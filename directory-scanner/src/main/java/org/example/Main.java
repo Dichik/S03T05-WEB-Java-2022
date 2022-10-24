@@ -4,14 +4,14 @@ import org.example.service.Consumer;
 import org.example.service.Producer;
 import org.example.entity.Record;
 
-import java.io.File;
 import java.util.concurrent.*;
 
 public class Main {
+
     public static void main(String[] args) {
 
-        BlockingQueue<Record> queue = new ArrayBlockingQueue<>(10);
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        final BlockingQueue<Record> queue = new ArrayBlockingQueue<>(10);
+        final ExecutorService executorService = Executors.newFixedThreadPool(5);
         Producer producer = new Producer(queue, executorService);
         Consumer consumer = new Consumer(queue);
 
@@ -19,6 +19,8 @@ public class Main {
         new Thread(consumer).start();
 
         System.out.println("Producer and Consumer has been started");
+        // Logging system to add
+// TODO sheduled task to check if new files were not added
 
         //System.out.println("Please enter directory name: ");
         //
@@ -31,7 +33,6 @@ public class Main {
         //} else {
         //    new SampleDataGenerator().generate(file.getPath());
         //}
-        //
         //
         //ExecutorService executorService = null;
         //Runnable runnable = () -> {
@@ -67,20 +68,6 @@ public class Main {
         // if we have K and C add this file name to thread queue where we are storing data to the file
         // if we finish all activities with the directory -> wait for finishing all threads and print result
 
-    }
-
-    private static Runnable processFile(ExecutorService executorService, File file) throws Exception {
-        return () -> {
-            if (!checkFileData("string")) {
-                // ...
-            }
-            // ...
-        };
-    }
-
-    private static boolean checkFileData(String string) {
-        // TODO
-        return true;
     }
 
 }
