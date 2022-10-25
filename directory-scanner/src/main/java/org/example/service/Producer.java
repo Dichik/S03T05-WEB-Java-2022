@@ -37,7 +37,7 @@ public class Producer implements Runnable {
 
     private Runnable processPath(Path path) {
         return () -> {
-            this.fileAnalyzerService.satisfy(path).ifPresent(queue::add);
+            this.fileAnalyzerService.analyze(path).ifPresent(queue::add);
         };
     }
 

@@ -1,6 +1,6 @@
 package org.example.service;
 
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
@@ -10,15 +10,19 @@ public class SampleDataGenerator {
     private static final Random random = new Random();
 
     public void generate(String path) {
-        // first of all clean data in the path
-        int numberOfSamples = 10;
+
+        int numberOfSamples = 2;
         for (int i = 0; i < numberOfSamples; ++ i) {
-            File file = new File("input" + i + ".txt");
-            try (FileWriter fileWriter = new FileWriter(file)) {
-                String sampleString = formSampleFileData();
-                fileWriter.write(sampleString);
+            String fileName = path + "/input" + i + ".txt";
+            try (FileWriter fileWriter = new FileWriter(fileName)) {
+                BufferedWriter writer = new BufferedWriter(fileWriter);
+
+                String randomData = formSampleFileData();
+                writer.write(randomData);
+                writer.close();
+                System.out.println("File with " + fileName + " path was successfully created.");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("Unexpected error, please see: " + e);
             }
         }
 
@@ -32,12 +36,17 @@ public class SampleDataGenerator {
             if (randomNumber % 2 == 0) {
                 stringBuilder.append("Sample data without required letters");
             } else {
-                stringBuilder.append("012345566").append(" ").append(" KPetrovich");
+                stringBuilder.append("012345566").append(" ").append("KPetrovich");
             }
             stringBuilder.append("\n");
         }
 
         return stringBuilder.toString();
+    }
+
+    private void cleanAllFiles(String path) {
+        // TODO clear all already existed files
+        // actually it workds without cleaning, but it is interesting how to clean directory
     }
 
 }

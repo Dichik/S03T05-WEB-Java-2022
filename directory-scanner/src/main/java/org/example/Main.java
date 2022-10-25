@@ -3,12 +3,15 @@ package org.example;
 import org.example.service.Consumer;
 import org.example.service.Producer;
 import org.example.entity.Record;
+import org.example.service.SampleDataGenerator;
 
 import java.util.concurrent.*;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        new SampleDataGenerator().generate("./data");
 
         final BlockingQueue<Record> queue = new ArrayBlockingQueue<>(10);
         final ExecutorService executorService = Executors.newFixedThreadPool(5);
@@ -19,6 +22,14 @@ public class Main {
         new Thread(consumer).start();
 
         System.out.println("Producer and Consumer has been started");
+
+        //try {
+        //    executorService.awaitTermination(1, TimeUnit.MINUTES);
+        //} catch (InterruptedException e) {
+        //    throw new RuntimeException(e);
+        //} finally {
+        //    executorService.shutdown();
+        //}
         // Logging system to add
 // TODO sheduled task to check if new files were not added
 

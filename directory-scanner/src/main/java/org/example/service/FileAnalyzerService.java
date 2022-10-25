@@ -14,10 +14,10 @@ public class FileAnalyzerService implements IFileAnalyzer<Record> {
 
     @Override
     public Optional<Record> analyze(Path path) {
-        List<String> abonents = new ArrayList<>();
-
         File file = new File(path.toString());
         try (final FileReader fileReader = new FileReader(file)) {
+            List<String> abonents = new ArrayList<>();
+
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -35,8 +35,9 @@ public class FileAnalyzerService implements IFileAnalyzer<Record> {
     }
 
     private boolean isValidAbonent(String abonent) {
+        System.out.println("Checking " + abonent);
         String[] data = abonent.split(" ");
-        return data[1].charAt(0) == 'K' || data[1].charAt(0) == 'C';
+        return data.length > 1 && (data[1].charAt(0) == 'K' || data[1].charAt(0) == 'C');
     }
 
 }
