@@ -31,17 +31,19 @@ public class SampleDataGenerator {
     private String formSampleFileData() {
         int randomNumber = random.nextInt() % 10;
         StringBuilder stringBuilder = new StringBuilder();
-
-        while (randomNumber --> 0) {
-            if (randomNumber % 2 == 0) {
-                stringBuilder.append("Sample data without required letters");
-            } else {
-                stringBuilder.append("012345566").append(" ").append("KPetrovich");
-            }
-            stringBuilder.append("\n");
-        }
+        stringBuilder.append("012345566").append(" ").append("KPetrovich");
 
         return stringBuilder.toString();
+        //stringBuilder.append("Sample data without required letters");
+        //while (randomNumber --> 0) {
+        //    if (randomNumber % 2 == 0) {
+        //
+        //    } else {
+        //    }
+        //    stringBuilder.append("\n");
+        //}
+        //
+        //return stringBuilder.toString();
     }
 
     private void cleanAllFiles(String path) {

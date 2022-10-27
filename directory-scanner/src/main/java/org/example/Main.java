@@ -1,10 +1,7 @@
 package org.example;
 
-import org.example.entity.RecordTask;
-import org.example.service.Consumer;
-import org.example.service.FileAnalyzingTask;
-import org.example.service.Producer;
-import org.example.service.SampleDataGenerator;
+import org.example.entity.Record;
+import org.example.service.*;
 
 import java.util.concurrent.*;
 
@@ -14,24 +11,28 @@ public class Main {
 
         new SampleDataGenerator().generate("./data");
 
-        BlockingQueue<RecordTask> recordingQueue = new SynchronousQueue<>();
+        BlockingQueue<Record> recordingQueue = new SynchronousQueue<>();
 
         BlockingQueue<FileAnalyzingTask> queue = new LinkedBlockingQueue<>();
         ExecutorService consumerExecutorService = Executors.newFixedThreadPool(2);
+        ExecutorService recordingExecutorService = Executors.newSingleThreadExecutor();
 
         ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(1);
 
-        Runnable directoryCheckerTask = new Producer(queue);
+        Runnable directoryCheckerTask = new Producer(queue, recordingQueue);
 
         threadPool.scheduleAtFixedRate(directoryCheckerTask, 0, 30, TimeUnit.SECONDS);
 
         consumerExecutorService.submit(new Consumer(queue));
         consumerExecutorService.submit(new Consumer(queue));
 
+        recordingExecutorService.submit(new Recorder(recordingQueue));
+
         System.out.println("Producer and Consumer has been started");
 
         threadPool.shutdown();
         consumerExecutorService.shutdown();
+        recordingExecutorService.shutdown();
 
         //try {
         //    executorService.awaitTermination(1, TimeUnit.MINUTES);

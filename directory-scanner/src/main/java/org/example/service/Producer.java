@@ -11,9 +11,14 @@ import java.util.stream.Stream;
 public class Producer implements Runnable {
 
     private final BlockingQueue<FileAnalyzingTask> queue;
+    private final BlockingQueue<Record> recorderQueue;
 
-    public Producer(BlockingQueue<FileAnalyzingTask> queue) {
+    public Producer(
+            BlockingQueue<FileAnalyzingTask> queue,
+            BlockingQueue<Record> recorderQueue
+    ) {
         this.queue = queue;
+        this.recorderQueue = recorderQueue;
         // TODO use hashmap to check which path we already checked
     }
 
@@ -23,7 +28,7 @@ public class Producer implements Runnable {
             paths.filter(Files::isRegularFile)
                 .forEach(path -> {
                     try {
-                        this.queue.put(new FileAnalyzingTask(path));
+                        this.queue.put(new FileAnalyzingTask(path, recorderQueue));
                     } catch (InterruptedException e) {
                         System.err.println("Can't create task for " + path.toString() + " Error: " + e);
                     }

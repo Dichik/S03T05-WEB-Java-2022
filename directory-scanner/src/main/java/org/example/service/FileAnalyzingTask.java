@@ -8,13 +8,16 @@ import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 public class FileAnalyzingTask implements Runnable {
 
     private Path path;
+    private final BlockingQueue<Record> recorderQueue;
 
-    public FileAnalyzingTask(Path path) {
+    public FileAnalyzingTask(Path path, BlockingQueue<Record> recorderQueue) {
         this.path = path;
+        this.recorderQueue = recorderQueue;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class FileAnalyzingTask implements Runnable {
                 abonents.add(line);
             }
             Record record = new Record(abonents, path.toString());
+            this.recorderQueue.put(record);
             System.out.println(record.getMessages().toString() + " record is created.");
         } catch (Exception e) {
             System.out.println("Error occured, please see: " + e);

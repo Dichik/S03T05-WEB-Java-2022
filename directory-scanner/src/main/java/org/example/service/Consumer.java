@@ -7,10 +7,12 @@ import java.util.concurrent.BlockingQueue;
 
 public class Consumer implements Runnable {
 
-    private final BlockingQueue<FileAnalyzingTask> queue;
+    private final BlockingQueue<FileAnalyzingTask> fileAnazingQueue;
 
-    public Consumer(BlockingQueue<FileAnalyzingTask> queue) {
-        this.queue = queue;
+    public Consumer(
+            BlockingQueue<FileAnalyzingTask> fileAnazingQueue
+    ) {
+        this.fileAnazingQueue = fileAnazingQueue;
     }
 
     @Override
@@ -18,7 +20,7 @@ public class Consumer implements Runnable {
         boolean isInterrupted = false;
         while ( !isInterrupted ) {
             try {
-                FileAnalyzingTask task = this.queue.take();
+                FileAnalyzingTask task = this.fileAnazingQueue.take();
                 task.run();
             } catch (InterruptedException e) {
                 e.printStackTrace();
