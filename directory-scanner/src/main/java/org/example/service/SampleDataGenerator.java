@@ -11,7 +11,7 @@ public class SampleDataGenerator {
 
     public void generate(String path) {
 
-        int numberOfSamples = 2;
+        int numberOfSamples = 10;
         for (int i = 0; i < numberOfSamples; ++ i) {
             String fileName = path + "/input" + i + ".txt";
             try (FileWriter fileWriter = new FileWriter(fileName)) {

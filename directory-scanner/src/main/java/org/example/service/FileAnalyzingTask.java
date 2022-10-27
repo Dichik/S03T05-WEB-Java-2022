@@ -8,12 +8,17 @@ import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class FileAnalyzerService implements IFileAnalyzer<Record> {
+public class FileAnalyzingTask implements Runnable {
+
+    private Path path;
+
+    public FileAnalyzingTask(Path path) {
+        this.path = path;
+    }
 
     @Override
-    public Optional<Record> analyze(Path path) {
+    public void run() {
         File file = new File(path.toString());
         try (final FileReader fileReader = new FileReader(file)) {
             List<String> abonents = new ArrayList<>();
@@ -27,17 +32,18 @@ public class FileAnalyzerService implements IFileAnalyzer<Record> {
                 abonents.add(line);
             }
             Record record = new Record(abonents, path.toString());
-            return Optional.of(record);
+            System.out.println(record.getMessages().toString() + " record is created.");
         } catch (Exception e) {
             System.out.println("Error occured, please see: " + e);
         }
-        return Optional.empty();
     }
 
     private boolean isValidAbonent(String abonent) {
+        //if (abonent == null || abonent.equals("")) {
+        //    return false;
+        //}
         System.out.println("Checking " + abonent);
         String[] data = abonent.split(" ");
         return data.length > 1 && (data[1].charAt(0) == 'K' || data[1].charAt(0) == 'C');
     }
-
 }

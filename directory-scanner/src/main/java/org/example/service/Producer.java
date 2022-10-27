@@ -6,19 +6,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 public class Producer implements Runnable {
 
-    private final BlockingQueue queue;
-    private final ExecutorService executorService;
-    private final FileAnalyzerService fileAnalyzerService;
+    private final BlockingQueue<FileAnalyzingTask> queue;
 
-    public Producer(BlockingQueue<Record> queue, ExecutorService executorService) {
+    public Producer(BlockingQueue<FileAnalyzingTask> queue) {
         this.queue = queue;
-        this.executorService = executorService;
-        this.fileAnalyzerService = new FileAnalyzerService();
+        // TODO use hashmap to check which path we already checked
     }
 
     @Override
@@ -26,19 +22,15 @@ public class Producer implements Runnable {
         try (Stream<Path> paths = Files.walk(Path.of("./data"), 1)) {
             paths.filter(Files::isRegularFile)
                 .forEach(path -> {
-                    Runnable runnable = processPath(path);
-                    this.executorService.execute(runnable);
-                    System.out.println("Task for " + path.toString() + " was created.");
+                    try {
+                        this.queue.put(new FileAnalyzingTask(path));
+                    } catch (InterruptedException e) {
+                        System.err.println("Can't create task for " + path.toString() + " Error: " + e);
+                    }
                 });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Runnable processPath(Path path) {
-        return () -> {
-            this.fileAnalyzerService.analyze(path).ifPresent(queue::add);
-        };
     }
 
 }

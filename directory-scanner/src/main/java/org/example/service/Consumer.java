@@ -7,25 +7,24 @@ import java.util.concurrent.BlockingQueue;
 
 public class Consumer implements Runnable {
 
-    private BlockingQueue<Record> queue;
+    private final BlockingQueue<FileAnalyzingTask> queue;
 
-    public Consumer(BlockingQueue<Record> queue) {
+    public Consumer(BlockingQueue<FileAnalyzingTask> queue) {
         this.queue = queue;
     }
 
-
     @Override
     public void run() {
-
-        try {
-            Record msq;
-            while ( !(msq = queue.take()).isEmpty() ) {
-                Thread.sleep(10);
-                System.out.println("Do something with the job, path = " + msq.getPath());
+        boolean isInterrupted = false;
+        while ( !isInterrupted ) {
+            try {
+                FileAnalyzingTask task = this.queue.take();
+                task.run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                isInterrupted = true;
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-
     }
+
 }
