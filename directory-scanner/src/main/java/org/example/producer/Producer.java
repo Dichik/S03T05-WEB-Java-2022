@@ -1,6 +1,7 @@
-package org.example.service;
+package org.example.producer;
 
 import org.example.entity.Record;
+import org.example.service.FileAnalyzingTask;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ public class Producer implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Started to scan directory...");
         try (Stream<Path> paths = Files.walk(Path.of("./data"), 1)) {
             paths.filter(Files::isRegularFile)
                 .forEach(path -> {
@@ -36,6 +38,7 @@ public class Producer implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("Finished to scan directory...");
     }
 
 }

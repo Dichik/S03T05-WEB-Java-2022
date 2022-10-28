@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.recorder;
 
 import org.example.entity.Record;
 

@@ -1,7 +1,7 @@
-package org.example.service;
+package org.example.consumer;
 
 
-import org.example.entity.Record;
+import org.example.service.FileAnalyzingTask;
 
 import java.util.concurrent.BlockingQueue;
 

@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-public class SampleDataGenerator {
+public class DataGeneratorService {
 
     private static final Random random = new Random();
 
