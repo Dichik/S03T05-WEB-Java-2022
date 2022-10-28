@@ -13,33 +13,29 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // TODO Logging system to add
+
+        // TODO if we finish all activities with the directory -> wait for finishing all threads and print result
+
         new DataGeneratorService().generate("./data");
 
         BlockingQueue<Record> recordingQueue = new SynchronousQueue<>();
-
         BlockingQueue<FileAnalyzingTask> queue = new LinkedBlockingQueue<>();
+
         ExecutorService consumerExecutorService = Executors.newFixedThreadPool(2);
+        consumerExecutorService.submit(new Consumer(queue));
+        consumerExecutorService.submit(new Consumer(queue));
+
         ExecutorService recordingExecutorService = Executors.newSingleThreadExecutor();
-
-        ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(1);
-
-        Runnable directoryCheckerTask = new Producer(queue, recordingQueue);
-
-        threadPool.scheduleAtFixedRate(directoryCheckerTask, 0, 30, TimeUnit.SECONDS);
-
-        consumerExecutorService.submit(new Consumer(queue));
-        consumerExecutorService.submit(new Consumer(queue));
-
         recordingExecutorService.submit(new Recorder(recordingQueue));
 
-        System.out.println("Producer and Consumer has been started");
+        ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(1);
+        Runnable directoryScanningTask = new Producer(queue, recordingQueue);
+        threadPool.scheduleAtFixedRate(directoryScanningTask, 0, 30, TimeUnit.SECONDS);
 
         consumerExecutorService.shutdown();
         recordingExecutorService.shutdown();
 
-        // TODO Logging system to add
-
-        // TODO if we finish all activities with the directory -> wait for finishing all threads and print result
     }
 
 }
