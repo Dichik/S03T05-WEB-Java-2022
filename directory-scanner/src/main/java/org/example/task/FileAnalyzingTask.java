@@ -36,6 +36,7 @@ public class FileAnalyzingTask implements Runnable {
             }
             Record record = new Record(abonents, path.toString());
             this.recorderQueue.put(record);
+            // TODO should we add task with print report about that?
             System.out.println(record.getMessages().toString() + " record is created.");
         } catch (Exception e) {
             System.out.println("Error occured, please see: " + e);
