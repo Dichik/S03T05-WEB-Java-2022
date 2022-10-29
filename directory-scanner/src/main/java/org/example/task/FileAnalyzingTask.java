@@ -1,6 +1,9 @@
 package org.example.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.entity.Record;
+import org.example.task.TaskDescription;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class FileAnalyzingTask implements Runnable {
+public class FileAnalyzingTask implements Runnable, TaskDescription {
+    private static final Logger logger = LogManager.getLogger(FileAnalyzingTask.class);
 
     private Path path;
     private final BlockingQueue<Record> recorderQueue;
@@ -34,21 +38,28 @@ public class FileAnalyzingTask implements Runnable {
                 }
                 abonents.add(line);
             }
+
+            if (abonents.isEmpty()) {
+                logger.info("Didn't create any record for " + path);
+                return;
+            }
+
             Record record = new Record(abonents, path.toString());
             this.recorderQueue.put(record);
-            // TODO should we add task with print report about that?
-            System.out.println(record.getMessages().toString() + " record is created.");
+
+            logger.info(record.getMessages().toString() + " record was created.");
         } catch (Exception e) {
-            System.out.println("Error occured, please see: " + e);
+            logger.warn("Error occured while processing analyzing task, please see: " + e);
         }
     }
 
     private boolean isValidAbonent(String abonent) {
-        //if (abonent == null || abonent.equals("")) {
-        //    return false;
-        //}
-        System.out.println("Checking " + abonent);
         String[] data = abonent.split(" ");
         return data.length > 1 && (data[1].charAt(0) == 'K' || data[1].charAt(0) == 'C');
+    }
+
+    @Override
+    public String getDescription() {
+        return "Analazying task for " + path;
     }
 }

@@ -1,5 +1,7 @@
 package org.example.producer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.entity.Record;
 import org.example.service.FileAnalyzingTask;
 
@@ -11,6 +13,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.stream.Stream;
 
 public class Producer implements Runnable {
+    private static final Logger logger = LogManager.getLogger(Producer.class);
+    private static final String DEFAULT_DIRECTORY_NAME = "./data";
 
     private final BlockingQueue<FileAnalyzingTask> queue;
     private final BlockingQueue<Record> recorderQueue;
@@ -23,30 +27,33 @@ public class Producer implements Runnable {
         this.queue = queue;
         this.recorderQueue = recorderQueue;
         this.fileChecked = new HashSet<>();
-        // TODO use hashmap to check which path we already checked
     }
 
     @Override
     public void run() {
-        System.out.println("Started to scan directory...");
-        try (Stream<Path> paths = Files.walk(Path.of("./data"), 1)) {
+        logger.info("Started to scan directory + " + DEFAULT_DIRECTORY_NAME);
+
+        try (Stream<Path> paths = Files.walk(Path.of(DEFAULT_DIRECTORY_NAME), 1)) {
             paths.filter(Files::isRegularFile)
                 .filter(this::checkIfPathWasScanned)
                 .forEach(path -> {
                     try {
                         this.queue.put(new FileAnalyzingTask(path, recorderQueue));
                         this.fileChecked.add(path.toString());
+
+                        logger.info("Task for " + path + " was successfully created.");
                     } catch (InterruptedException e) {
-                        System.err.println("Can't create task for " + path.toString() + " Error: " + e);
+                        logger.warn(String.format("Can't create task for %s file, error message: %s", path, e));
                     }
                 });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.error(String.format("Error while scanning directory %s, please see: %s", DEFAULT_DIRECTORY_NAME, e));
         }
-        System.out.println("Finished to scan directory...");
+        logger.info("Finished to scan directory " + DEFAULT_DIRECTORY_NAME);
     }
 
     private boolean checkIfPathWasScanned(Path path) {
         return !this.fileChecked.contains(path.toString());
     }
+    
 }

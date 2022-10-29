@@ -16,10 +16,6 @@ public class Record {
         return messages;
     }
 
-    public boolean isEmpty() {
-        return messages.isEmpty();
-    }
-
     public String getPath() {
         return path;
     }

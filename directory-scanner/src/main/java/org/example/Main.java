@@ -1,23 +1,25 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.consumer.Consumer;
 import org.example.entity.Record;
 import org.example.producer.Producer;
 import org.example.recorder.Recorder;
-import org.example.service.*;
+import org.example.service.DataGeneratorService;
 import org.example.service.FileAnalyzingTask;
 
 import java.util.concurrent.*;
 
 public class Main {
 
+    private static final Logger logger = LogManager.getLogger(Main.class);
+    private static final String DEFAULT_DATA_DIRECTORY = "./data";
+
     public static void main(String[] args) {
+        logger.info("Application successfully started.");
 
-        // TODO Logging system to add
-
-        // TODO if we finish all activities with the directory -> wait for finishing all threads and print result
-
-        new DataGeneratorService().generate("./data");
+        new DataGeneratorService().generate(DEFAULT_DATA_DIRECTORY);
 
         BlockingQueue<Record> recordingQueue = new SynchronousQueue<>();
         BlockingQueue<FileAnalyzingTask> queue = new LinkedBlockingQueue<>();
@@ -36,6 +38,7 @@ public class Main {
         consumerExecutorService.shutdown();
         recordingExecutorService.shutdown();
 
+        logger.info("Application successfully finished.");
     }
 
 }
