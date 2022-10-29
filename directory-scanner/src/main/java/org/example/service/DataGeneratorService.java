@@ -6,13 +6,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
 
 public class DataGeneratorService {
 
     private static final Logger logger = LogManager.getLogger(DataGeneratorService.class);
-
-    private static final Random random = new Random();
 
     public void generate(String path) {
         logger.info("Started to generate sample data.");
@@ -33,19 +30,7 @@ public class DataGeneratorService {
     }
 
     private String formSampleFileData() {
-        int randomNumber = random.nextInt() % 10;
-
         return "012345566" + " " + "KPetrovich";
-        //stringBuilder.append("Sample data without required letters");
-        //while (randomNumber --> 0) {
-        //    if (randomNumber % 2 == 0) {
-        //
-        //    } else {
-        //    }
-        //    stringBuilder.append("\n");
-        //}
-        //
-        //return stringBuilder.toString();
     }
 
 }
