@@ -1,4 +1,4 @@
-package org.example.service;
+package org.agency.service;
 
 public class UserService {
 }

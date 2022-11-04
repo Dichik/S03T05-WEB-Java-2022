@@ -1,4 +1,4 @@
-package org.example;
+package org.agency;
 
 public class App {
     public static void main(String[] args) {
