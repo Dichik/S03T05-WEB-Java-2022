@@ -17,6 +17,17 @@ public class ManagerController {
         return null;
     }
 
+    public void setStatus(String status) { // TODO create enum for statuses
+        if (validateStatusChange(status, status)) {
+            return;
+        }
+    }
+
+    private boolean validateStatusChange(String oldStatus, String newStatus) {
+        // TODO fix this method
+        return oldStatus.equals(newStatus) || (oldStatus.equals("new") && newStatus.equals("in_progress"));
+    }
+
 
 
 }

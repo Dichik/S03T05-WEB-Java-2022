@@ -17,6 +17,11 @@ public class UserController {
         // TODO implement submitTicket() method
     }
 
-
+    // TODO we should have option to check notifications
+    // and one of them should contains "Feedback about solving ticket #3: fix laptop"
+    public void leaveFeedback(Long id) {
+        // TODO check from which user we perform operation
+        // TODO create controller to check authentification
+    }
 
 }
