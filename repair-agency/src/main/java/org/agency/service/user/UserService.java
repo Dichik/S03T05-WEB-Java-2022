@@ -1,20 +1,20 @@
 package org.agency.service.user;
 
 import org.agency.entity.Ticket;
+import org.agency.repository.UserRepository;
 
+import java.sql.Connection;
 import java.util.List;
 
 public class UserService {
 
-    public UserService() {
+    private final Connection connection;
 
+    public UserService(Connection connection) {
+        this.connection = connection;
     }
 
-    // TODO add annotation
-    public void createTicket(Ticket ticket) {
-        // TODO need to be implemented
-    }
-
+    // TODO add annotatio
     public List<Ticket> getActiveTickets() {
         // TODO implement this method
         return null;

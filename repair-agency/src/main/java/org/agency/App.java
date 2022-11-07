@@ -1,16 +1,47 @@
 package org.agency;
 
+import org.agency.controller.UserController;
 import org.agency.entity.Role;
+import org.agency.entity.Ticket;
+import org.agency.repository.TicketRepository;
 import org.agency.service.auth.AuthService;
+import org.agency.service.user.TicketService;
+import org.agency.service.user.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class App {
+    private final static Logger logger = LogManager.getLogger(App.class);
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         // TODO add tests coverage
         // TODO add logger
+
+
+        final String DB_URL = System.getenv("PG_DB_URL");
+        final String USERNAME = System.getenv("PG_USERNAME");
+        final String PASSWORD = System.getenv("PG_PASSWORD");
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
+            System.out.println("Connection was successful!");
+
+            TicketRepository ticketRepository = new TicketRepository(connection);
+            TicketService ticketService = new TicketService(ticketRepository);
+            UserService userService = new UserService(connection);
+            UserController userController = new UserController(userService, ticketService);
+
+            Ticket ticket = new Ticket("title", "description");
+            userController.createTicket(ticket);
+            logger.info("ticket was successfully created!");
+        } catch (SQLException e) {
+            logger.error("ticket was not created! See: " + e);
+            throw new RuntimeException(e);
+        }
 
         AuthService authService = new AuthService();
         while (true) {
@@ -23,7 +54,7 @@ public class App {
             int choice = scanner.nextInt();
             authService.setAuthorisation(Role.getRoleByIndex(choice));
 
-
+            break;
 
 //            System.out.println("1 - login");
 //            System.out.println("2 - logout");
