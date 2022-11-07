@@ -1,5 +1,6 @@
-package org.agency.service;
+package org.agency.service.auth;
 
+import org.agency.entity.Role;
 import org.agency.entity.Session;
 
 import java.util.HashMap;
@@ -7,8 +8,11 @@ import java.util.Map;
 
 public class AuthService {
 
+    private static Role currentRole;
     public Session session;
     public Map<String, String> users;
+
+    // TODO we should have sync methods for auth
 
     public AuthService() {
         this.session = new Session();
@@ -34,7 +38,7 @@ public class AuthService {
         return true;
     }
 
-    public void logout(String email) {
+    public void logout() {
         this.session.clear();
     }
 
@@ -42,7 +46,12 @@ public class AuthService {
         return true;
     }
 
-    public Session getCurrentSession() {
+    public static Session getCurrentSession() {
         return null;
     }
+
+    public void setAuthorisation(Role role) {
+        this.currentRole = role;
+    }
+
 }
