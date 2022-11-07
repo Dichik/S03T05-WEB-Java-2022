@@ -1,7 +1,7 @@
 package org.agency.controller;
 
 import org.agency.entity.Ticket;
-import org.agency.service.UserService;
+import org.agency.service.user.UserService;
 
 public class UserController {
 
