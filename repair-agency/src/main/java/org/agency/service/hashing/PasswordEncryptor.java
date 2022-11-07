@@ -1,4 +1,4 @@
-package org.agency.service;
+package org.agency.service.hashing;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
