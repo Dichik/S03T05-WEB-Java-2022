@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalTime;
 
 public class DataGeneratorService {
 
@@ -30,7 +31,7 @@ public class DataGeneratorService {
     }
 
     private String formSampleFileData() {
-        return "012345566" + " " + "KPetrovich";
+        return LocalTime.now() + " " + "KPetrovich";
     }
 
 }

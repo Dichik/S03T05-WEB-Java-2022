@@ -11,12 +11,12 @@ public class Consumer implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(Consumer.class);
 
-    private final BlockingQueue<FileAnalyzingTask> fileAnazingQueue;
+    private final BlockingQueue<FileAnalyzingTask> fileAnalyzingQueue;
 
     public Consumer(
-            BlockingQueue<FileAnalyzingTask> fileAnazingQueue
+            BlockingQueue<FileAnalyzingTask> fileAnalyzingQueue
     ) {
-        this.fileAnazingQueue = fileAnazingQueue;
+        this.fileAnalyzingQueue = fileAnalyzingQueue;
     }
 
     @Override
@@ -24,12 +24,12 @@ public class Consumer implements Runnable {
         boolean isInterrupted = false;
         while (!isInterrupted) {
             try {
-                FileAnalyzingTask task = this.fileAnazingQueue.take();
+                FileAnalyzingTask task = this.fileAnalyzingQueue.take();
                 task.run();
                 logger.info("Executing task for " + task.getDescription());
             } catch (InterruptedException e) {
                 isInterrupted = true;
-                logger.error("Consumer was interrpted, see: " + e);
+                logger.error("Consumer was interrupted, see: " + e);
             }
         }
     }

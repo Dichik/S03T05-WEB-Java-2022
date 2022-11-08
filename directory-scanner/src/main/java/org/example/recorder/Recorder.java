@@ -29,9 +29,9 @@ public class Recorder implements Runnable {
                 this.record(reportRecord);
             } catch (InterruptedException e) {
                 isInterrupted = true;
-                logger.warn("Interrupted error occured, please see: " + e);
+                logger.warn("Interrupted error occurred, please see: " + e);
             } catch (UnableToReadFileDataError e) {
-                logger.error("Unable to read data from the file. Please check details: " + e); // TODO params for exceptions -> logger here, formed error messages higher
+                logger.error("Unable to read data from the file. Please check details: " + e);
             } catch (UnableToWriteToFileError e) {
                 logger.error(String.format("Couldn't write %s to %s, error message: %s", e.getRecord(), DEFAULT_REPORT_PATH, e));
             }
@@ -48,7 +48,7 @@ public class Recorder implements Runnable {
                 sb.append(line).append("\n");
             }
             sb.append(message);
-            logger.info(String.format("%s report record for %s was successfully formed.", DEFAULT_REPORT_PATH, message));
+            logger.info(String.format("%s report record for %s was successfully updated.", DEFAULT_REPORT_PATH, message));
         } catch (IOException e) {
             throw new UnableToReadFileDataError(UnableToReadFileDataError.DEFAULT_ERROR_MESSAGE, DEFAULT_REPORT_PATH);
         }

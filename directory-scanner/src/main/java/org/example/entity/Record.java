@@ -5,7 +5,7 @@ import java.util.List;
 public class Record {
 
     private final List<String> messages;
-    private String path;
+    private final String path;
 
     public Record(List<String> messages, String path) {
         this.messages = messages;
