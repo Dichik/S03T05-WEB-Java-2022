@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class TicketRepositoryImpl implements TicketRepository {
     private final Logger logger = LogManager.getLogger(TicketRepositoryImpl.class);
@@ -30,13 +31,13 @@ public class TicketRepositoryImpl implements TicketRepository {
     }
 
     @Override
-    public void findAll() {
-
+    public List<Ticket> findAll() {
+        return null;
     }
 
     @Override
-    public void findById(Long id) {
-
+    public Ticket findById(Long id) {
+        return null;
     }
 
     @Override
@@ -53,7 +54,6 @@ public class TicketRepositoryImpl implements TicketRepository {
 
     @Override
     public void update(Ticket t) {
-        return null;
     }
 
     @Override

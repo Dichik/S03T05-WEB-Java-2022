@@ -1,10 +1,14 @@
 package org.agency.repository;
 
+import org.agency.entity.Ticket;
+
+import java.util.List;
+
 public interface BaseRepository<T> {
 
-    void findAll();
+    List<Ticket> findAll();
 
-    void findById(Long id);
+    Ticket findById(Long id);
 
     void create(T t);
 

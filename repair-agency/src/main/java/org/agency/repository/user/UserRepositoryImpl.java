@@ -1,10 +1,12 @@
 package org.agency.repository.user;
 
+import org.agency.entity.Ticket;
 import org.agency.entity.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
 
@@ -27,13 +29,13 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public void findAll() {
-
+    public List<Ticket> findAll() {
+        return null;
     }
 
     @Override
-    public void findById(Long id) {
-
+    public Ticket findById(Long id) {
+        return null;
     }
 
     @Override

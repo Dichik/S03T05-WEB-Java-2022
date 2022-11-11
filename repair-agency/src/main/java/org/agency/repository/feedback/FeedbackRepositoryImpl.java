@@ -1,15 +1,18 @@
 package org.agency.repository.feedback;
 
 import org.agency.entity.Feedback;
+import org.agency.entity.Ticket;
+
+import java.util.List;
 
 public class FeedbackRepositoryImpl implements FeedbackRepository {
     @Override
-    public void findAll() {
+    public List<Ticket> findAll() {
 
     }
 
     @Override
-    public void findById(Long id) {
+    public Ticket findById(Long id) {
 
     }
 

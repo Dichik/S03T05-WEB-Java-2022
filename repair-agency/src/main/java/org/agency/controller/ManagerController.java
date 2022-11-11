@@ -1,7 +1,9 @@
 package org.agency.controller;
 
+import org.agency.entity.Ticket;
 import org.agency.entity.User;
 import org.agency.exception.UserNotFoundException;
+import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,9 +14,11 @@ public class ManagerController {
     private static final Logger logger = LogManager.getLogger(ManagerController.class);
 
     private final UserService userService;
+    private final TicketService ticketService;
 
-    public ManagerController(UserService userService) {
+    public ManagerController(UserService userService, TicketService ticketService) {
         this.userService = userService;
+        this.ticketService = ticketService;
     }
 
     public void addMasterToTicket(Long masterId, Long ticketId) {
@@ -26,10 +30,8 @@ public class ManagerController {
         return null;
     }
 
-    public void setStatus(String status) { // TODO create enum for statuses
-        if (validateStatusChange(status, status)) {
-            return;
-        }
+    public void setStatus(Long ticketId, String updatedStatus) { // TODO create enum for statuses
+        this.ticketService.updateStatus(ticketId, updatedStatus);
     }
 
     public void topUpAccount(String userEmail, BigDecimal amount) throws UserNotFoundException {
@@ -41,12 +43,6 @@ public class ManagerController {
         logger.info(String.format("Manager %s successfully topped up %s account. Current balance: %a", "Manager1", user.getEmail(), currentBalance));
         this.userService.update(user);
     }
-
-    private boolean validateStatusChange(String oldStatus, String newStatus) {
-        // TODO fix this method
-        return oldStatus.equals(newStatus) || (oldStatus.equals("new") && newStatus.equals("in_progress"));
-    }
-
 
 
 }
