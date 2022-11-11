@@ -2,6 +2,7 @@ package org.agency.controller;
 
 import org.agency.entity.Ticket;
 import org.agency.entity.User;
+import org.agency.exception.TicketNotFoundException;
 import org.agency.exception.UserNotFoundException;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
@@ -21,28 +22,42 @@ public class ManagerController {
         this.ticketService = ticketService;
     }
 
-    public void addMasterToTicket(Long masterId, Long ticketId) {
-        // TODO implement addMasterToTicket() method
+    public void assignMasterToTicket(Long ticketId, Long masterId) {
+        try {
+            this.ticketService.assignMaster(ticketId, masterId);
+            logger.info(String.format("Successfully assigned master [id=%d] to ticket [id=%d]", masterId, ticketId));
+        } catch (TicketNotFoundException e) {
+            logger.error("Couldn't assign master to the ticket, see: ");
+        }
     }
 
-    public BigDecimal calculateTicketCost(Long ticketId) {
-        // TODO here we should calculate how much it costs to master to fix ticket
-        return null;
+    public Ticket setTicketPrice(Long ticketId, BigDecimal price) {
+        try {
+            return this.ticketService.updatePrice(ticketId, price);
+        } catch (TicketNotFoundException e) {
+            logger.error("Couldn't set ticket price, see: " + e);
+            return null;
+        }
     }
 
     public void setStatus(Long ticketId, String updatedStatus) { // TODO create enum for statuses
-        this.ticketService.updateStatus(ticketId, updatedStatus);
-    }
-
-    public void topUpAccount(String userEmail, BigDecimal amount) throws UserNotFoundException {
-        User user = this.userService.findByEmail(userEmail);
-        if (user == null) {
-            throw new UserNotFoundException("User with " + userEmail + " email was not found");
+        try {
+            this.ticketService.updateStatus(ticketId, updatedStatus);
+            logger.info(String.format("Successfully set %s status for ticket with %d id", updatedStatus, ticketId));
+        } catch (TicketNotFoundException e) {
+            logger.error("Couldn't set status " + updatedStatus + ", see: " + e);
         }
-        BigDecimal currentBalance = user.topUp(amount);
-        logger.info(String.format("Manager %s successfully topped up %s account. Current balance: %a", "Manager1", user.getEmail(), currentBalance));
-        this.userService.update(user);
     }
 
+    public void topUpAccount(String email, BigDecimal amount) {
+        try {
+            this.userService.topUpBalance(email, amount);
+            logger.info(String.format("Manager %s successfully topped up %s account. Current balance: %a", "Manager1", email, 0.0));
+        } catch (UserNotFoundException e) {
+            logger.error("Couldn't top up account, see: " + e);
+        }
+    }
+
+    // TODO when do user pay for the request/ticket? after ticket will be successfully done?
 
 }

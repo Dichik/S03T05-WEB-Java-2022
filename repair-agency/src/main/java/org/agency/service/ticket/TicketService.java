@@ -1,7 +1,10 @@
 package org.agency.service.ticket;
 
 import org.agency.entity.Ticket;
+import org.agency.exception.TicketNotFoundException;
 import org.agency.repository.ticket.TicketRepository;
+
+import java.math.BigDecimal;
 
 public class TicketService {
 
@@ -15,10 +18,10 @@ public class TicketService {
         this.ticketRepository.create(ticket);
     }
 
-    public void updateStatus(Long ticketId, String updatedStatus) {
+    public void updateStatus(Long ticketId, String updatedStatus) throws TicketNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId);
         if (ticket == null) {
-            return; // TODO throw corresponded custom exception
+            throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
         }
         String currentStatus = ticket.getStatus();
         if (this.validateStatusChange(currentStatus, updatedStatus)) {
@@ -31,6 +34,27 @@ public class TicketService {
     private boolean validateStatusChange(String oldStatus, String newStatus) {
         // TODO fix this method
         return oldStatus.equals(newStatus) || (oldStatus.equals("new") && newStatus.equals("in_progress"));
+    }
+
+    public Ticket updatePrice(Long ticketId, BigDecimal price) throws TicketNotFoundException {
+        Ticket ticket = this.ticketRepository.findById(ticketId);
+        if (ticket == null) {
+            throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
+        }
+        ticket.setPrice(price);
+        this.ticketRepository.update(ticket);
+        return ticket;
+    }
+
+    public void assignMaster(Long ticketId, Long masterId) throws TicketNotFoundException {
+        Ticket ticket = this.ticketRepository.findById(ticketId);
+        if (ticket == null) {
+            throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
+        }
+
+        // FIXME would be really great to know here if master_id is correct
+        ticket.setMasterId(masterId);
+        this.ticketRepository.update(ticket);
     }
 
 }
