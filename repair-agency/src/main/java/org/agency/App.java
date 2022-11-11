@@ -3,7 +3,7 @@ package org.agency;
 import org.agency.controller.UserController;
 import org.agency.entity.Role;
 import org.agency.entity.Ticket;
-import org.agency.repository.TicketRepository;
+import org.agency.repository.ticket.TicketRepositoryImpl;
 import org.agency.service.auth.AuthService;
 import org.agency.service.user.TicketService;
 import org.agency.service.user.UserService;
@@ -30,7 +30,7 @@ public class App {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
             System.out.println("Connection was successful!");
 
-            TicketRepository ticketRepository = new TicketRepository(connection);
+            TicketRepositoryImpl ticketRepository = new TicketRepositoryImpl(connection);
             TicketService ticketService = new TicketService(ticketRepository);
             UserService userService = new UserService(connection);
             UserController userController = new UserController(userService, ticketService);

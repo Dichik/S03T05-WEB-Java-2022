@@ -1,17 +1,16 @@
-package org.agency.repository;
+package org.agency.repository.user;
 
-import org.agency.entity.Ticket;
+import org.agency.entity.User;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
     private final Connection connection;
 
-    public UserRepository(Connection connection) {
+    public UserRepositoryImpl(Connection connection) {
         this.connection = connection;
     }
 
@@ -27,5 +26,28 @@ public class UserRepository {
     }
 
 
+    @Override
+    public void findAll() {
 
+    }
+
+    @Override
+    public void findById(Long id) {
+
+    }
+
+    @Override
+    public void create(User t) {
+        return null;
+    }
+
+    @Override
+    public User update() {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
 }

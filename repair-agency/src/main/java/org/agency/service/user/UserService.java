@@ -1,7 +1,6 @@
 package org.agency.service.user;
 
 import org.agency.entity.Ticket;
-import org.agency.repository.UserRepository;
 
 import java.sql.Connection;
 import java.util.List;

@@ -1,13 +1,13 @@
 package org.agency.service.user;
 
 import org.agency.entity.Ticket;
-import org.agency.repository.TicketRepository;
+import org.agency.repository.ticket.TicketRepositoryImpl;
 
 public class TicketService {
 
-    private final TicketRepository ticketRepository;
+    private final TicketRepositoryImpl ticketRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepositoryImpl ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 

@@ -1,4 +1,4 @@
-package org.agency.repository;
+package org.agency.repository.ticket;
 
 import org.agency.entity.Ticket;
 import org.apache.logging.log4j.LogManager;
@@ -9,12 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class TicketRepository {
-    private final Logger logger = LogManager.getLogger(TicketRepository.class);
+public class TicketRepositoryImpl implements TicketRepository {
+    private final Logger logger = LogManager.getLogger(TicketRepositoryImpl.class);
 
     private final Connection connection;
 
-    public TicketRepository(Connection connection) {
+    public TicketRepositoryImpl(Connection connection) {
         this.connection = connection;
         this.createTable();
     }
@@ -29,7 +29,18 @@ public class TicketRepository {
         }
     }
 
-    public void createTicket(Ticket ticket) {
+    @Override
+    public void findAll() {
+
+    }
+
+    @Override
+    public void findById(Long id) {
+
+    }
+
+    @Override
+    public void create(Ticket ticket) {
         String sql = "INSERT INTO tickets(title, description) VALUES (?, ?) ";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setObject(1, ticket.getTitle());
@@ -40,4 +51,13 @@ public class TicketRepository {
         }
     }
 
+    @Override
+    public Ticket update() {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
 }
