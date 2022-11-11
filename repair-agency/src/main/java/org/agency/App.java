@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class App {
-    private final static Logger logger = LogManager.getLogger(App.class);
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Logger logger = LogManager.getLogger(App.class);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         // TODO add tests coverage
