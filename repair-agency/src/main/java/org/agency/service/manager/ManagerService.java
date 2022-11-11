@@ -1,4 +1,4 @@
-package org.agency.service.master;
+package org.agency.service.manager;
 
 import org.agency.entity.Ticket;
 import org.apache.logging.log4j.LogManager;

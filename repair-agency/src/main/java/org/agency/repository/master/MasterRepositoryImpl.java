@@ -1,18 +1,11 @@
-package org.agency.repository.feedback;
+package org.agency.repository.master;
 
-import org.agency.entity.Feedback;
+import org.agency.entity.Master;
 import org.agency.entity.Ticket;
 
-import java.sql.Connection;
 import java.util.List;
 
-public class FeedbackRepositoryImpl implements FeedbackRepository {
-
-    private final Connection connection;
-
-    public FeedbackRepositoryImpl(Connection connection) {
-        this.connection = connection;
-    }
+public class MasterRepositoryImpl implements MasterRepository {
 
     @Override
     public boolean existsById(Long id) {
@@ -30,15 +23,23 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     }
 
     @Override
-    public void create(Feedback t) {
+    public void create(Master master) {
+
     }
 
     @Override
-    public void update(Feedback t) {
+    public void update(Master master) {
+
     }
 
     @Override
     public void delete(Long id) {
+
+    }
+
+    @Override
+    public Master findByEmail(String email) {
+        return null;
     }
 
 }

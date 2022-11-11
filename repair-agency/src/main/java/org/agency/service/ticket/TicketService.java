@@ -19,6 +19,7 @@ public class TicketService {
     }
 
     public void updateStatus(Long ticketId, String updatedStatus) throws TicketNotFoundException {
+        // FIXME we update status from two different roles, so we should check when an action is valid
         Ticket ticket = this.ticketRepository.findById(ticketId);
         if (ticket == null) {
             throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
@@ -32,6 +33,9 @@ public class TicketService {
     }
 
     private boolean validateStatusChange(String oldStatus, String newStatus) {
+
+        // FIXME get currentSession and check who is currently authorised
+
         // TODO fix this method
         return oldStatus.equals(newStatus) || (oldStatus.equals("new") && newStatus.equals("in_progress"));
     }
@@ -55,6 +59,10 @@ public class TicketService {
         // FIXME would be really great to know here if master_id is correct
         ticket.setMasterId(masterId);
         this.ticketRepository.update(ticket);
+    }
+
+    public boolean ticketExistsById(Long ticketId) {
+        return this.ticketRepository.existsById(ticketId);
     }
 
 }

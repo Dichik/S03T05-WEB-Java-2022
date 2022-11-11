@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface BaseRepository<T> {
 
+    boolean existsById(Long id);
+
     List<Ticket> findAll();
 
     Ticket findById(Long id);

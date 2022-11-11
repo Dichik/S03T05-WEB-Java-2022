@@ -3,8 +3,14 @@ package org.agency;
 import org.agency.controller.UserController;
 import org.agency.entity.Role;
 import org.agency.entity.Ticket;
+import org.agency.repository.feedback.FeedbackRepository;
+import org.agency.repository.feedback.FeedbackRepositoryImpl;
+import org.agency.repository.ticket.TicketRepository;
 import org.agency.repository.ticket.TicketRepositoryImpl;
+import org.agency.repository.user.UserRepository;
+import org.agency.repository.user.UserRepositoryImpl;
 import org.agency.service.auth.AuthService;
+import org.agency.service.feedback.FeedbackService;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +27,6 @@ public class App {
 
     public static void main(String[] args) {
         // TODO add tests coverage
-        // TODO add logger
-
 
         final String DB_URL = System.getenv("PG_DB_URL");
         final String USERNAME = System.getenv("PG_USERNAME");
@@ -30,12 +34,20 @@ public class App {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
             System.out.println("Connection was successful!");
 
-            TicketRepositoryImpl ticketRepository = new TicketRepositoryImpl(connection);
-            TicketService ticketService = new TicketService(ticketRepository);
-            UserService userService = new UserService(connection);
-            UserController userController = new UserController(userService, ticketService);
+            TicketRepository ticketRepository = new TicketRepositoryImpl(connection);
+            UserRepository userRepository = new UserRepositoryImpl(connection);
+            FeedbackRepository feedbackRepository = new FeedbackRepositoryImpl(connection);
 
-            Ticket ticket = new Ticket("title", "description");
+            TicketService ticketService = new TicketService(ticketRepository);
+            UserService userService = new UserService(userRepository);
+            FeedbackService feedbackService = new FeedbackService(feedbackRepository);
+
+            UserController userController = new UserController(userService, ticketService, feedbackService);
+
+            Ticket ticket = new Ticket();
+            ticket.setTitle("title");
+            ticket.setDescription("description");
+
             userController.createTicket(ticket);
             logger.info("ticket was successfully created!");
         } catch (SQLException e) {

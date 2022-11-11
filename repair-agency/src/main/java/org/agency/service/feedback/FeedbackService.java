@@ -14,7 +14,10 @@ public class FeedbackService {
         this.feedbackRepository = feedbackRepository;
     }
 
-    public void submit(Feedback feedback) {
+    public void submit(Long ticketId, String feedbackText) {
+        Feedback feedback = new Feedback();
+        feedback.setTicketId(ticketId);
+        feedback.setText(feedbackText);
         this.feedbackRepository.create(feedback);
     }
 
