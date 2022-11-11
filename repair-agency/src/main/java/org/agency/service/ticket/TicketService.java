@@ -1,4 +1,4 @@
-package org.agency.service.user;
+package org.agency.service.ticket;
 
 import org.agency.entity.Ticket;
 import org.agency.repository.ticket.TicketRepositoryImpl;

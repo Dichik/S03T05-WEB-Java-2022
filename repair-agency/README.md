@@ -49,4 +49,4 @@
   - [ ] за майстром, що виконує/виконував замовлення.
 
 ## Database Schema
-![img](database_schema.png)
+![img](images/database_schema.png)

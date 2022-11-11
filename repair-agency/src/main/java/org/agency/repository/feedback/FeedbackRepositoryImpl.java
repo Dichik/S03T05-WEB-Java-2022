@@ -19,7 +19,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     }
 
     @Override
-    public Feedback update() {
+    public void update(Feedback t) {
         return null;
     }
 

@@ -52,7 +52,7 @@ public class TicketRepositoryImpl implements TicketRepository {
     }
 
     @Override
-    public Ticket update() {
+    public void update(Ticket t) {
         return null;
     }
 

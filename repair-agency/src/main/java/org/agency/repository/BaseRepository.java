@@ -8,7 +8,7 @@ public interface BaseRepository<T> {
 
     void create(T t);
 
-    T update();
+    void update(T t);
 
     void delete(Long id);
 

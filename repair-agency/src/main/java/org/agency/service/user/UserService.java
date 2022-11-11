@@ -1,16 +1,17 @@
 package org.agency.service.user;
 
 import org.agency.entity.Ticket;
+import org.agency.entity.User;
+import org.agency.repository.user.UserRepository;
 
-import java.sql.Connection;
 import java.util.List;
 
 public class UserService {
 
-    private final Connection connection;
+    private final UserRepository userRepository;
 
-    public UserService(Connection connection) {
-        this.connection = connection;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     // TODO add annotatio
@@ -31,4 +32,11 @@ public class UserService {
         return false;
     }
 
+    public void update(User user) {
+        this.userRepository.update(user);
+    }
+
+    public User findByEmail(String userEmail) {
+        return this.userRepository.findByEmail(userEmail);
+    }
 }

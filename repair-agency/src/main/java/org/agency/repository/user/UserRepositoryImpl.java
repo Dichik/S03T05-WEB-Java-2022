@@ -38,16 +38,20 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void create(User t) {
-        return null;
     }
 
     @Override
-    public User update() {
-        return null;
+    public void update(User t) {
     }
 
     @Override
     public void delete(Long id) {
 
     }
+
+    @Override
+    public User findByEmail(String email) {
+        return null;
+    }
+
 }

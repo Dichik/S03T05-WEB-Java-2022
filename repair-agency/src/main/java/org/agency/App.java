@@ -5,7 +5,7 @@ import org.agency.entity.Role;
 import org.agency.entity.Ticket;
 import org.agency.repository.ticket.TicketRepositoryImpl;
 import org.agency.service.auth.AuthService;
-import org.agency.service.user.TicketService;
+import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
