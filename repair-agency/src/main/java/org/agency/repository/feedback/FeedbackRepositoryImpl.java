@@ -1,38 +1,34 @@
 package org.agency.repository.feedback;
 
 import org.agency.entity.Feedback;
+import org.agency.repository.BaseRepositoryImpl;
 
 import java.sql.Connection;
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class FeedbackRepositoryImpl implements FeedbackRepository {
-
-    private final Connection connection;
+public class FeedbackRepositoryImpl extends BaseRepositoryImpl<Feedback> {
 
     public FeedbackRepositoryImpl(Connection connection) {
-        this.connection = connection;
+        super(connection, "feedbacks");
+
+        this.createTable();
     }
 
     @Override
-    public List<Feedback> findAll() {
+    public String getTableSQLSchema() {
         return null;
     }
 
     @Override
-    public Feedback findById(Long id) {
+    public Feedback buildItem(ResultSet rs) throws SQLException {
         return null;
     }
 
     @Override
-    public void create(Feedback t) {
-    }
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, Feedback item) throws SQLException {
 
-    @Override
-    public void update(Feedback t) {
-    }
-
-    @Override
-    public void delete(Long id) {
     }
 
 }

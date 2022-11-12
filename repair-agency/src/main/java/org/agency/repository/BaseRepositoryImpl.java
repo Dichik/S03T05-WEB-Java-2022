@@ -1,6 +1,5 @@
 package org.agency.repository;
 
-import org.agency.entity.Ticket;
 import org.agency.exception.TableCreationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,30 +11,27 @@ import java.util.List;
 public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
     private static final Logger logger = LogManager.getLogger(BaseRepositoryImpl.class);
 
-    protected Connection connection;
-    protected String tableName;
+    protected final Connection connection;
+    protected final String tableName;
+
+    public BaseRepositoryImpl(Connection connection, String tableName) {
+        this.connection = connection;
+        this.tableName = tableName;
+    }
 
     // FIXME add annotation to drop table on delete (use the same name in annotation as in creation)
 
-    abstract String getTableName();
+    public abstract String getTableSQLSchema();
 
-    abstract Connection getConnection();
+    public abstract T buildItem(ResultSet rs) throws SQLException;
 
-    abstract String getTableSQLSchema();
+    public abstract void updatePreparedStatementWithItemData(PreparedStatement ps, T item) throws SQLException;
 
     // FIXME add creation annotation before constructor creation
     @Override
     public void createTable() {
         try {
             Statement statement = this.connection.createStatement();
-//            String sql = "CREATE TABLE IF NOT EXISTS " + this.tableName + "(" +
-//                    "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
-//                    "title VARCHAR(255), " +
-//                    "description VARCHAR(255), " +
-//                    "status VARCHAR(255), " +
-//                    "masterId BIGINT, " +
-//                    "price DECIMAL DEFAULT NULL, " +
-//                    "createdAt TIMESTAMP)";
             String sql = this.getTableSQLSchema();
             statement.executeUpdate(sql);
             logger.info(String.format("Table [%s] was successfully created/updated.", this.tableName));
@@ -65,26 +61,17 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
         List<T> items = new ArrayList<>();
         try {
             Statement statement = this.connection.createStatement();
-            String sql = "SELECT * from tickets"; // FIXME add method to get database name (get from ???)
+            String sql = "SELECT * from " + this.tableName;
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
-                Ticket ticket = Ticket.builder()
-                        .id(rs.getLong("id"))
-                        .title(rs.getString("title"))
-                        .description(rs.getString("description"))
-                        .status(rs.getString("status"))
-                        .masterId(rs.getLong("masterId"))
-                        .price(rs.getBigDecimal("price"))
-                        .createdAt(rs.getTimestamp("createAt"))
-                        .build();
-//                T item = new T();
-//                items.add(ticket);
-                // FIXME add getDescriptionMethod for each entity (toString override)
+                T item = this.buildItem(rs);
+                items.add(item);
             }
-            logger.info("Tickets was successfully gotten.");
+            logger.info(String.format("Item from table=%s was successfully gotten.", this.tableName));
         } catch (SQLException e) {
-            logger.error("Couldn't get tickets, see: " + e);
-            throw new TableCreationException("Couldn't get tickets, see: " + e);
+            String message = String.format("Couldn't get %s, see: %s", this.tableName, e);
+            logger.error(message);
+            throw new TableCreationException(message);
         }
         return items;
     }
@@ -97,28 +84,22 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             ResultSet rs = statement.executeQuery(sql);
             T item = null;
             while (rs.next()) {
-                Ticket ticket = Ticket.builder()
-                        .id(rs.getLong("id"))
-                        .title(rs.getString("title"))
-                        .description(rs.getString("description"))
-                        .status(rs.getString("status"))
-                        .masterId(rs.getLong("masterId"))
-                        .price(rs.getBigDecimal("price"))
-                        .createdAt(rs.getTimestamp("createAt"))
-                        .build();
+                item = this.buildItem(rs);
             }
             return item;
         } catch (SQLException e) {
-            logger.error(String.format("Couldn't get ticket with id=%d, see: %s", id, e));
-            throw new TableCreationException(String.format("Couldn't get ticket with id=%d, see: %s", id, e));
+            String message = String.format("Couldn't get ticket with id=%d, see: %s", id, e);
+            logger.error(message);
+            throw new TableCreationException(message);
         }
     }
 
     @Override
-    public void create(T ticket) {
-        String sql = "INSERT INTO tickets(title, description, status, masterId, price, createdAt) VALUES (?, ?, ?, ?, ?, ?) ";
+    public void create(T item) {
+        // FIXME broken insert statement, should be generic
+        String sql = "INSERT INTO " + this.tableName + " (title, description, status, masterId, price, createdAt) VALUES (?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            updatePrepareStatementWithTicketData(ps, ticket);
+            updatePreparedStatementWithItemData(ps, item);
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e); // FIXME
@@ -126,13 +107,13 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
     }
 
     @Override
-    public void update(T ticket) {
+    public void update(Long id, T item) {
         String sql = "UPDATE " + this.tableName +
                 " SET title=?, description=?, status=?, masterId=?, price=?, createdAt=?" +
                 " WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            updatePrepareStatementWithTicketData(ps, ticket);
-//            ps.setLong(7, ticket.getId());
+            updatePreparedStatementWithItemData(ps, item);
+            ps.setLong(7, id);
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e); // FIXME

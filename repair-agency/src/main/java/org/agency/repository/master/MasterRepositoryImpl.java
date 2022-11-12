@@ -2,62 +2,38 @@ package org.agency.repository.master;
 
 import org.agency.entity.Master;
 import org.agency.exception.TableCreationException;
+import org.agency.repository.BaseRepositoryImpl;
+import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
+import java.sql.*;
 
-public class MasterRepositoryImpl implements MasterRepository {
+public class MasterRepositoryImpl extends BaseRepositoryImpl<Master> implements PersonRepository<Master> {
     private static final Logger logger = LogManager.getLogger(MasterRepositoryImpl.class);
 
-    private final Connection connection;
-
     public MasterRepositoryImpl(Connection connection) {
-        this.connection = connection;
+        super(connection, "masters");
+
         this.createTable();
     }
 
-    private void createTable() {
-        try {
-            Statement statement = this.connection.createStatement();
-            String sql = "CREATE TABLE IF NOT EXISTS masters(" +
-                    "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
-                    "firstName VARCHAR(255), " +
-                    "secondName VARCHAR(255), " +
-                    "email VARCHAR(255))";
-            statement.executeUpdate(sql);
-            logger.info("Table [tickets] was successfully created/updated.");
-        } catch (SQLException e) {
-            logger.error("Couldn't create table [tickets], see: " + e);
-            throw new TableCreationException("Couldn't create table [tickets], see: " + e);
-        }
+    @Override
+    public String getTableSQLSchema() {
+        return "CREATE TABLE IF NOT EXISTS masters(" +
+                "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
+                "firstName VARCHAR(255), " +
+                "secondName VARCHAR(255), " +
+                "email VARCHAR(255))";
     }
 
     @Override
-    public List<Master> findAll() {
+    public Master buildItem(ResultSet rs) throws SQLException {
         return null;
     }
 
     @Override
-    public Master findById(Long id) {
-        return null;
-    }
-
-    @Override
-    public void create(Master master) {
-
-    }
-
-    @Override
-    public void update(Master master) {
-
-    }
-
-    @Override
-    public void delete(Long id) {
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, Master item) throws SQLException {
 
     }
 

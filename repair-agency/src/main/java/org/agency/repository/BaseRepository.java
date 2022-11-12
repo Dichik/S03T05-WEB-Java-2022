@@ -14,7 +14,7 @@ public interface BaseRepository<T> {
 
     void create(T t);
 
-    void update(T t);
+    void update(Long id, T item);
 
     void delete(Long id);
 

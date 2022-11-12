@@ -29,7 +29,7 @@ public class TicketService {
             return; // TODO throw corresponded custom exception
         }
         ticket.setStatus(updatedStatus);
-        this.ticketRepository.update(ticket);
+        this.ticketRepository.update(ticket.getId(), ticket);
     }
 
     private boolean validateStatusChange(String oldStatus, String newStatus) {
@@ -46,7 +46,7 @@ public class TicketService {
             throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
         }
         ticket.setPrice(price);
-        this.ticketRepository.update(ticket);
+        this.ticketRepository.update(ticket.getId(), ticket); // FIXME
         return ticket;
     }
 
@@ -58,7 +58,7 @@ public class TicketService {
 
         // FIXME would be really great to know here if master_id is correct
         ticket.setMasterId(masterId);
-        this.ticketRepository.update(ticket);
+        this.ticketRepository.update(ticket.getId(), ticket); // FIXME
     }
 
     public boolean ticketExistsById(Long ticketId) {

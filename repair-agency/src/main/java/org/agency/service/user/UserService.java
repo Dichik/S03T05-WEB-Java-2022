@@ -40,7 +40,7 @@ public class UserService {
             throw new UserNotFoundException("User with " + email + " email was not found");
         }
         BigDecimal currentBalance = user.topUp(amount);
-        this.userRepository.update(user);
+        this.userRepository.update(user.getId(), user);
     }
 
     public User findByEmail(String userEmail) {
