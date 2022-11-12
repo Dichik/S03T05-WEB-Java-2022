@@ -62,7 +62,7 @@ public class TicketService {
     }
 
     public boolean ticketExistsById(Long ticketId) {
-        return this.ticketRepository.existsById(ticketId);
+        return !(this.ticketRepository.findById(ticketId) == null);
     }
 
 }

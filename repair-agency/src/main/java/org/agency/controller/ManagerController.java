@@ -1,15 +1,16 @@
 package org.agency.controller;
 
 import org.agency.entity.Ticket;
-import org.agency.entity.User;
 import org.agency.exception.TicketNotFoundException;
 import org.agency.exception.UserNotFoundException;
+import org.agency.repository.ticket.filter.CustomTicketFilter;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ManagerController {
     private static final Logger logger = LogManager.getLogger(ManagerController.class);
@@ -20,6 +21,11 @@ public class ManagerController {
     public ManagerController(UserService userService, TicketService ticketService) {
         this.userService = userService;
         this.ticketService = ticketService;
+    }
+
+    public List<Ticket> getFilteredTickets(CustomTicketFilter filter) { // FIXME should be generic. SOLID
+        // TODO implement method
+        return null;
     }
 
     public void assignMasterToTicket(Long ticketId, Long masterId) {

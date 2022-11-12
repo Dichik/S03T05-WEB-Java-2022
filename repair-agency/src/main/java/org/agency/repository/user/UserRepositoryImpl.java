@@ -28,11 +28,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean existsById(Long id) {
-        return false;
-    }
-
-    @Override
     public List<Ticket> findAll() {
         return null;
     }

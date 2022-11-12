@@ -8,11 +8,6 @@ import java.util.List;
 public class MasterRepositoryImpl implements MasterRepository {
 
     @Override
-    public boolean existsById(Long id) {
-        return false;
-    }
-
-    @Override
     public List<Ticket> findAll() {
         return null;
     }

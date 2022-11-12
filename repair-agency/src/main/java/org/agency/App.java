@@ -27,6 +27,7 @@ public class App {
 
     public static void main(String[] args) {
         // TODO add tests coverage
+        // TODO add DTOs
 
         final String DB_URL = System.getenv("PG_DB_URL");
         final String USERNAME = System.getenv("PG_USERNAME");
@@ -44,9 +45,10 @@ public class App {
 
             UserController userController = new UserController(userService, ticketService, feedbackService);
 
-            Ticket ticket = new Ticket();
-            ticket.setTitle("title");
-            ticket.setDescription("description");
+            Ticket ticket = Ticket.builder()
+                    .title("title")
+                    .description("description")
+                    .build();
 
             userController.createTicket(ticket);
             logger.info("ticket was successfully created!");
