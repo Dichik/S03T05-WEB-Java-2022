@@ -1,7 +1,6 @@
 package org.agency.repository.feedback;
 
 import org.agency.entity.Feedback;
-import org.agency.entity.Ticket;
 
 import java.sql.Connection;
 import java.util.List;
@@ -15,12 +14,12 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     }
 
     @Override
-    public List<Ticket> findAll() {
+    public List<Feedback> findAll() {
         return null;
     }
 
     @Override
-    public Ticket findById(Long id) {
+    public Feedback findById(Long id) {
         return null;
     }
 
