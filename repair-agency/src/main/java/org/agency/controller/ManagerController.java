@@ -3,7 +3,6 @@ package org.agency.controller;
 import org.agency.entity.Ticket;
 import org.agency.exception.TicketNotFoundException;
 import org.agency.exception.UserNotFoundException;
-import org.agency.repository.ticket.filter.CustomTicketFilter;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +22,7 @@ public class ManagerController {
         this.ticketService = ticketService;
     }
 
-    public List<Ticket> getFilteredTickets(CustomTicketFilter filter) { // FIXME should be generic. SOLID
+    public List<Ticket> getFilteredTickets() { // FIXME should be generic. SOLID
         // TODO implement method
         return null;
     }

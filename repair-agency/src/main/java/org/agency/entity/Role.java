@@ -1,27 +1,27 @@
 package org.agency.entity;
 
 public enum Role {
-    MANAGER(1),
-    MASTER(2),
-    USER(3);
+    MANAGER("manager"),
+    MASTER("master"),
+    USER("user");
 
-    private int index;
+    private final String name;
 
-    Role(int index) {
-        this.index = index;
+    Role(String name) {
+        this.name = name;
     }
 
-    public static Role getRoleByIndex(int index) {
+    public static Role getRoleByName(String name) {
         for (Role role : Role.values()) {
-            if (role.getIndex() == index) {
+            if (role.getName().equals(name)) {
                 return role;
             }
         }
         return null;
     }
 
-    public int getIndex() {
-        return index;
+    public String getName() {
+        return name;
     }
 
 }

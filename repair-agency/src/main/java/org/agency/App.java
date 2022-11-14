@@ -4,11 +4,8 @@ import org.agency.controller.UserController;
 import org.agency.entity.Role;
 import org.agency.entity.Ticket;
 import org.agency.repository.feedback.FeedbackRepository;
-import org.agency.repository.feedback.FeedbackRepositoryImpl;
 import org.agency.repository.ticket.TicketRepository;
-import org.agency.repository.ticket.TicketRepositoryImpl;
 import org.agency.repository.user.UserRepository;
-import org.agency.repository.user.UserRepositoryImpl;
 import org.agency.service.auth.AuthService;
 import org.agency.service.feedback.FeedbackService;
 import org.agency.service.ticket.TicketService;
@@ -35,9 +32,9 @@ public class App {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
             System.out.println("Connection was successful!");
 // FIXME fix it
-            TicketRepository ticketRepository = new TicketRepositoryImpl(connection);
-            UserRepository userRepository = new UserRepositoryImpl(connection);
-            FeedbackRepository feedbackRepository = new FeedbackRepositoryImpl(connection);
+            TicketRepository ticketRepository = new TicketRepository(connection);
+            UserRepository userRepository = new UserRepository(connection);
+            FeedbackRepository feedbackRepository = new FeedbackRepository(connection);
 
             TicketService ticketService = new TicketService(ticketRepository);
             UserService userService = new UserService(userRepository);
@@ -45,9 +42,7 @@ public class App {
 
             UserController userController = new UserController(userService, ticketService, feedbackService);
 
-            Ticket ticket = Ticket.builder()
-                    .title("title")
-                    .description("description")
+            Ticket ticket = new Ticket.TicketBuilder("title", "description")
                     .build();
 
             userController.createTicket(ticket);
@@ -65,8 +60,8 @@ public class App {
             System.out.println("2 - user");
             System.out.println("3 - session");
 
-            int choice = scanner.nextInt();
-            authService.setAuthorisation(Role.getRoleByIndex(choice));
+            String choice = scanner.nextLine();
+            authService.setAuthorisation(Role.getRoleByName(choice));
 
             break;
 

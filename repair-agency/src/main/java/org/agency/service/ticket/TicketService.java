@@ -1,6 +1,7 @@
 package org.agency.service.ticket;
 
 import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
 import org.agency.exception.TicketNotFoundException;
 import org.agency.repository.ticket.TicketRepository;
 
@@ -18,13 +19,14 @@ public class TicketService {
         this.ticketRepository.create(ticket);
     }
 
-    public void updateStatus(Long ticketId, String updatedStatus) throws TicketNotFoundException {
+    public void updateStatus(Long ticketId, String updatedStatusName) throws TicketNotFoundException {
         // FIXME we update status from two different roles, so we should check when an action is valid
         Ticket ticket = this.ticketRepository.findById(ticketId);
         if (ticket == null) {
             throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
         }
-        String currentStatus = ticket.getStatus();
+        TicketStatus currentStatus = ticket.getStatus();
+        TicketStatus updatedStatus = TicketStatus.getTicketStatusByName(updatedStatusName);
         if (this.validateStatusChange(currentStatus, updatedStatus)) {
             return; // TODO throw corresponded custom exception
         }
@@ -32,12 +34,12 @@ public class TicketService {
         this.ticketRepository.update(ticket.getId(), ticket);
     }
 
-    private boolean validateStatusChange(String oldStatus, String newStatus) {
+    private boolean validateStatusChange(TicketStatus oldStatus, TicketStatus newStatus) {
 
         // FIXME get currentSession and check who is currently authorised
 
         // TODO fix this method
-        return oldStatus.equals(newStatus) || (oldStatus.equals("new") && newStatus.equals("in_progress"));
+        return oldStatus.equals(newStatus) || (oldStatus.equals(TicketStatus.NEW) && newStatus.equals(TicketStatus.IN_PROGRESS));
     }
 
     public Ticket updatePrice(Long ticketId, BigDecimal price) throws TicketNotFoundException {
