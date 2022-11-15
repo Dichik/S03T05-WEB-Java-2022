@@ -31,12 +31,12 @@ public class App {
         final String PASSWORD = System.getenv("PG_PASSWORD");
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
             System.out.println("Connection was successful!");
-// FIXME fix it
+
             TicketRepository ticketRepository = new TicketRepository(connection);
             UserRepository userRepository = new UserRepository(connection);
             FeedbackRepository feedbackRepository = new FeedbackRepository(connection);
 
-            TicketService ticketService = new TicketService(ticketRepository);
+            TicketService ticketService = new TicketService(ticketRepository, null);
             UserService userService = new UserService(userRepository);
             FeedbackService feedbackService = new FeedbackService(feedbackRepository);
 

@@ -19,7 +19,6 @@ public class MasterController {
     }
 
     public void updateStatus(Long ticketId, String updatedStatus) {
-        // FIXME check if the current ticket is assigned to this master_id
         try {
             this.ticketService.updateStatus(ticketId, updatedStatus);
         } catch (TicketNotFoundException e) {

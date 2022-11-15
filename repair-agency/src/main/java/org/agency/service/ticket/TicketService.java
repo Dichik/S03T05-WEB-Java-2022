@@ -1,30 +1,45 @@
 package org.agency.service.ticket;
 
+import org.agency.entity.Master;
 import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
+import org.agency.exception.MasterLackOfPermissionException;
 import org.agency.exception.TicketNotFoundException;
+import org.agency.repository.master.MasterRepository;
 import org.agency.repository.ticket.TicketRepository;
+import org.agency.service.session.CurrentSession;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final MasterRepository masterRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, MasterRepository masterRepository) {
         this.ticketRepository = ticketRepository;
+        this.masterRepository = masterRepository;
     }
 
     public void createTicket(Ticket ticket) {
         this.ticketRepository.create(ticket);
     }
 
+    // FIXME check if operation made by master role
     public void updateStatus(Long ticketId, String updatedStatusName) throws TicketNotFoundException {
         // FIXME we update status from two different roles, so we should check when an action is valid
+        // FIXME check if the current ticket is assigned to this master_id
         Ticket ticket = this.ticketRepository.findById(ticketId);
         if (ticket == null) {
             throw new TicketNotFoundException("Ticket with " + ticketId + " was not found.");
         }
+
+        Master master = CurrentSession.getSession().getMaster();
+        if (!Objects.equals(ticket.getMasterId(), master.getId())) {
+            throw new MasterLackOfPermissionException("Ooops, it seems like you are trying to update not your ticket...");
+        }
+
         TicketStatus currentStatus = ticket.getStatus();
         TicketStatus updatedStatus = TicketStatus.getTicketStatusByName(updatedStatusName);
         if (this.validateStatusChange(currentStatus, updatedStatus)) {

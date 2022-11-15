@@ -45,7 +45,7 @@ public class ManagerController {
         }
     }
 
-    public void setStatus(Long ticketId, String updatedStatus) { // TODO create enum for statuses
+    public void setStatus(Long ticketId, String updatedStatus) {
         try {
             this.ticketService.updateStatus(ticketId, updatedStatus);
             logger.info(String.format("Successfully set %s status for ticket with %d id", updatedStatus, ticketId));
