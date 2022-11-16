@@ -25,6 +25,9 @@ public class App {
     public static void main(String[] args) {
         // TODO add tests coverage
         // TODO add DTOs
+        // TODO cached information for the password
+        // TODO to cache everything that is possible
+        // TODO create class with getting fields (for password ask about the same password twice)
 
         final String DB_URL = System.getenv("PG_DB_URL");
         final String USERNAME = System.getenv("PG_USERNAME");
@@ -55,6 +58,12 @@ public class App {
         AuthService authService = new AuthService();
         while (true) {
 
+            // choose a base options for not authorised users (default ones) (login/signup)
+            //         or see default ones for authorised (see list of operations / logout)
+            // see list of actions
+            // check if action is valid for current one
+            // perform operation + see result
+
             System.out.println("Choose your role for the action");
             System.out.println("1 - master");
             System.out.println("2 - user");
@@ -64,36 +73,6 @@ public class App {
             authService.setAuthorisation(Role.getRoleByName(choice));
 
             break;
-
-//            System.out.println("1 - login");
-//            System.out.println("2 - logout");
-//            System.out.println("3 - register");
-//            int choice = scanner.nextInt();
-//            if (choice == 1) {
-//                System.out.print("Email: ");
-//                String email = scanner.nextLine();
-//                System.out.print("Password: ");
-//                String password = scanner.nextLine();
-//                boolean operationStatus = authService.login(email, password);
-//                if (operationStatus) {
-//                    System.out.println("Successfully authorised!");
-//                } else {
-//                    System.out.println("Oops, try again..."); // TODO only 3 times
-//                    // TODO cached information for the password
-//                    // TODO to cache everything that is possible
-//                }
-//            } else if (choice == 2) {
-//                authService.logout();
-//            } else if (choice == 3) {
-//
-//                String email = getUserEmail();
-//                String password = getUserEmail(); // TODO create class with getting fields (for password ask about the same password twice)
-//
-//                authService.register(email, password);
-//            } else {
-//                // TODO clear session
-//                break;
-//            }
 
         }
 
