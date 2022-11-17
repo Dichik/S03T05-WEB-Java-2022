@@ -1,13 +1,15 @@
 package org.agency;
 
+import org.agency.controller.ActionController;
 import org.agency.controller.UserController;
-import org.agency.entity.Role;
 import org.agency.entity.Ticket;
 import org.agency.repository.feedback.FeedbackRepository;
 import org.agency.repository.ticket.TicketRepository;
 import org.agency.repository.user.UserRepository;
 import org.agency.service.auth.AuthService;
 import org.agency.service.feedback.FeedbackService;
+import org.agency.service.operation.ActionPerformer;
+import org.agency.service.operation.performer.DefaultPerformer;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -54,8 +56,12 @@ public class App {
             logger.error("ticket was not created! See: " + e);
             throw new RuntimeException(e);
         }
+// TODO there is default login and password for admin
 
         AuthService authService = new AuthService();
+
+        ActionPerformer actionPerformer = new DefaultPerformer(); // FIXME should have a factory for getting performer
+        ActionController actionController = new ActionController(actionPerformer);
         while (true) {
 
             // choose a base options for not authorised users (default ones) (login/signup)
@@ -63,34 +69,13 @@ public class App {
             // see list of actions
             // check if action is valid for current one
             // perform operation + see result
-
-            System.out.println("Choose your role for the action");
-            System.out.println("1 - master");
-            System.out.println("2 - user");
-            System.out.println("3 - session");
-
-            String choice = scanner.nextLine();
-            authService.setAuthorisation(Role.getRoleByName(choice));
+            actionController.showActionsList();
+            actionController.chooseAction();
+            actionController.performAction();
 
             break;
-
         }
 
-    }
-
-    // re-design this method ..... stupid
-    private static String getUserEmail() {
-        String input = "";
-        System.out.print("Please, enter your email: ");
-        if (scanner.hasNextLine()) {
-            input = scanner.nextLine();
-            // if input is not correct email -> throw Exception
-        } else {
-            scanner.next();
-            System.err.println("Please specify the correct email");
-            return getUserEmail();
-        }
-        return input;
     }
 
 }
