@@ -1,5 +1,7 @@
 package org.agency.service.session;
 
+import org.agency.entity.Role;
+
 public class CurrentSession {
 
     public static Session getSession() {
@@ -8,4 +10,8 @@ public class CurrentSession {
         return new Session();
     }
 
+    public static Role getCurrentRole() {
+        // TODO implement the method
+        return Role.MASTER;
+    }
 }
