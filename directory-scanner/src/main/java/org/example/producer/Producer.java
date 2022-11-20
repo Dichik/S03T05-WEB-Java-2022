@@ -18,7 +18,7 @@ public class Producer implements Runnable {
 
     private final BlockingQueue<FileAnalyzingTask> queue;
     private final BlockingQueue<Record> recorderQueue;
-    private final HashSet<String> fileChecked;
+    private final HashSet<String> fileChecked; // TODO check by time created/updated to check file again
 
     public Producer(
             BlockingQueue<FileAnalyzingTask> queue,

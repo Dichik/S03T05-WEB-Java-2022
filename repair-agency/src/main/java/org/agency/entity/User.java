@@ -12,6 +12,7 @@ public class User {
     private String secondName;
     private String email;
     private BigDecimal balance;
+    private String password;
 
     public BigDecimal topUp(BigDecimal amount) {
         return this.balance.add(amount);

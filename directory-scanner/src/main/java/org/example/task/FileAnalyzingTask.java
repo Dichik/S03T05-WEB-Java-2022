@@ -27,7 +27,7 @@ public class FileAnalyzingTask implements Runnable, TaskDescription {
     @Override
     public void run() {
         File file = new File(path.toString());
-        try (final FileReader fileReader = new FileReader(file)) {
+        try (FileReader fileReader = new FileReader(file)) {
             List<String> abonents = new ArrayList<>();
 
             BufferedReader bufferedReader = new BufferedReader(fileReader);

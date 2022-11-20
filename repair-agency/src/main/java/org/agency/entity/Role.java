@@ -1,6 +1,7 @@
 package org.agency.entity;
 
 public enum Role {
+    NOT_AUTHORIZED("not_authorized"),
     MANAGER("manager"),
     MASTER("master"),
     USER("user");

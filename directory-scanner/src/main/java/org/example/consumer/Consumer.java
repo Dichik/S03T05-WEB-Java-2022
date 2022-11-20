@@ -13,9 +13,7 @@ public class Consumer implements Runnable {
 
     private final BlockingQueue<FileAnalyzingTask> fileAnalyzingQueue;
 
-    public Consumer(
-            BlockingQueue<FileAnalyzingTask> fileAnalyzingQueue
-    ) {
+    public Consumer(BlockingQueue<FileAnalyzingTask> fileAnalyzingQueue) {
         this.fileAnalyzingQueue = fileAnalyzingQueue;
     }
 
@@ -25,7 +23,7 @@ public class Consumer implements Runnable {
         while (!isInterrupted) {
             try {
                 FileAnalyzingTask task = this.fileAnalyzingQueue.take();
-                task.run();
+                task.run(); // TODO fix
                 logger.info("Executing task for " + task.getDescription());
             } catch (InterruptedException e) {
                 isInterrupted = true;

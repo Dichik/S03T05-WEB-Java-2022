@@ -37,6 +37,8 @@ public class App {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
             System.out.println("Connection was successful!");
 
+            AuthService authService = new AuthService(null, connection);
+
             TicketRepository ticketRepository = new TicketRepository(connection);
             UserRepository userRepository = new UserRepository(connection);
             FeedbackRepository feedbackRepository = new FeedbackRepository(connection);
@@ -58,7 +60,6 @@ public class App {
         }
 // TODO there is default login and password for admin
 
-        AuthService authService = new AuthService();
 
         ActionPerformer actionPerformer = new DefaultPerformer(); // FIXME should have a factory for getting performer
         ActionController actionController = new ActionController(actionPerformer);

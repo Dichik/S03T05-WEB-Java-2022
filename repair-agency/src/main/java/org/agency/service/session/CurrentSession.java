@@ -4,14 +4,22 @@ import org.agency.entity.Role;
 
 public class CurrentSession {
 
+    private static final Session session = new Session();
+
     public static Session getSession() {
-        // TODO should have generic thing to get sessions
-        // TODO find appropriate design pattern
-        return new Session();
+        return session;
     }
 
-    public static Role getCurrentRole() {
-        // TODO implement the method
-        return Role.MASTER;
+    public static void setRole(Role role) {
+        session.setRole(role);
     }
+
+    public static Role getRole() {
+        return session.getRole();
+    }
+
+    public static void clear() {
+        session.clear();
+    }
+
 }

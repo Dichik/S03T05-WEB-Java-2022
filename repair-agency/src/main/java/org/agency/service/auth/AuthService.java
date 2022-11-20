@@ -2,56 +2,58 @@ package org.agency.service.auth;
 
 import org.agency.entity.Role;
 import org.agency.entity.Session;
+import org.agency.entity.User;
+import org.agency.exception.UserAlreadyRegisteredException;
+import org.agency.repository.BaseRepository;
+import org.agency.repository.PersonRepository;
+import org.agency.repository.factory.RepositoryFactory;
+import org.agency.repository.user.UserRepository;
+import org.agency.service.session.CurrentSession;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AuthService {
 
-    private static Role currentRole;
-    public Session session;
-    public Map<String, String> users;
+    private final UserRepository userRepository;
 
-    // TODO we should have sync methods for auth
-
-    public AuthService() {
-        this.session = new Session();
-        this.users = new HashMap<>();
+    public AuthService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public boolean register(String email, String password) {
-        // TODO check if email registered
+    public boolean register(String email, String password) throws UserAlreadyRegisteredException {
         // TODO encrypt password
         // TODO save to database
-        this.users.put(email, password);
+        if (this.userRepository.findByEmail(email) != null) {
+            throw new UserAlreadyRegisteredException("Email=[" + email + "] is already registered!");
+        }
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        this.userRepository.create(user);
         return true;
     }
 
-    public boolean login(String email, String password) {
-        if (!this.users.containsKey(email)) {
+    public boolean login(String email, String password, PersonRepository<?> repository) {
+        Object object = repository.findByEmail(email);
+        if (object == null) {
             return false;
         }
-        if (!this.users.getOrDefault(email, "").equals(password)) {
-            return false;
-        }
-        this.session.setEmail(email);
+        // setRole
+        // FIXME how to login using personRepository???
         return true;
     }
 
     public void logout() {
-        this.session.clear();
+        CurrentSession.clear();
     }
 
-    public boolean isAuthorised(String email) {
-        return true;
+    public boolean isAuthorised() {
+        return (CurrentSession.getRole() != Role.NOT_AUTHORIZED);
     }
 
-    public static Session getCurrentSession() {
-        return null;
-    }
-
-    public void setAuthorisation(Role role) {
-        this.currentRole = role;
+    public void authorize(Role role) {
+        CurrentSession.setRole(role);
     }
 
 }

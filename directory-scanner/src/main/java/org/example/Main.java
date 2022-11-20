@@ -20,12 +20,12 @@ public class Main {
         logger.info("Application successfully started.");
 
         new DataGeneratorService().generate(DEFAULT_DATA_DIRECTORY);
-
-        BlockingQueue<Record> recordingQueue = new SynchronousQueue<>();
+        // one pool
+        BlockingQueue<Record> recordingQueue = new SynchronousQueue<>(); // fix
         BlockingQueue<FileAnalyzingTask> queue = new LinkedBlockingQueue<>();
 
         ExecutorService consumerExecutorService = Executors.newFixedThreadPool(2);
-        consumerExecutorService.submit(new Consumer(queue));
+//        consumerExecutorService.submit(new Consumer(queue));
         consumerExecutorService.submit(new Consumer(queue));
 
         ExecutorService recordingExecutorService = Executors.newSingleThreadExecutor();
