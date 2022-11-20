@@ -62,7 +62,7 @@ public class App {
 
 
         ActionPerformer actionPerformer = new DefaultPerformer(); // FIXME should have a factory for getting performer
-        ActionController actionController = new ActionController(actionPerformer);
+        ActionController actionController = new ActionController();
         while (true) {
 
             // choose a base options for not authorised users (default ones) (login/signup)

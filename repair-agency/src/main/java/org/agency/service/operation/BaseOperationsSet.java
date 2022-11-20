@@ -4,8 +4,8 @@ public interface BaseOperationsSet {
 
     void showActionsList();
 
-    void chooseAction();
+    String chooseAction();
 
-    void performAction();
+    void performAction(String action);
 
 }

@@ -1,18 +1,12 @@
 package org.agency.service.auth;
 
 import org.agency.entity.Role;
-import org.agency.entity.Session;
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UserAlreadyRegisteredException;
-import org.agency.repository.BaseRepository;
 import org.agency.repository.PersonRepository;
-import org.agency.repository.factory.RepositoryFactory;
 import org.agency.repository.user.UserRepository;
 import org.agency.service.session.CurrentSession;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AuthService {
 

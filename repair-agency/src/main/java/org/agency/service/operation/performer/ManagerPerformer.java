@@ -7,4 +7,14 @@ public class ManagerPerformer implements ActionPerformer {
     public void showActions() {
 
     }
+
+    @Override
+    public String chooseValidAction() {
+        return null;
+    }
+
+    @Override
+    public void performAction(String action) {
+
+    }
 }

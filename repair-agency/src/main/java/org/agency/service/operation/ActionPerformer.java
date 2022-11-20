@@ -4,4 +4,8 @@ public interface ActionPerformer {
 
     void showActions();
 
+    String chooseValidAction();
+
+    void performAction(String action);
+
 }
