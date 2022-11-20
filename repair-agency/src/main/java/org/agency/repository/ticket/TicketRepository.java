@@ -1,6 +1,7 @@
 package org.agency.repository.ticket;
 
 import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
 import org.agency.repository.BaseRepositoryImpl;
 
 import java.sql.*;
@@ -28,14 +29,12 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
 
     @Override
     public Ticket buildItem(ResultSet rs) throws SQLException {
-        return Ticket.builder()
-                .id(rs.getLong("id"))
-                .title(rs.getString("title"))
-                .description(rs.getString("description"))
-                .status(rs.getString("status"))
-                .masterId(rs.getLong("masterId"))
-                .price(rs.getBigDecimal("price"))
-                .createdAt(rs.getTimestamp("createAt"))
+        return new Ticket.TicketBuilder(rs.getString("title"), rs.getString("description"))
+                .setId(rs.getLong("id"))
+                .setStatus(TicketStatus.getTicketStatusByName(rs.getString("status")))
+                .setMasterId(rs.getLong("masterId"))
+                .setPrice(rs.getBigDecimal("price"))
+                .setCreatedAt(rs.getTimestamp("createdAt"))
                 .build();
     }
 
@@ -43,7 +42,7 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
     public void updatePreparedStatementWithItemData(PreparedStatement ps, Ticket item) throws SQLException {
         ps.setString(1, item.getTitle());
         ps.setString(2, item.getDescription());
-        ps.setString(3, item.getStatus());
+        ps.setString(3, item.getStatus().getName());
 
         if (item.getMasterId() != null) {
             ps.setLong(4, item.getMasterId());

@@ -16,14 +16,14 @@ public enum TicketStatus {
 
     public static TicketStatus getTicketStatusByName(String statusName) {
         for (TicketStatus status : TicketStatus.values()) {
-            if (status.getStatus().equals(statusName)) {
+            if (status.getName().equals(statusName)) {
                 return status;
             }
         }
         return null;
     }
 
-    public String getStatus() {
+    public String getName() {
         return status;
     }
 

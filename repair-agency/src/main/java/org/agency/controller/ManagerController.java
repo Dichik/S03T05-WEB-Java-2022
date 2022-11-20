@@ -1,8 +1,8 @@
 package org.agency.controller;
 
 import org.agency.entity.Ticket;
-import org.agency.exception.TicketNotFoundException;
-import org.agency.exception.UserNotFoundException;
+import org.agency.exception.EntityNotFoundException;
+import org.agency.exception.UnvalidStatusUpdateException;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ public class ManagerController {
         try {
             this.ticketService.assignMaster(ticketId, masterId);
             logger.info(String.format("Successfully assigned master [id=%d] to ticket [id=%d]", masterId, ticketId));
-        } catch (TicketNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             logger.error("Couldn't assign master to the ticket, see: ");
         }
     }
@@ -39,7 +39,7 @@ public class ManagerController {
     public Ticket setTicketPrice(Long ticketId, BigDecimal price) {
         try {
             return this.ticketService.updatePrice(ticketId, price);
-        } catch (TicketNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             logger.error("Couldn't set ticket price, see: " + e);
             return null;
         }
@@ -49,7 +49,7 @@ public class ManagerController {
         try {
             this.ticketService.updateStatus(ticketId, updatedStatus);
             logger.info(String.format("Successfully set %s status for ticket with %d id", updatedStatus, ticketId));
-        } catch (TicketNotFoundException e) {
+        } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
             logger.error("Couldn't set status " + updatedStatus + ", see: " + e);
         }
     }
@@ -58,7 +58,7 @@ public class ManagerController {
         try {
             this.userService.topUpBalance(email, amount);
             logger.info(String.format("Manager %s successfully topped up %s account. Current balance: %a", "Manager1", email, 0.0));
-        } catch (UserNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             logger.error("Couldn't top up account, see: " + e);
         }
     }

@@ -37,7 +37,7 @@ public class App {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
             System.out.println("Connection was successful!");
 
-            AuthService authService = new AuthService(null, connection);
+            AuthService authService = new AuthService(null);
 
             TicketRepository ticketRepository = new TicketRepository(connection);
             UserRepository userRepository = new UserRepository(connection);

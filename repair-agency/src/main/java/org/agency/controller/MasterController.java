@@ -1,7 +1,7 @@
 package org.agency.controller;
 
-import org.agency.entity.Ticket;
-import org.agency.exception.TicketNotFoundException;
+import org.agency.exception.EntityNotFoundException;
+import org.agency.exception.UnvalidStatusUpdateException;
 import org.agency.service.master.MasterService;
 import org.agency.service.ticket.TicketService;
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +21,10 @@ public class MasterController {
     public void updateStatus(Long ticketId, String updatedStatus) {
         try {
             this.ticketService.updateStatus(ticketId, updatedStatus);
-        } catch (TicketNotFoundException e) {
-            logger.error("Couldn't update the status, see: ");
+        } catch (EntityNotFoundException e) {
+            logger.error("Couldn't update the status, see: " + e);
+        } catch (UnvalidStatusUpdateException e) {
+            throw new RuntimeException(e);
         }
 
     }

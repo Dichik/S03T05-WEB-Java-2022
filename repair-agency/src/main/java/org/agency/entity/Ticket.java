@@ -14,7 +14,7 @@ public class Ticket {
     private final Timestamp createdAt;
 
     private Ticket(TicketBuilder builder) {
-
+        this.id = builder.id;
         this.title = builder.title;
         this.description = builder.description;
         this.price = builder.price;
@@ -78,6 +78,7 @@ public class Ticket {
 
     public static class TicketBuilder {
 
+        private Long id;
         private String title;
         private String description;
 
@@ -85,13 +86,18 @@ public class Ticket {
         private Long masterId;
         private BigDecimal price;
 
+        private Timestamp createdAt;
+
         public TicketBuilder(String title, String description) {
             this.title = title;
             this.description = description;
 
-            this.price = null;
-            this.masterId = null;
             this.status = TicketStatus.NEW;
+        }
+
+        public TicketBuilder setId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public TicketBuilder setStatus(TicketStatus status) {
@@ -106,6 +112,11 @@ public class Ticket {
 
         public TicketBuilder setPrice(BigDecimal price) {
             this.price = price;
+            return this;
+        }
+
+        public TicketBuilder setCreatedAt(Timestamp createdAt) {
+            this.createdAt = createdAt;
             return this;
         }
 

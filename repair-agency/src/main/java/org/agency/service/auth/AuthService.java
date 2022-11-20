@@ -3,6 +3,7 @@ package org.agency.service.auth;
 import org.agency.entity.Role;
 import org.agency.entity.Session;
 import org.agency.entity.User;
+import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UserAlreadyRegisteredException;
 import org.agency.repository.BaseRepository;
 import org.agency.repository.PersonRepository;
@@ -21,20 +22,19 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public boolean register(String email, String password) throws UserAlreadyRegisteredException {
+    public boolean register(String email, String password) throws UserAlreadyRegisteredException, EntityNotFoundException {
         // TODO encrypt password
-        // TODO save to database
         if (this.userRepository.findByEmail(email) != null) {
             throw new UserAlreadyRegisteredException("Email=[" + email + "] is already registered!");
         }
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
+        User user = new User.UserBuilder(email)
+                .setPassword(password)
+                .build();
         this.userRepository.create(user);
         return true;
     }
 
-    public boolean login(String email, String password, PersonRepository<?> repository) {
+    public boolean login(String email, String password, PersonRepository<?> repository) throws EntityNotFoundException {
         Object object = repository.findByEmail(email);
         if (object == null) {
             return false;

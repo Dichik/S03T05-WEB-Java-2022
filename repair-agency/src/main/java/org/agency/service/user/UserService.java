@@ -2,7 +2,7 @@ package org.agency.service.user;
 
 import org.agency.entity.Ticket;
 import org.agency.entity.User;
-import org.agency.exception.UserNotFoundException;
+import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.user.UserRepository;
 
 import java.math.BigDecimal;
@@ -34,16 +34,16 @@ public class UserService {
         return false;
     }
 
-    public void topUpBalance(String email, BigDecimal amount) throws UserNotFoundException {
+    public void topUpBalance(String email, BigDecimal amount) throws EntityNotFoundException {
         User user = this.userRepository.findByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException("User with " + email + " email was not found");
+            throw new EntityNotFoundException("User with " + email + " email was not found");
         }
         BigDecimal currentBalance = user.topUp(amount);
         this.userRepository.update(user.getId(), user);
     }
 
-    public User findByEmail(String userEmail) {
+    public User findByEmail(String userEmail) throws EntityNotFoundException {
         return this.userRepository.findByEmail(userEmail);
     }
 }
