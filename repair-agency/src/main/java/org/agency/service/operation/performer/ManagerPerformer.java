@@ -1,6 +1,7 @@
 package org.agency.service.operation.performer;
 
 import org.agency.service.operation.ActionPerformer;
+import org.agency.service.operation.performer.action.Action;
 
 public class ManagerPerformer implements ActionPerformer {
     @Override
@@ -9,12 +10,12 @@ public class ManagerPerformer implements ActionPerformer {
     }
 
     @Override
-    public String chooseValidAction() {
+    public Action chooseValidAction() {
         return null;
     }
 
     @Override
-    public void performAction(String action) {
+    public void performAction(Action action) {
 
     }
 }

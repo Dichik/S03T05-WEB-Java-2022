@@ -2,6 +2,7 @@ package org.agency.controller;
 
 import org.agency.service.operation.BaseOperationsSet;
 import org.agency.service.operation.factory.PerformerFactory;
+import org.agency.service.operation.performer.action.Action;
 import org.agency.service.session.CurrentSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,7 @@ public class ActionController implements BaseOperationsSet {
     }
 
     @Override
-    public String chooseAction() {
+    public Action chooseAction() {
         try {
             return PerformerFactory.getByRole(CurrentSession.getRole()).chooseValidAction();
         } catch (Exception e) {
@@ -29,7 +30,7 @@ public class ActionController implements BaseOperationsSet {
     }
 
     @Override
-    public void performAction(String action) {
+    public void performAction(Action action) {
         try {
             PerformerFactory.getByRole(CurrentSession.getRole()).performAction(action);
         } catch (Exception e) {

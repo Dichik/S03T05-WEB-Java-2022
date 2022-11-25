@@ -1,11 +1,13 @@
 package org.agency.service.operation;
 
+import org.agency.service.operation.performer.action.Action;
+
 public interface ActionPerformer {
 
     void showActions();
 
-    String chooseValidAction();
+    Action chooseValidAction();
 
-    void performAction(String action);
+    void performAction(Action action);
 
 }

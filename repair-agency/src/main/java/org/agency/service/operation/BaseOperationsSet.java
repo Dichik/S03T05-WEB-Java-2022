@@ -1,11 +1,13 @@
 package org.agency.service.operation;
 
+import org.agency.service.operation.performer.action.Action;
+
 public interface BaseOperationsSet {
 
     void showActionsList();
 
-    String chooseAction();
+    Action chooseAction();
 
-    void performAction(String action);
+    void performAction(Action action);
 
 }

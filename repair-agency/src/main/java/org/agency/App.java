@@ -10,6 +10,7 @@ import org.agency.service.auth.AuthService;
 import org.agency.service.feedback.FeedbackService;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.DefaultPerformer;
+import org.agency.service.operation.performer.action.Action;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -71,8 +72,8 @@ public class App {
             // check if action is valid for current one
             // perform operation + see result
             actionController.showActionsList();
-            actionController.chooseAction();
-            actionController.performAction();
+            Action action = actionController.chooseAction();
+            actionController.performAction(action);
 
             break;
         }
