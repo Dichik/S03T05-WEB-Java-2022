@@ -1,8 +1,5 @@
 package org.agency.entity;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.math.BigDecimal;
 
 public class User {

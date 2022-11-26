@@ -6,7 +6,10 @@ import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MasterRepository extends BaseRepositoryImpl<Master> implements PersonRepository<Master> {
     private static final Logger logger = LogManager.getLogger(MasterRepository.class);

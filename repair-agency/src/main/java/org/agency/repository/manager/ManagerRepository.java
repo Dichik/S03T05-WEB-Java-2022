@@ -1,7 +1,6 @@
 package org.agency.repository.manager;
 
 import org.agency.entity.Manager;
-import org.agency.repository.BaseRepository;
 import org.agency.repository.BaseRepositoryImpl;
 import org.agency.repository.PersonRepository;
 

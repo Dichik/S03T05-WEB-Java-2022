@@ -13,11 +13,14 @@ public class DefaultPerformer implements ActionPerformer {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    public DefaultPerformer() {
+
+    }
+
     @Override
     public void showActions() {
-        int index = 0;
         for (DefaultAction action: DefaultAction.values()) {
-            System.out.println("Enter[" + (index++) + "] to " + action.getName());
+            System.out.println("Enter [" + action.getName() + "] to perform.");
         }
     }
 
@@ -28,33 +31,63 @@ public class DefaultPerformer implements ActionPerformer {
             scanner.next();
         }
         String input = scanner.nextLine();
-        if (!validateInputAction(input)) {
-            throw new RuntimeException("Action is not valid!");
-        }
-        return Action.getByName(input);
-    }
-
-    private boolean validateInputAction(String input) {
-        try {
-            DefaultAction.getByName(input);
-            return true;
-        } catch (RuntimeException e) {
-            logger.warn("Error, see: " + e);
-            return false;
-        }
+        return DefaultAction.valueOf(input.toUpperCase());
     }
 
     @Override
     public void performAction(Action action) {
-        switch (action) {
-            case DefaultAction.LOGIN:
-                break;
-            case DefaultAction.REGISTER:
-                break;
-            case DefaultAction.EXIT:
-                break;
-            default:
-                throw new RuntimeException();
+        DefaultAction defaultAction = (DefaultAction) action;
+        if (defaultAction == DefaultAction.LOGIN) {
+
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid email. Please try again.");
+                scanner.next();
+            }
+            String email = scanner.nextLine();
+
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid password. Please try again.");
+                scanner.next();
+            }
+            String password = scanner.nextLine();
+
+            // TODO login here
+//            this.authService.login(email, password, null);
+
+            logger.info("Login action was performed.");
+        } else if (defaultAction == DefaultAction.REGISTER) {
+
+            // FIXME register as Master, User (default password for admin);
+
+            System.out.println("Enter email: ");
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid email. Please try again.");
+                scanner.next();
+            }
+            String email = scanner.nextLine();
+
+            System.out.println("Enter password: ");
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid password. Please try again.");
+                scanner.next();
+            }
+            String password1 = scanner.nextLine();
+
+            System.out.println("Enter same password again: ");
+            String password2;
+            while (!scanner.hasNextLine() && !(password2 = scanner.nextLine()).equals(password1)) {
+                System.out.println("You should enter valid password one more time. Please try again.");
+                scanner.next();
+            }
+
+            // TODO register user here
+
+            logger.info("Perform register action.");
+        } else if (defaultAction == DefaultAction.EXIT) {
+            logger.info("Exit action performed.");
+            System.exit(1);
+        } else {
+            throw new RuntimeException();
         }
     }
 
