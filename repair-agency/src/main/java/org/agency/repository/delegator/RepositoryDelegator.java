@@ -18,12 +18,16 @@ public class RepositoryDelegator {
 
     public RepositoryDelegator(Connection connection) {
         this.repositories = new HashMap<>(){{
-            put(Feedback.class, new FeedbackRepository(connection));
-            put(Manager.class, new ManagerRepository(connection));
-            put(Master.class, new MasterRepository(connection));
-            put(Ticket.class, new TicketRepository(connection));
-            put(User.class, new UserRepository(connection));
+            put(FeedbackRepository.class, new FeedbackRepository(connection));
+            put(ManagerRepository.class, new ManagerRepository(connection));
+            put(MasterRepository.class, new MasterRepository(connection));
+            put(TicketRepository.class, new TicketRepository(connection));
+            put(UserRepository.class, new UserRepository(connection));
         }};
+    }
+
+    public boolean existsByClass(Class<?> clazz) {
+        return this.repositories.containsKey(clazz);
     }
 
     public BaseRepository<?> getByClass(Class<?> clazz) {

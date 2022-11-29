@@ -34,7 +34,7 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
 
     @Override
     public void updatePreparedStatementWithItemData(PreparedStatement ps, User item) throws SQLException {
-
+        ps.setString(1, item.getTitle());
     }
 
     @Override

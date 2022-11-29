@@ -26,7 +26,8 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
                 "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
                 "firstName VARCHAR(255), " +
                 "secondName VARCHAR(255), " +
-                "email VARCHAR(255))";
+                "email VARCHAR(255), " +
+                "password VARCHAR(255))";
     }
 
     @Override

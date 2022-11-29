@@ -1,5 +1,9 @@
 package org.agency.service.operation.performer;
 
+import org.agency.entity.Role;
+import org.agency.exception.EntityNotFoundException;
+import org.agency.service.auth.AuthService;
+import org.agency.service.delegator.ServiceDelegator;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.operation.performer.action.DefaultAction;
@@ -12,14 +16,15 @@ public class DefaultPerformer implements ActionPerformer {
     private static final Logger logger = LogManager.getLogger(DefaultPerformer.class);
 
     private static final Scanner scanner = new Scanner(System.in);
+    private final AuthService authService;
 
-    public DefaultPerformer() {
-
+    public DefaultPerformer(ServiceDelegator serviceDelegator) {
+        this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
     }
 
     @Override
     public void showActions() {
-        for (DefaultAction action: DefaultAction.values()) {
+        for (DefaultAction action : DefaultAction.values()) {
             System.out.println("Enter [" + action.getName() + "] to perform.");
         }
     }
@@ -51,8 +56,11 @@ public class DefaultPerformer implements ActionPerformer {
             }
             String password = scanner.nextLine();
 
-            // TODO login here
-//            this.authService.login(email, password, null);
+            try {
+                this.authService.login(email, password, Role.USER); // FIXME
+            } catch (EntityNotFoundException e) {
+                throw new RuntimeException(e);
+            }
 
             logger.info("Login action was performed.");
         } else if (defaultAction == DefaultAction.REGISTER) {
@@ -80,7 +88,7 @@ public class DefaultPerformer implements ActionPerformer {
                 scanner.next();
             }
 
-            // TODO register user here
+            this.authService.register(email, password1, Role.USER); // FIXME
 
             logger.info("Perform register action.");
         } else if (defaultAction == DefaultAction.EXIT) {

@@ -17,7 +17,7 @@ public class ActionController {
 
     public void showActionsList() {
         try {
-            performerDelegator.getByRole(CurrentSession.getRole()).showActions();
+            this.performerDelegator.getByRole(CurrentSession.getRole()).showActions();
         } catch (Exception e) {
             logger.error("Can't show action list, see: " + e);
         }
@@ -25,7 +25,7 @@ public class ActionController {
 
     public Action chooseAction() {
         try {
-            return performerDelegator.getByRole(CurrentSession.getRole()).chooseValidAction();
+            return this.performerDelegator.getByRole(CurrentSession.getRole()).chooseValidAction();
         } catch (Exception e) {
             logger.error("Can't choose action, see: " + e);
             throw new RuntimeException();
@@ -34,9 +34,9 @@ public class ActionController {
 
     public void performAction(Action action) {
         try {
-            performerDelegator.getByRole(CurrentSession.getRole()).performAction(action);
+            this.performerDelegator.getByRole(CurrentSession.getRole()).performAction(action);
         } catch (Exception e) {
-            logger.error("Can't choose action, see: " + e);
+            logger.error("Can't perform action, see: " + e);
         }
     }
 

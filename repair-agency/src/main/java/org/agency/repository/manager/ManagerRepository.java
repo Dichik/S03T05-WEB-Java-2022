@@ -19,7 +19,12 @@ public class ManagerRepository extends BaseRepositoryImpl<Manager> implements Pe
 
     @Override
     public String getTableSQLSchema() {
-        return null;
+        return "CREATE TABLE IF NOT EXISTS managers(" +
+                "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
+                "firstName VARCHAR(255), " +
+                "secondName VARCHAR(255), " +
+                "email VARCHAR(255), " +
+                "password VARCHAR(255))";
     }
 
     @Override
