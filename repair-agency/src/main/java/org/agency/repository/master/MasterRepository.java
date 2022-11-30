@@ -45,4 +45,8 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
         return null;
     }
 
+    @Override
+    public void create(Master master) {
+
+    }
 }

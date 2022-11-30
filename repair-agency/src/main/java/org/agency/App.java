@@ -1,8 +1,8 @@
 package org.agency;
 
 import org.agency.controller.ActionController;
-import org.agency.repository.delegator.RepositoryDelegator;
-import org.agency.service.delegator.ServiceDelegator;
+import org.agency.delegator.RepositoryDelegator;
+import org.agency.delegator.ServiceDelegator;
 import org.agency.service.operation.delegator.PerformerDelegator;
 import org.agency.service.operation.performer.action.Action;
 import org.apache.logging.log4j.LogManager;
@@ -41,10 +41,7 @@ public class App {
                 Action action = actionController.chooseAction();
                 actionController.performAction(action);
 
-                break;
             }
-
-            logger.info("ticket was successfully created!"); // FIXME
         } catch (SQLException e) {
             logger.error("ticket was not created! See: " + e); // FIXME
             throw new RuntimeException(e);

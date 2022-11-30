@@ -14,9 +14,9 @@ public class User {
     private User(UserBuilder builder) {
         this.id = builder.id;
         this.firstName = builder.firstName;
-        this.secondName = builder.secondName;
+        this.secondName =  builder.secondName;
         this.email = builder.email;
-        this.balance = builder.balance;
+        this.balance = (builder.balance != null) ? builder.balance : BigDecimal.ZERO;
         this.password = builder.password;
     }
 

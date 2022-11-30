@@ -1,6 +1,8 @@
 package org.agency.repository;
 
+import org.agency.exception.SQLOperationException;
 import org.agency.exception.TableCreationException;
+import org.agency.exception.TableDeletionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +29,6 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
     public abstract void updatePreparedStatementWithItemData(PreparedStatement ps, T item) throws SQLException;
 
-    // FIXME add creation annotation before constructor creation
     @Override
     public void createTable() {
         try {
@@ -37,7 +38,6 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             logger.info(String.format("Table [%s] was successfully created/updated.", this.tableName));
         } catch (SQLException e) {
             String message = String.format("Couldn't create table [%s], see: %s", this.tableName, e);
-            logger.error(message); // FIXME logger level up
             throw new TableCreationException(message);
         }
     }
@@ -51,8 +51,7 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             logger.info(String.format("Table [%s] was successfully dropped.", this.tableName));
         } catch (SQLException e) {
             String message = String.format("Couldn't drop table [%s], see: %s", this.tableName, e);
-            logger.error(message); // FIXME
-            throw new TableCreationException(message);
+            throw new TableDeletionException(message);
         }
     }
 
@@ -70,8 +69,7 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             logger.info(String.format("Item from table=%s was successfully gotten.", this.tableName));
         } catch (SQLException e) {
             String message = String.format("Couldn't get %s, see: %s", this.tableName, e);
-            logger.error(message);
-            throw new TableCreationException(message);
+            throw new SQLOperationException(message);
         }
         return items;
     }
@@ -89,22 +87,22 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             return item;
         } catch (SQLException e) {
             String message = String.format("Couldn't get ticket with id=%d, see: %s", id, e);
-            logger.error(message);
-            throw new TableCreationException(message);
+            throw new SQLOperationException(message);
         }
     }
 
-    @Override
-    public void create(T item) {
-        // FIXME broken insert statement, should be generic
-        String sql = "INSERT INTO " + this.tableName + " (title, description, status, masterId, price, createdAt) VALUES (?, ?, ?, ?, ?, ?) ";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            updatePreparedStatementWithItemData(ps, item);
-            ps.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e); // FIXME
-        }
-    }
+//    @Override
+//    public void create(T item) {
+//        // FIXME broken insert statement, should be generic
+//        String sql = "INSERT INTO " + this.tableName + " (title, description, status, masterId, price, createdAt) VALUES (?, ?, ?, ?, ?, ?) ";
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            updatePreparedStatementWithItemData(ps, item);
+//            ps.execute();
+//        } catch (SQLException e) {
+//            String message = String.format("Couldn't create item in table=[%s], see: %s", this.tableName, e);
+//            throw new SQLOperationException(message);
+//        }
+//    }
 
     @Override
     public void update(Long id, T item) {
@@ -116,7 +114,8 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             ps.setLong(7, id);
             ps.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e); // FIXME
+            String message = String.format("Couldn't update item in table=[%s], see: %s", this.tableName, e);
+            throw new SQLOperationException(message);
         }
     }
 
@@ -128,7 +127,8 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             ps.setLong(1, id);
             ps.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e); // FIXME
+            String message = String.format("Couldn't update item in table=[%s], see: %s", this.tableName, e);
+            throw new SQLOperationException(message);
         }
     }
 

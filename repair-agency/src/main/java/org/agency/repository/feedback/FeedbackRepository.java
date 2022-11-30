@@ -31,4 +31,8 @@ public class FeedbackRepository extends BaseRepositoryImpl<Feedback> {
 
     }
 
+    @Override
+    public void create(Feedback feedback) {
+
+    }
 }

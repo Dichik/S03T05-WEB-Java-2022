@@ -2,6 +2,7 @@ package org.agency.repository.user;
 
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
+import org.agency.exception.SQLOperationException;
 import org.agency.repository.BaseRepositoryImpl;
 import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
     public UserRepository(Connection connection) {
         super(connection, "users");
 
+        this.dropTable();
         this.createTable();
     }
 
@@ -22,9 +24,12 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
     public String getTableSQLSchema() {
         return "CREATE TABLE IF NOT EXISTS " +
                 this.tableName +
-                " (id INTEGER PRIMARY KEY, " +
+                " (id SERIAL PRIMARY KEY, " +
+                "firstName VARCHAR(255), " +
+                "secondName VARCHAR(255), " +
                 "email VARCHAR(255), " +
-                "money DECIMAL)";
+                "balance decimal, " +
+                "password VARCHAR(255))";
     }
 
     @Override
@@ -33,8 +38,36 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
     }
 
     @Override
-    public void updatePreparedStatementWithItemData(PreparedStatement ps, User item) throws SQLException {
-        ps.setString(1, item.getTitle());
+    public void create(User user) {
+        String sql = "INSERT INTO " + this.tableName + " (firstName, secondName, email, balance, password) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            updatePreparedStatementWithItemData(ps, user);
+            ps.execute();
+        } catch (SQLException e) {
+            String message = String.format("Couldn't create item in table=[%s], see: %s", this.tableName, e);
+            throw new SQLOperationException(message);
+        }
+    }
+
+    @Override
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, User user) throws SQLException {
+        if (user.getFirstName() != null) {
+            ps.setString(1, user.getFirstName());
+        } else ps.setNull(1, Types.NULL);
+
+        if (user.getSecondName() != null) {
+            ps.setString(2, user.getSecondName());
+        } else ps.setNull(2, Types.NULL);
+
+        if (user.getEmail() != null) {
+            ps.setString(3, user.getEmail());
+        } else ps.setNull(3, Types.NULL);
+
+        ps.setBigDecimal(4, user.getBalance());
+
+        if (user.getPassword() != null) {
+            ps.setString(5, user.getPassword());
+        } else ps.setNull(5, Types.NULL);
     }
 
     @Override

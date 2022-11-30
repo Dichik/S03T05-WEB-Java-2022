@@ -1,4 +1,4 @@
-package org.agency.repository.delegator;
+package org.agency.delegator;
 
 import org.agency.entity.*;
 import org.agency.repository.BaseRepository;
@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RepositoryDelegator {
+public class RepositoryDelegator implements Delegator<BaseRepository<?>> {
 
     private final Map<Class<?>, BaseRepository<?>> repositories;
 
@@ -26,10 +26,12 @@ public class RepositoryDelegator {
         }};
     }
 
+    @Override
     public boolean existsByClass(Class<?> clazz) {
         return this.repositories.containsKey(clazz);
     }
 
+    @Override
     public BaseRepository<?> getByClass(Class<?> clazz) {
         return this.repositories.getOrDefault(clazz, null);
     }

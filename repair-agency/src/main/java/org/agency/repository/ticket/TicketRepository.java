@@ -52,4 +52,9 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
         ps.setTimestamp(6, item.getCreatedAt());
     }
 
+    @Override
+    public void create(Ticket ticket) {
+
+    }
+
 }

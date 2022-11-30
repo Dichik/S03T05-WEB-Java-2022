@@ -1,8 +1,7 @@
 package org.agency.service.operation.delegator;
 
 import org.agency.entity.Role;
-import org.agency.repository.delegator.RepositoryDelegator;
-import org.agency.service.delegator.ServiceDelegator;
+import org.agency.delegator.ServiceDelegator;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.DefaultPerformer;
 import org.agency.service.operation.performer.ManagerPerformer;

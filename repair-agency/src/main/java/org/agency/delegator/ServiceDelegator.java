@@ -1,13 +1,12 @@
-package org.agency.service.delegator;
+package org.agency.delegator;
 
-import org.agency.repository.delegator.RepositoryDelegator;
 import org.agency.service.BaseService;
 import org.agency.service.auth.AuthService;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServiceDelegator {
+public class ServiceDelegator implements Delegator<BaseService> {
 
     private final Map<Class, BaseService> services;
 
@@ -17,6 +16,12 @@ public class ServiceDelegator {
         }};
     }
 
+    @Override
+    public boolean existsByClass(Class<?> clazz) {
+        return this.services.containsKey(clazz);
+    }
+
+    @Override
     public BaseService getByClass(Class<?> clazz) {
         return this.services.getOrDefault(clazz, null);
     }
