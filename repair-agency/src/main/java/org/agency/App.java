@@ -16,6 +16,7 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
 
     public static void main(String[] args) {
+        logger.info("[App] is started successfully.");
         // TODO add tests coverage
         // TODO add DTOs
         // TODO cached information for the password
@@ -34,20 +35,19 @@ public class App {
             PerformerDelegator performerDelegator = new PerformerDelegator(serviceDelegator);
 
             ActionController actionController = new ActionController(performerDelegator);
-            int index = 5;
-            while (index --> 0) {
-
+            boolean stop = false;
+            while (!stop) {
                 actionController.showActionsList();
                 Action action = actionController.chooseAction();
-                actionController.performAction(action);
-
+                stop = actionController.performAction(action);
             }
+            logger.info("Action performing is finished.");
         } catch (SQLException e) {
             logger.error("ticket was not created! See: " + e); // FIXME
             throw new RuntimeException(e);
         }
-// TODO there is default login and password for admin
-
+        // TODO there is default login and password for admin
+        logger.info("[App] is finished successfully.");
     }
 
 }

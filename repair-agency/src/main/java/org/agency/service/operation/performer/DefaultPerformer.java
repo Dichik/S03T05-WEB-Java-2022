@@ -40,7 +40,7 @@ public class DefaultPerformer implements ActionPerformer {
     }
 
     @Override
-    public void performAction(Action action) {
+    public boolean performAction(Action action) {
         DefaultAction defaultAction = (DefaultAction) action;
         if (defaultAction == DefaultAction.LOGIN) {
 
@@ -60,14 +60,15 @@ public class DefaultPerformer implements ActionPerformer {
 
             try {
                 this.authService.login(email, password, Role.USER); // FIXME
+                logger.info("Login action was performed.");
+                return false;
             } catch (EntityNotFoundException e) {
                 throw new RuntimeException(e);
             }
-
-            logger.info("Login action was performed.");
         } else if (defaultAction == DefaultAction.REGISTER) {
 
             // FIXME register as Master, User (default password for admin);
+            // TODO add email validation
 
             System.out.println("Enter email: ");
             while (!scanner.hasNextLine()) {
@@ -81,22 +82,22 @@ public class DefaultPerformer implements ActionPerformer {
                 System.out.println("You should enter valid password. Please try again.");
                 scanner.next();
             }
-            String password1 = scanner.nextLine();
+            String password = scanner.nextLine();
 
             System.out.println("Enter same password again: ");
-            while (!scanner.nextLine().equals(password1)) {
+            while (!scanner.nextLine().equals(password)) {
                 System.out.println("You should enter valid password one more time. Please try again.");
                 scanner.next();
             }
 
-            this.authService.register(email, password1, Role.USER); // FIXME
-
+            this.authService.register(email, password, Role.USER); // FIXME
             logger.info("Perform register action.");
+            return false;
         } else if (defaultAction == DefaultAction.EXIT) {
             logger.info("Exit action performed.");
-            System.exit(1);
+            return true;
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException(); // FIXME
         }
     }
 

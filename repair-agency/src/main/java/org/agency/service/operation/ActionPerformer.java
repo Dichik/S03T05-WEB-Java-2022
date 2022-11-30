@@ -8,6 +8,6 @@ public interface ActionPerformer {
 
     Action chooseValidAction();
 
-    void performAction(Action action);
+    boolean performAction(Action action);
 
 }

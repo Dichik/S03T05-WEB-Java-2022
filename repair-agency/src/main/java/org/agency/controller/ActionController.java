@@ -32,11 +32,12 @@ public class ActionController {
         }
     }
 
-    public void performAction(Action action) {
+    public boolean performAction(Action action) {
         try {
-            this.performerDelegator.getByRole(CurrentSession.getRole()).performAction(action);
+            return this.performerDelegator.getByRole(CurrentSession.getRole()).performAction(action);
         } catch (Exception e) {
             logger.error("Can't perform action, see: " + e);
+            return true;
         }
     }
 

@@ -93,7 +93,6 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
 //    @Override
 //    public void create(T item) {
-//        // FIXME broken insert statement, should be generic
 //        String sql = "INSERT INTO " + this.tableName + " (title, description, status, masterId, price, createdAt) VALUES (?, ?, ?, ?, ?, ?) ";
 //        try (PreparedStatement ps = connection.prepareStatement(sql)) {
 //            updatePreparedStatementWithItemData(ps, item);

@@ -15,7 +15,7 @@ public class MasterPerformer implements ActionPerformer {
     }
 
     @Override
-    public void performAction(Action action) {
-
+    public boolean performAction(Action action) {
+        return true;
     }
 }
