@@ -34,8 +34,8 @@ public class App {
             PerformerDelegator performerDelegator = new PerformerDelegator(serviceDelegator);
 
             ActionController actionController = new ActionController(performerDelegator);
-
-            while (true) {
+            int index = 5;
+            while (index --> 0) {
 
                 actionController.showActionsList();
                 Action action = actionController.chooseAction();

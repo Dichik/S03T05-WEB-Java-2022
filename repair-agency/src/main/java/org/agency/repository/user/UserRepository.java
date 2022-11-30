@@ -1,5 +1,7 @@
 package org.agency.repository.user;
 
+import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.SQLOperationException;
@@ -16,7 +18,7 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
     public UserRepository(Connection connection) {
         super(connection, "users");
 
-        this.dropTable();
+//        this.dropTable();
         this.createTable();
     }
 
@@ -31,10 +33,15 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
                 "balance decimal, " +
                 "password VARCHAR(255))";
     }
-
+// FIXME field names should be in configuration
     @Override
     public User buildItem(ResultSet rs) throws SQLException {
-        return null;
+        return new User.UserBuilder(rs.getString("email"))
+                .setId(rs.getLong("id"))
+                .setFirstName(rs.getString("firstName"))
+                .setSecondName(rs.getString("secondName"))
+                .setPassword(rs.getString("password"))
+                .build();
     }
 
     @Override
@@ -74,8 +81,7 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
     public User findByEmail(String email) throws EntityNotFoundException {
         try {
             Statement statement = this.connection.createStatement();
-            String sql = "SELECT * FROM " + this.tableName +
-                    " WHERE email=" + email;
+            String sql = "SELECT * FROM " + this.tableName + " WHERE email='" + email + "'";
             ResultSet rs = statement.executeQuery(sql);
             User item = null;
             while (rs.next()) {

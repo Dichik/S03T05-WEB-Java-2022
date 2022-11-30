@@ -2,14 +2,10 @@ package org.agency.entity;
 
 import java.math.BigDecimal;
 
-public class User {
+public class User extends Person {
 
     private Long id;
-    private String firstName;
-    private String secondName;
-    private String email;
     private BigDecimal balance;
-    private String password;
 
     private User(UserBuilder builder) {
         this.id = builder.id;
@@ -24,24 +20,8 @@ public class User {
         return id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
     public BigDecimal getBalance() {
         return balance;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public BigDecimal topUp(BigDecimal amount) {
@@ -59,6 +39,11 @@ public class User {
 
         public UserBuilder(String email) {
             this.email = email;
+        }
+
+        public UserBuilder setId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public UserBuilder setFirstName(String firstName) {

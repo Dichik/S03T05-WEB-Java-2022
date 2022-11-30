@@ -1,9 +1,6 @@
 package org.agency.service.auth;
 
-import org.agency.entity.Manager;
-import org.agency.entity.Master;
-import org.agency.entity.Role;
-import org.agency.entity.User;
+import org.agency.entity.*;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.PersonRepository;
 import org.agency.delegator.RepositoryDelegator;
@@ -28,7 +25,7 @@ public class AuthService implements BaseService {
         this.managerRepository = (ManagerRepository) repositoryDelegator.getByClass(ManagerRepository.class);
     }
 
-    public boolean register(String email, String password, Role role) {
+    public void register(String email, String password, Role role) {
         // TODO encrypt password
         // TODO already registered check
         if (role == Role.MASTER) {
@@ -49,28 +46,30 @@ public class AuthService implements BaseService {
         } else {
             throw new RuntimeException("Error...");
         }
-
-        return true;
     }
 
-    public boolean login(String email, String password, Role role) throws EntityNotFoundException {
-        PersonRepository<?> repository;
+    public void login(String email, String password, Role role) throws EntityNotFoundException {
+        PersonRepository<?> repository = getRepositoryByRole(role);
+        Person person = (Person) repository.findByEmail(email);
+        if (person == null) {
+            throw new RuntimeException("Error..."); // FIXME
+        }
+        if (!password.equals(person.getPassword())) {
+            throw new RuntimeException("Error..."); // FIXME
+        }
+        CurrentSession.setRole(role);
+    }
+
+    private PersonRepository<?> getRepositoryByRole(Role role) {
         if (role == Role.MASTER) {
-            repository = masterRepository;
+            return this.masterRepository;
         } else if (role == Role.MANAGER) {
-            repository = managerRepository;
+            return this.managerRepository;
         } else if (role == Role.USER) {
-            repository = userRepository;
+            return this.userRepository;
         } else {
             throw new RuntimeException("Error...");
         }
-        Object object = repository.findByEmail(email);
-        if (object == null) {
-            return false;
-        }
-        // setRole
-        // FIXME how to login using personRepository???
-        return true;
     }
 
     public void logout() {

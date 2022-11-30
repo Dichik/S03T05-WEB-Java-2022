@@ -44,12 +44,14 @@ public class DefaultPerformer implements ActionPerformer {
         DefaultAction defaultAction = (DefaultAction) action;
         if (defaultAction == DefaultAction.LOGIN) {
 
+            System.out.println("Enter email: ");
             while (!scanner.hasNextLine()) {
                 System.out.println("You should enter valid email. Please try again.");
                 scanner.next();
             }
             String email = scanner.nextLine();
 
+            System.out.println("Enter password: ");
             while (!scanner.hasNextLine()) {
                 System.out.println("You should enter valid password. Please try again.");
                 scanner.next();
@@ -82,8 +84,7 @@ public class DefaultPerformer implements ActionPerformer {
             String password1 = scanner.nextLine();
 
             System.out.println("Enter same password again: ");
-            String password2;
-            while (!scanner.hasNextLine() && !(password2 = scanner.nextLine()).equals(password1)) {
+            while (!scanner.nextLine().equals(password1)) {
                 System.out.println("You should enter valid password one more time. Please try again.");
                 scanner.next();
             }
