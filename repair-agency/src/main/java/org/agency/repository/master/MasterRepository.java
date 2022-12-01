@@ -19,7 +19,7 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
 
         this.createTable();
     }
-
+// FIXME why do we need first name and second name? Maybe we can easily remove them? Keep it simple stupid (KISS)
     @Override
     public String getTableSQLSchema() {
         return "CREATE TABLE IF NOT EXISTS masters(" +
