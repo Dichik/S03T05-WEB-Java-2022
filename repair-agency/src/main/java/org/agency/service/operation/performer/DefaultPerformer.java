@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class DefaultPerformer implements ActionPerformer {
@@ -46,16 +47,17 @@ public class DefaultPerformer implements ActionPerformer {
         if (defaultAction == DefaultAction.LOGIN) {
 
             System.out.println("Valid roles: ");
-            Arrays.stream(Role.values())
-                    .filter(role -> role != Role.NOT_AUTHORIZED)
-                    .peek(System.out::println);
-
+            for (Role role: Role.values()) {
+                if (role != Role.NOT_AUTHORIZED) {
+                    System.out.println("Role=[" + role + "]");
+                }
+            }
             System.out.println("Enter role: ");
             while (!scanner.hasNextLine()) {
                 System.out.println("You should enter valid email. Please try again.");
                 scanner.next();
             }
-            Role role = Role.valueOf(scanner.nextLine());
+            Role role = Role.valueOf(scanner.nextLine().toUpperCase()); // FIXME try to enter one more time instead of exit
 
             System.out.println("Enter email: ");
             while (!scanner.hasNextLine()) {

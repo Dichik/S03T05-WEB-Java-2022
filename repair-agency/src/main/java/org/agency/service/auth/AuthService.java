@@ -17,9 +17,6 @@ public class AuthService implements BaseService {
     private final ManagerRepository managerRepository;
 
     public AuthService(RepositoryDelegator repositoryDelegator) {
-//        if (!repositoryDelegator.existsByClass(User.class)) {
-//            throw new RuntimeException("Error..."); // FIXME
-//        }
         this.userRepository = (UserRepository) repositoryDelegator.getByClass(UserRepository.class);
         this.masterRepository = (MasterRepository) repositoryDelegator.getByClass(MasterRepository.class);
         this.managerRepository = (ManagerRepository) repositoryDelegator.getByClass(ManagerRepository.class);
@@ -29,9 +26,7 @@ public class AuthService implements BaseService {
         // TODO encrypt password
         // TODO already registered check
         if (role == Role.MASTER) {
-            Master master = new Master();
-            master.setEmail(email);
-            master.setPassword(password);
+            Master master = new Master.MasterBuilder(email, password).build();
             this.masterRepository.create(master);
         } else if (role == Role.MANAGER) {
             Manager manager = new Manager();
@@ -68,16 +63,12 @@ public class AuthService implements BaseService {
         } else if (role == Role.USER) {
             return this.userRepository;
         } else {
-            throw new RuntimeException("Error...");
+            throw new RuntimeException("Error..."); // FIXME
         }
     }
 
     public void logout() {
         CurrentSession.clear();
-    }
-
-    public boolean isAuthorised() {
-        return (CurrentSession.getRole() != Role.NOT_AUTHORIZED);
     }
 
 }

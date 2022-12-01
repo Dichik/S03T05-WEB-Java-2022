@@ -17,7 +17,7 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
     public TicketRepository(Connection connection) {
         super(connection, "tickets"); // FIXME take name from the correct place
 
-//        this.dropTable();
+        this.dropTable();
         this.createTable();
     }
 
@@ -29,15 +29,17 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
                 "description VARCHAR(255) NOT NULL, " +
                 "userEmail VARCHAR(255) NOT NULL, " +
                 "status VARCHAR(255), " +
-                "masterId BIGINT, " +
+                "masterEmail VARCHAR(255), " +
                 "price DECIMAL DEFAULT NULL, " +
                 "createdAt TIMESTAMP)";
     }
 
+// FIXME remove unused methods for assignment (update, etc)
+
     @Override
     public String getInsertSQLQuery() {
         return "INSERT INTO " + this.tableName +
-                " (title, description, userEmail, status, masterId, price, createdAt) " +
+                " (title, description, userEmail, status, masterEmail, price, createdAt) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 

@@ -47,8 +47,4 @@ public class ManagerRepository extends BaseRepositoryImpl<Manager> implements Pe
         return null;
     }
 
-    @Override
-    public void create(Manager manager) {
-
-    }
 }

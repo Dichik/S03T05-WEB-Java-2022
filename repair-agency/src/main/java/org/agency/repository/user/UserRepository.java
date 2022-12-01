@@ -82,7 +82,7 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
             }
             return item;
         } catch (SQLException e) {
-            String message = String.format("Couldn't get user with email=%s, see: %s", email, e);
+            String message = String.format("Couldn't get user with item=%s, see: %s", email, e);
             logger.error(message);
             throw new EntityNotFoundException(message);
         }
