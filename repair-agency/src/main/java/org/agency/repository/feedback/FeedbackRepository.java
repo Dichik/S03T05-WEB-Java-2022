@@ -22,6 +22,11 @@ public class FeedbackRepository extends BaseRepositoryImpl<Feedback> {
     }
 
     @Override
+    public String getInsertSQLQuery() {
+        return null;
+    }
+
+    @Override
     public Feedback buildItem(ResultSet rs) throws SQLException {
         return null;
     }

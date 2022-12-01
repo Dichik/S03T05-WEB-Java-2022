@@ -1,10 +1,7 @@
 package org.agency.repository.user;
 
-import org.agency.entity.Ticket;
-import org.agency.entity.TicketStatus;
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
-import org.agency.exception.SQLOperationException;
 import org.agency.repository.BaseRepositoryImpl;
 import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +30,15 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
                 "balance decimal, " +
                 "password VARCHAR(255))";
     }
-// FIXME field names should be in configuration
+
+    @Override
+    public String getInsertSQLQuery() {
+        return "INSERT INTO " + this.tableName +
+                " (firstName, secondName, email, balance, password) " +
+                "VALUES (?, ?, ?, ?, ?)";
+    }
+
+    // FIXME field names should be in configuration
     @Override
     public User buildItem(ResultSet rs) throws SQLException {
         return new User.UserBuilder(rs.getString("email"))
@@ -42,18 +47,6 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
                 .setSecondName(rs.getString("secondName"))
                 .setPassword(rs.getString("password"))
                 .build();
-    }
-
-    @Override
-    public void create(User user) {
-        String sql = "INSERT INTO " + this.tableName + " (firstName, secondName, email, balance, password) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            updatePreparedStatementWithItemData(ps, user);
-            ps.execute();
-        } catch (SQLException e) {
-            String message = String.format("Couldn't create item in table=[%s], see: %s", this.tableName, e);
-            throw new SQLOperationException(message);
-        }
     }
 
     @Override

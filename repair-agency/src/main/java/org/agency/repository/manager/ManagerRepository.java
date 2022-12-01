@@ -28,6 +28,11 @@ public class ManagerRepository extends BaseRepositoryImpl<Manager> implements Pe
     }
 
     @Override
+    public String getInsertSQLQuery() {
+        return null;
+    }
+
+    @Override
     public Manager buildItem(ResultSet rs) throws SQLException {
         return null;
     }

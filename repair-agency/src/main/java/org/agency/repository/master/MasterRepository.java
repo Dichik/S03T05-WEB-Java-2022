@@ -31,6 +31,11 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
     }
 
     @Override
+    public String getInsertSQLQuery() {
+        return null;
+    }
+
+    @Override
     public Master buildItem(ResultSet rs) throws SQLException {
         return null;
     }
@@ -45,8 +50,4 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
         return null;
     }
 
-    @Override
-    public void create(Master master) {
-
-    }
 }
