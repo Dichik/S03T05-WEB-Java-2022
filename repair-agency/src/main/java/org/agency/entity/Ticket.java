@@ -11,7 +11,7 @@ public class Ticket {
     private String description;
     private String userEmail;
     private TicketStatus status;
-    private Long masterId;
+    private String masterEmail;
     private BigDecimal price;
     private final Timestamp createdAt;
 
@@ -21,7 +21,7 @@ public class Ticket {
         this.description = builder.description;
         this.userEmail = builder.userEmail;
         this.price = builder.price;
-        this.masterId = builder.masterId;
+        this.masterEmail = builder.masterId;
         this.status = builder.status;
 
         this.createdAt = new Timestamp(System.currentTimeMillis());
@@ -63,12 +63,12 @@ public class Ticket {
         this.status = status;
     }
 
-    public Long getMasterId() {
-        return masterId;
+    public String getMasterEmail() {
+        return masterEmail;
     }
 
-    public void setMasterId(Long masterId) {
-        this.masterId = masterId;
+    public void setMasterEmail(String masterEmail) {
+        this.masterEmail = masterEmail;
     }
 
     public BigDecimal getPrice() {
@@ -91,7 +91,7 @@ public class Ticket {
                 ", description='" + description + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", status=" + status +
-                ", masterId=" + masterId +
+                ", masterEmail=" + masterEmail +
                 ", price=" + price +
                 ", createdAt=" + createdAt +
                 '}';
@@ -105,7 +105,7 @@ public class Ticket {
         private String userEmail;
 
         private TicketStatus status;
-        private Long masterId;
+        private String masterId;
         private BigDecimal price;
 
         private Timestamp createdAt;
@@ -129,7 +129,7 @@ public class Ticket {
             return this;
         }
 
-        public TicketBuilder setMasterId(Long masterId) {
+        public TicketBuilder setMasterId(String masterId) {
             this.masterId = masterId;
             return this;
         }

@@ -32,6 +32,10 @@ public class TicketService implements BaseService {
         return this.ticketRepository.getByUserEmail(email);
     }
 
+    public List<Ticket> getTicketsByMasterEmail(String email) {
+        return this.ticketRepository.getByMasterEmail(email);
+    }
+
     // FIXME check if operation made by master role
     public void updateStatus(Long ticketId, String updatedStatusName) throws EntityNotFoundException, UnvalidStatusUpdateException {
         // FIXME we update status from two different roles, so we should check when an action is valid
@@ -73,14 +77,14 @@ public class TicketService implements BaseService {
         return ticket;
     }
 
-    public void assignMaster(Long ticketId, Long masterId) throws EntityNotFoundException {
+    public void assignMaster(Long ticketId, String masterId) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId);
         if (ticket == null) {
             throw new EntityNotFoundException("Ticket with " + ticketId + " was not found.");
         }
 
         // FIXME would be really great to know here if master_id is correct
-        ticket.setMasterId(masterId);
+        ticket.setMasterEmail(masterId);
         this.ticketRepository.update(ticket.getId(), ticket); // FIXME
     }
 

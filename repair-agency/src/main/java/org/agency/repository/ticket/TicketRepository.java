@@ -46,7 +46,7 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
         return new Ticket.TicketBuilder(rs.getString("title"), rs.getString("description"), rs.getString("userEmail"))
                 .setId(rs.getLong("id"))
                 .setStatus(TicketStatus.getTicketStatusByName(rs.getString("status")))
-                .setMasterId(rs.getLong("masterId"))
+                .setMasterId(rs.getString("masterEmail"))
                 .setPrice(rs.getBigDecimal("price"))
                 .setCreatedAt(rs.getTimestamp("createdAt"))
                 .build();
@@ -59,8 +59,8 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
         ps.setString(3, item.getUserEmail());
         ps.setString(4, item.getStatus().getName());
 
-        if (item.getMasterId() != null) {
-            ps.setLong(5, item.getMasterId());
+        if (item.getMasterEmail() != null) {
+            ps.setString(5, item.getMasterEmail());
         } else ps.setNull(5, Types.NULL);
 
         ps.setBigDecimal(6, item.getPrice());
@@ -72,6 +72,24 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
         try {
             Statement statement = this.connection.createStatement();
             String sql = "SELECT * from " + this.tableName + " WHERE userEmail='" + email + "'";
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                Ticket item = this.buildItem(rs);
+                items.add(item);
+            }
+            logger.info(String.format("Items from table=%s were successfully gotten.", this.tableName));
+        } catch (SQLException e) {
+            String message = String.format("Couldn't get items from %s, see: %s", this.tableName, e);
+            throw new SQLOperationException(message);
+        }
+        return items;
+    }
+
+    public List<Ticket> getByMasterEmail(String email) {
+        List<Ticket> items = new ArrayList<>();
+        try {
+            Statement statement = this.connection.createStatement();
+            String sql = "SELECT * from " + this.tableName + " WHERE masterEmail='" + email + "'";
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 Ticket item = this.buildItem(rs);
