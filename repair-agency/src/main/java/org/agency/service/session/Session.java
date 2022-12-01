@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 
 public class Session {
 
+    private String email;
     private Role role;
     private Timestamp authorizedAt;
     private final Object lock;
@@ -27,6 +28,19 @@ public class Session {
             return this.role;
         }
     }
+
+    public void setEmail(String email) {
+        synchronized (lock) {
+            this.email = email;
+        }
+    }
+
+    public String getEmail() {
+        synchronized (lock) {
+            return this.email;
+        }
+    }
+
 
     public Timestamp getAuthorizedTime() {
         synchronized (lock) {
