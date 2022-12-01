@@ -2,12 +2,14 @@ package org.agency.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Ticket {
 
     private Long id;
     private String title;
     private String description;
+    private String userEmail;
     private TicketStatus status;
     private Long masterId;
     private BigDecimal price;
@@ -17,6 +19,7 @@ public class Ticket {
         this.id = builder.id;
         this.title = builder.title;
         this.description = builder.description;
+        this.userEmail = builder.userEmail;
         this.price = builder.price;
         this.masterId = builder.masterId;
         this.status = builder.status;
@@ -48,6 +51,10 @@ public class Ticket {
         this.description = description;
     }
 
+    public String getUserEmail() {
+        return this.userEmail;
+    }
+
     public TicketStatus getStatus() {
         return status;
     }
@@ -76,11 +83,26 @@ public class Ticket {
         return createdAt;
     }
 
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", status=" + status +
+                ", masterId=" + masterId +
+                ", price=" + price +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
     public static class TicketBuilder {
 
         private Long id;
         private String title;
         private String description;
+        private String userEmail;
 
         private TicketStatus status;
         private Long masterId;
@@ -88,11 +110,13 @@ public class Ticket {
 
         private Timestamp createdAt;
 
-        public TicketBuilder(String title, String description) {
+        public TicketBuilder(String title, String description, String userEmail) {
             this.title = title;
             this.description = description;
+            this.userEmail = userEmail;
 
             this.status = TicketStatus.NEW;
+            this.createdAt = new Timestamp(LocalDateTime.now().toLocalTime().getNano());
         }
 
         public TicketBuilder setId(Long id) {

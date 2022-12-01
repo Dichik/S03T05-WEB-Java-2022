@@ -1,28 +1,35 @@
 package org.agency.service.ticket;
 
+import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UnvalidStatusUpdateException;
 import org.agency.repository.master.MasterRepository;
 import org.agency.repository.ticket.TicketRepository;
+import org.agency.service.BaseService;
 import org.agency.service.session.CurrentSession;
 import org.agency.service.session.Session;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class TicketService {
+public class TicketService implements BaseService {
 
     private final TicketRepository ticketRepository;
     private final MasterRepository masterRepository;
 
-    public TicketService(TicketRepository ticketRepository, MasterRepository masterRepository) {
-        this.ticketRepository = ticketRepository;
-        this.masterRepository = masterRepository;
+    public TicketService(RepositoryDelegator repositoryDelegator) {
+        this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
+        this.masterRepository = (MasterRepository) repositoryDelegator.getByClass(MasterRepository.class);
     }
 
     public void createTicket(Ticket ticket) {
         this.ticketRepository.create(ticket);
+    }
+
+    public List<Ticket> getTicketsByUserEmail(String email) {
+        return this.ticketRepository.getByUserEmail(email);
     }
 
     // FIXME check if operation made by master role
