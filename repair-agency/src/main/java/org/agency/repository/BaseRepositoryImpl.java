@@ -25,6 +25,8 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
     public abstract String getTableSQLSchema();
 
+    public abstract String getInsertSQLQuery();
+
     public abstract T buildItem(ResultSet rs) throws SQLException;
 
     public abstract void updatePreparedStatementWithItemData(PreparedStatement ps, T item) throws SQLException;
@@ -66,9 +68,9 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
                 T item = this.buildItem(rs);
                 items.add(item);
             }
-            logger.info(String.format("Item from table=%s was successfully gotten.", this.tableName));
+            logger.info(String.format("Items from table=%s were successfully gotten.", this.tableName));
         } catch (SQLException e) {
-            String message = String.format("Couldn't get %s, see: %s", this.tableName, e);
+            String message = String.format("Couldn't get items from %s, see: %s", this.tableName, e);
             throw new SQLOperationException(message);
         }
         return items;
@@ -91,17 +93,18 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
         }
     }
 
-//    @Override
-//    public void create(T item) {
-//        String sql = "INSERT INTO " + this.tableName + " (title, description, status, masterId, price, createdAt) VALUES (?, ?, ?, ?, ?, ?) ";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            updatePreparedStatementWithItemData(ps, item);
-//            ps.execute();
-//        } catch (SQLException e) {
-//            String message = String.format("Couldn't create item in table=[%s], see: %s", this.tableName, e);
-//            throw new SQLOperationException(message);
-//        }
-//    }
+    @Override
+    public void create(T t) {
+        String sql = this.getInsertSQLQuery();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            updatePreparedStatementWithItemData(ps, t);
+            ps.execute();
+            logger.info("Item in table=[" + this.tableName + "] was successfully created.");
+        } catch (SQLException e) {
+            String message = String.format("Couldn't create item in table=[%s], see: %s", this.tableName, e);
+            throw new SQLOperationException(message);
+        }
+    }
 
     @Override
     public void update(Long id, T item) {

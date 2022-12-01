@@ -1,9 +1,9 @@
 package org.agency.service.operation.performer;
 
+import org.agency.delegator.ServiceDelegator;
 import org.agency.entity.Role;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.service.auth.AuthService;
-import org.agency.delegator.ServiceDelegator;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.operation.performer.action.DefaultAction;
@@ -32,7 +32,7 @@ public class DefaultPerformer implements ActionPerformer {
     @Override
     public Action chooseValidAction() {
         while (!scanner.hasNextLine()) {
-            System.out.println("You should enter string action name. Please try again.");
+            System.out.println("You should enter valid string action name. Please try again.");
             scanner.next();
         }
         String input = scanner.nextLine();
