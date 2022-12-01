@@ -17,7 +17,7 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
     public TicketRepository(Connection connection) {
         super(connection, "tickets"); // FIXME take name from the correct place
 
-        this.dropTable();
+//        this.dropTable();
         this.createTable();
     }
 
