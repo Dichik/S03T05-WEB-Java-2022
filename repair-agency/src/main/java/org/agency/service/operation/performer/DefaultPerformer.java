@@ -10,6 +10,7 @@ import org.agency.service.operation.performer.action.DefaultAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class DefaultPerformer implements ActionPerformer {
@@ -44,6 +45,18 @@ public class DefaultPerformer implements ActionPerformer {
         DefaultAction defaultAction = (DefaultAction) action;
         if (defaultAction == DefaultAction.LOGIN) {
 
+            System.out.println("Valid roles: ");
+            Arrays.stream(Role.values())
+                    .filter(role -> role != Role.NOT_AUTHORIZED)
+                    .peek(System.out::println);
+
+            System.out.println("Enter role: ");
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid email. Please try again.");
+                scanner.next();
+            }
+            Role role = Role.valueOf(scanner.nextLine());
+
             System.out.println("Enter email: ");
             while (!scanner.hasNextLine()) {
                 System.out.println("You should enter valid email. Please try again.");
@@ -59,7 +72,7 @@ public class DefaultPerformer implements ActionPerformer {
             String password = scanner.nextLine();
 
             try {
-                this.authService.login(email, password, Role.USER); // FIXME
+                this.authService.login(email, password, role);
                 logger.info("Login action was performed.");
                 return false;
             } catch (EntityNotFoundException e) {
@@ -69,6 +82,19 @@ public class DefaultPerformer implements ActionPerformer {
 
             // FIXME register as Master, User (default password for admin);
             // TODO add email validation
+            System.out.println("Valid roles: ");
+            for (Role role: Role.values()) {
+                if (role != Role.NOT_AUTHORIZED) {
+                    System.out.println("Role=[" + role + "]");
+                }
+            }
+
+            System.out.println("Enter role: ");
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid email. Please try again.");
+                scanner.next();
+            }
+            Role role = Role.valueOf(scanner.nextLine().toUpperCase());
 
             System.out.println("Enter email: ");
             while (!scanner.hasNextLine()) {
@@ -90,15 +116,13 @@ public class DefaultPerformer implements ActionPerformer {
                 scanner.next();
             }
 
-            this.authService.register(email, password, Role.USER); // FIXME
+            this.authService.register(email, password, role);
             logger.info("Perform register action.");
             return false;
-        } else if (defaultAction == DefaultAction.EXIT) {
-            logger.info("Exit action performed.");
-            return true;
-        } else {
-            throw new RuntimeException(); // FIXME
         }
+        // FIXME should we perform exit only in case if we have input EXIT?
+        logger.info("Exit action performed.");
+        return true;
     }
 
 }

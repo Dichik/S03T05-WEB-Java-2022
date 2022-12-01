@@ -19,7 +19,7 @@ public class PerformerDelegator {
         this.performers = new HashMap<>() {{
             put(Role.NOT_AUTHORIZED, new DefaultPerformer(serviceDelegator));
             put(Role.MANAGER, new ManagerPerformer());
-            put(Role.MASTER, new MasterPerformer());
+            put(Role.MASTER, new MasterPerformer(serviceDelegator));
             put(Role.USER, new UserPerformer(serviceDelegator));
         }};
     }

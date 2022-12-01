@@ -66,20 +66,18 @@ public class UserPerformer implements ActionPerformer {
             ).build();
             this.ticketService.createTicket(ticket);
             logger.info("Action " + userAction.getName() + " was successfully performed.");
+            return false;
         } else if (userAction == UserAction.SHOW_MY_TICKETS) {
             List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(CurrentSession.getSession().getEmail());
             System.out.println(tickets);
             logger.info("Action " + userAction.getName() + " was successfully performed.");
+            return false;
         } else if (userAction == UserAction.LOGOUT) {
             this.authService.logout();
             logger.info("Action " + userAction.getName() + " was successfully performed.");
-        } else if (userAction == UserAction.EXIT) {
-            logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return true;
-        } else {
-            logger.error("Action " + userAction.getName() + " was not successfully performed.");
-            throw new RuntimeException("Error..."); // FIXME
+            return false;
         }
-        return false;
+        logger.info("Exit action performed.");
+        return true;
     }
 }

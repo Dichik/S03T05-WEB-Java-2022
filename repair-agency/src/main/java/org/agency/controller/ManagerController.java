@@ -27,7 +27,7 @@ public class ManagerController {
         return null;
     }
 
-    public void assignMasterToTicket(Long ticketId, Long masterId) {
+    public void assignMasterToTicket(Long ticketId, String masterId) {
         try {
             this.ticketService.assignMaster(ticketId, masterId);
             logger.info(String.format("Successfully assigned master [id=%d] to ticket [id=%d]", masterId, ticketId));
