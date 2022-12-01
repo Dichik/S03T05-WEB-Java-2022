@@ -1,15 +1,10 @@
 package org.agency.service.operation.performer;
 
-import org.agency.delegator.ServiceDelegator;
-import org.agency.exception.EntityNotFoundException;
-import org.agency.exception.UnvalidStatusUpdateException;
-import org.agency.service.auth.AuthService;
-import org.agency.service.master.MasterService;
+import org.agency.controller.MasterController;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.operation.performer.action.MasterAction;
 import org.agency.service.session.CurrentSession;
-import org.agency.service.ticket.TicketService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,14 +14,11 @@ public class MasterPerformer implements ActionPerformer {
     private static final Logger logger = LogManager.getLogger(MasterPerformer.class);
 
     private static final Scanner scanner = new Scanner(System.in);
-    private final AuthService authService;
-    private final TicketService ticketService;
-    private final MasterService masterService;
+    private final MasterController masterController;
 
-    public MasterPerformer(ServiceDelegator serviceDelegator) {
-        this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
-        this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
-        this.masterService = (MasterService) serviceDelegator.getByClass(MasterService.class);
+
+    public MasterPerformer(MasterController masterController) {
+        this.masterController = masterController;
     }
 
     @Override
@@ -50,10 +42,9 @@ public class MasterPerformer implements ActionPerformer {
     public boolean performAction(Action action) {
         MasterAction masterAction = (MasterAction) action;
         if (masterAction == MasterAction.CHANGE_STATUS) {
-
             System.out.println(
-                    this.ticketService.getTicketsByMasterEmail(CurrentSession.getSession().getEmail())
-            );
+                    this.masterController.getTicketsByEmail(CurrentSession.getSession().getEmail())
+            ); // FIXME
 
             System.out.println("Enter ticket id: ");
             while (!scanner.hasNextLine()) {
@@ -69,14 +60,10 @@ public class MasterPerformer implements ActionPerformer {
             }
             Long id = scanner.nextLong();
 
-            try {
-                this.masterService.updateStatus(id, status);
-            } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
-                throw new RuntimeException(e);
-            }
+            this.masterController.updateStatus(id, status);
 
         } else if (masterAction == MasterAction.LOGOUT) {
-            this.authService.logout();
+            this.masterController.logout();
             logger.info("Action " + masterAction.getName() + " was successfully performed.");
             return false;
         }

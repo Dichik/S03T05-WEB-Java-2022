@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class FeedbackRepository extends BaseRepositoryImpl<Feedback> {
 
     public FeedbackRepository(Connection connection) {
-        super(connection, "feedbacks");
+        super(connection, "feedbacks"); // FIXME take name from the correct place
 
         this.createTable();
     }

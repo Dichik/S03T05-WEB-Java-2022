@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class ManagerRepository extends BaseRepositoryImpl<Manager> implements PersonRepository<Manager> {
 
     public ManagerRepository(Connection connection) {
-        super(connection, "managers");
+        super(connection, "managers"); // FIXME take name from the correct place
 
         this.createTable();
     }

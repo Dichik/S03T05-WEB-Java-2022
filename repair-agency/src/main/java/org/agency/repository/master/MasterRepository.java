@@ -15,7 +15,7 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
     private static final Logger logger = LogManager.getLogger(MasterRepository.class);
 
     public MasterRepository(Connection connection) {
-        super(connection, "masters");
+        super(connection, "masters"); // FIXME name must be taken from properties of somewhere else
 
         this.createTable();
     }

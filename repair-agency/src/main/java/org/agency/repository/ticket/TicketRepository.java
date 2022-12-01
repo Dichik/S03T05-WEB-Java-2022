@@ -15,7 +15,7 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
     private static final Logger logger = LogManager.getLogger(TicketRepository.class);
 
     public TicketRepository(Connection connection) {
-        super(connection, "tickets");
+        super(connection, "tickets"); // FIXME take name from the correct place
 
 //        this.dropTable();
         this.createTable();
