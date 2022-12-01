@@ -1,6 +1,5 @@
 package org.agency.delegator;
 
-import org.agency.entity.*;
 import org.agency.repository.BaseRepository;
 import org.agency.repository.feedback.FeedbackRepository;
 import org.agency.repository.manager.ManagerRepository;

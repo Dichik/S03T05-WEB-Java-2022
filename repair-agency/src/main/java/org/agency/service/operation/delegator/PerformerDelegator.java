@@ -1,7 +1,7 @@
 package org.agency.service.operation.delegator;
 
-import org.agency.entity.Role;
 import org.agency.delegator.ServiceDelegator;
+import org.agency.entity.Role;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.DefaultPerformer;
 import org.agency.service.operation.performer.ManagerPerformer;
@@ -20,7 +20,7 @@ public class PerformerDelegator {
             put(Role.NOT_AUTHORIZED, new DefaultPerformer(serviceDelegator));
             put(Role.MANAGER, new ManagerPerformer());
             put(Role.MASTER, new MasterPerformer());
-            put(Role.USER, new UserPerformer());
+            put(Role.USER, new UserPerformer(serviceDelegator));
         }};
     }
 
