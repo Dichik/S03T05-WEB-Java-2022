@@ -9,8 +9,11 @@ import org.agency.repository.master.MasterRepository;
 import org.agency.repository.user.UserRepository;
 import org.agency.service.BaseService;
 import org.agency.service.session.CurrentSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AuthService implements BaseService {
+    private static final Logger logger = LogManager.getLogger(AuthService.class);
 
     private final UserRepository userRepository;
     private final MasterRepository masterRepository;
@@ -29,9 +32,7 @@ public class AuthService implements BaseService {
             Master master = new Master.MasterBuilder(email, password).build();
             this.masterRepository.create(master);
         } else if (role == Role.MANAGER) {
-            Manager manager = new Manager();
-            manager.setEmail(email);
-            manager.setPassword(password);
+            Manager manager = new Manager.ManagerBuilder(email, password).build();
             this.managerRepository.create(manager);
         } else if (role == Role.USER) {
             User user = new User.UserBuilder(email)
@@ -47,10 +48,11 @@ public class AuthService implements BaseService {
         PersonRepository<?> repository = getRepositoryByRole(role);
         Person person = (Person) repository.findByEmail(email);
         if (person == null) {
-            throw new RuntimeException("Error..."); // FIXME
+            throw new RuntimeException("Couldn't find person by email=[" + email + "]"); // FIXME
         }
         if (!password.equals(person.getPassword())) {
-            throw new RuntimeException("Error..."); // FIXME
+            logger.info("Password=" + person.getPassword() + " Email: " + person.getEmail());
+            throw new RuntimeException("Wrong password for email=[" + email + "]"); // FIXME
         }
         CurrentSession.setRole(email, role);
     }

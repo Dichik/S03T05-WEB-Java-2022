@@ -77,14 +77,14 @@ public class TicketService implements BaseService {
         return ticket;
     }
 
-    public void assignMaster(Long ticketId, String masterId) throws EntityNotFoundException {
+    public void assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId);
         if (ticket == null) {
             throw new EntityNotFoundException("Ticket with " + ticketId + " was not found.");
         }
 
         // FIXME would be really great to know here if master_id is correct
-        ticket.setMasterEmail(masterId);
+        ticket.setMasterEmail(masterEmail);
         this.ticketRepository.update(ticket.getId(), ticket); // FIXME
     }
 

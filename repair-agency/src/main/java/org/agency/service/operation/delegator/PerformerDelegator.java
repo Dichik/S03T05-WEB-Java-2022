@@ -1,5 +1,6 @@
 package org.agency.service.operation.delegator;
 
+import org.agency.controller.ManagerController;
 import org.agency.controller.MasterController;
 import org.agency.controller.UserController;
 import org.agency.delegator.ServiceDelegator;
@@ -20,7 +21,7 @@ public class PerformerDelegator {
     public PerformerDelegator(ServiceDelegator serviceDelegator) {
         this.performers = new HashMap<>() {{
             put(Role.NOT_AUTHORIZED, new DefaultPerformer(serviceDelegator));
-            put(Role.MANAGER, new ManagerPerformer());
+            put(Role.MANAGER, new ManagerPerformer(new ManagerController(serviceDelegator)));
             put(Role.MASTER, new MasterPerformer(new MasterController(serviceDelegator)));
             put(Role.USER, new UserPerformer(new UserController(serviceDelegator)));
         }};

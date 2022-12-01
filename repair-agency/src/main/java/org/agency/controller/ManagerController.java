@@ -1,5 +1,6 @@
 package org.agency.controller;
 
+import org.agency.delegator.ServiceDelegator;
 import org.agency.entity.Ticket;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UnvalidStatusUpdateException;
@@ -17,9 +18,9 @@ public class ManagerController {
     private final UserService userService;
     private final TicketService ticketService;
 
-    public ManagerController(UserService userService, TicketService ticketService) {
-        this.userService = userService;
-        this.ticketService = ticketService;
+    public ManagerController(ServiceDelegator serviceDelegator) {
+        this.userService = (UserService) serviceDelegator.getByClass(UserService.class);
+        this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
     }
 
     public List<Ticket> getFilteredTickets() { // FIXME should be generic. SOLID
@@ -27,10 +28,10 @@ public class ManagerController {
         return null;
     }
 
-    public void assignMasterToTicket(Long ticketId, String masterId) {
+    public void assignMasterToTicket(Long ticketId, String masterEmail) {
         try {
-            this.ticketService.assignMaster(ticketId, masterId);
-            logger.info(String.format("Successfully assigned master [id=%d] to ticket [id=%d]", masterId, ticketId));
+            this.ticketService.assignMaster(ticketId, masterEmail);
+            logger.info(String.format("Successfully assigned master [email=%s] to ticket [id=%d]", masterEmail, ticketId));
         } catch (EntityNotFoundException e) {
             logger.error("Couldn't assign master to the ticket, see: ");
         }

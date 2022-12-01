@@ -23,18 +23,22 @@ public class Master extends Person {
         return id;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public String getSecondName() {
         return secondName;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
