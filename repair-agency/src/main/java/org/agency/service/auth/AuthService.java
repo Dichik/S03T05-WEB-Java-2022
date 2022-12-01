@@ -1,9 +1,9 @@
 package org.agency.service.auth;
 
+import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.*;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.PersonRepository;
-import org.agency.delegator.RepositoryDelegator;
 import org.agency.repository.manager.ManagerRepository;
 import org.agency.repository.master.MasterRepository;
 import org.agency.repository.user.UserRepository;
@@ -57,7 +57,7 @@ public class AuthService implements BaseService {
         if (!password.equals(person.getPassword())) {
             throw new RuntimeException("Error..."); // FIXME
         }
-        CurrentSession.setRole(role);
+        CurrentSession.setRole(email, role);
     }
 
     private PersonRepository<?> getRepositoryByRole(Role role) {
@@ -78,10 +78,6 @@ public class AuthService implements BaseService {
 
     public boolean isAuthorised() {
         return (CurrentSession.getRole() != Role.NOT_AUTHORIZED);
-    }
-
-    public void authorize(Role role) {
-        CurrentSession.setRole(role);
     }
 
 }
