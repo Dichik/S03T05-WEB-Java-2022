@@ -1,5 +1,6 @@
 package org.agency.controller;
 
+import org.agency.exception.InvalidActionException;
 import org.agency.service.operation.delegator.PerformerDelegator;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.session.CurrentSession;
@@ -23,12 +24,15 @@ public class ActionController {
         }
     }
 
-    public Action chooseAction() {
+    public Action chooseAction() throws InvalidActionException {
         try {
             return this.performerDelegator.getByRole(CurrentSession.getRole()).chooseValidAction();
+        } catch (IllegalArgumentException e) {
+            String message = "Error while choosing action occurred. See: " + e;
+            throw new InvalidActionException(message);
         } catch (Exception e) {
-            logger.error("Can't choose action, see: " + e);
-            throw new RuntimeException();
+            logger.error("Couldn't choose action, see: " + e);
+            throw new RuntimeException(); // FIXME
         }
     }
 

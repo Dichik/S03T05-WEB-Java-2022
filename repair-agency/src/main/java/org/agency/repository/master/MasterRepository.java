@@ -47,7 +47,7 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
     }
 
     @Override
-    public void updatePreparedStatementWithItemData(PreparedStatement ps, Master master) throws SQLException {
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, Master master, boolean setId) throws SQLException {
         if (master.getFirstName() != null) {
             ps.setString(1, master.getFirstName());
         } else ps.setNull(1, Types.NULL);
@@ -63,6 +63,11 @@ public class MasterRepository extends BaseRepositoryImpl<Master> implements Pers
         if (master.getPassword() != null) {
             ps.setString(4, master.getPassword());
         } else ps.setNull(4, Types.NULL);
+    }
+
+    @Override
+    public String getUpdateSQLQuery() {
+        return null;
     }
 
     @Override

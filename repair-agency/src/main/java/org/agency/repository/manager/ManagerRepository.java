@@ -46,7 +46,7 @@ public class ManagerRepository extends BaseRepositoryImpl<Manager> implements Pe
     }
 
     @Override
-    public void updatePreparedStatementWithItemData(PreparedStatement ps, Manager manager) throws SQLException {
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, Manager manager, boolean setId) throws SQLException {
         if (manager.getFirstName() != null) {
             ps.setString(1, manager.getFirstName());
         } else ps.setNull(1, Types.NULL);
@@ -62,6 +62,11 @@ public class ManagerRepository extends BaseRepositoryImpl<Manager> implements Pe
         if (manager.getPassword() != null) {
             ps.setString(4, manager.getPassword());
         } else ps.setNull(4, Types.NULL);
+    }
+
+    @Override
+    public String getUpdateSQLQuery() {
+        return null;
     }
 
     @Override

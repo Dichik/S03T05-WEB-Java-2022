@@ -10,7 +10,9 @@ public enum ManagerAction implements Action {
     SORT_BY_STATUS,
     SORT_BY_PRICE,
     FILTER_BY_STATUS,
-    FILTER_BY_MASTER;
+    FILTER_BY_MASTER,
+    LOGOUT,
+    EXIT;
 
     @Override
     public String getName() {

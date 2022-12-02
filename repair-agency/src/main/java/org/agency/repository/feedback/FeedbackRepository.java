@@ -32,8 +32,13 @@ public class FeedbackRepository extends BaseRepositoryImpl<Feedback> {
     }
 
     @Override
-    public void updatePreparedStatementWithItemData(PreparedStatement ps, Feedback item) throws SQLException {
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, Feedback item, boolean setId) throws SQLException {
 
+    }
+
+    @Override
+    public String getUpdateSQLQuery() {
+        return null;
     }
 
 }

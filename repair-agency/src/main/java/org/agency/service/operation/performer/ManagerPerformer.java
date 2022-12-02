@@ -40,11 +40,23 @@ public class ManagerPerformer implements ActionPerformer {
     public boolean performAction(Action action) {
         ManagerAction managerAction = (ManagerAction) action;
         if (managerAction == ManagerAction.ASSIGN_MASTER) {
-            Long ticketId = scanner.nextLong();
+            System.out.println("Enter ticket id: ");
+            while (!scanner.hasNextLong()) {
+                System.out.println("You should enter valid string action name. Please try again.");
+                scanner.next();
+            }
+            Long ticketId = Long.parseLong(scanner.nextLine()); // FIXME
+
+            System.out.println("Enter master email: ");
+            while (!scanner.hasNextLine()) {
+                System.out.println("You should enter valid string action name. Please try again.");
+                scanner.next();
+            }
             String masterEmail = scanner.nextLine();
+
             this.managerController.assignMasterToTicket(ticketId, masterEmail);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

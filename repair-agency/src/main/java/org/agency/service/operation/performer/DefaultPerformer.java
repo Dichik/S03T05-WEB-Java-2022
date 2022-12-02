@@ -10,8 +10,6 @@ import org.agency.service.operation.performer.action.DefaultAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class DefaultPerformer implements ActionPerformer {
@@ -76,7 +74,7 @@ public class DefaultPerformer implements ActionPerformer {
             try {
                 this.authService.login(email, password, role);
                 logger.info("Login action was performed.");
-                return false;
+                return true;
             } catch (EntityNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -120,11 +118,11 @@ public class DefaultPerformer implements ActionPerformer {
 
             this.authService.register(email, password, role);
             logger.info("Perform register action.");
-            return false;
+            return true;
         }
         // FIXME should we perform exit only in case if we have input EXIT?
         logger.info("Exit action performed.");
-        return true;
+        return false;
     }
 
 }

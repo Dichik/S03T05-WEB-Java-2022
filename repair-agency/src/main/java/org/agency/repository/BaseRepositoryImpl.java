@@ -21,15 +21,7 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
         this.tableName = tableName;
     }
 
-    // FIXME add annotation to drop table on delete (use the same name in annotation as in creation)
-
     public abstract String getTableSQLSchema();
-
-    public abstract String getInsertSQLQuery();
-
-    public abstract T buildItem(ResultSet rs) throws SQLException;
-
-    public abstract void updatePreparedStatementWithItemData(PreparedStatement ps, T item) throws SQLException;
 
     @Override
     public void createTable() {
@@ -56,6 +48,8 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             throw new TableDeletionException(message);
         }
     }
+
+    public abstract T buildItem(ResultSet rs) throws SQLException;
 
     @Override
     public List<T> findAll() {
@@ -93,11 +87,15 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
         }
     }
 
+    public abstract String getInsertSQLQuery();
+
+    public abstract void updatePreparedStatementWithItemData(PreparedStatement ps, T item, boolean setId) throws SQLException;
+
     @Override
     public void create(T t) {
         String sql = this.getInsertSQLQuery();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            updatePreparedStatementWithItemData(ps, t);
+            updatePreparedStatementWithItemData(ps, t, false);
             ps.execute();
             logger.info("Item in table=[" + this.tableName + "] was successfully created.");
         } catch (SQLException e) {
@@ -106,14 +104,13 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
         }
     }
 
+    public abstract String getUpdateSQLQuery();
+
     @Override
     public void update(Long id, T item) {
-        String sql = "UPDATE " + this.tableName +
-                " SET title=?, description=?, status=?, masterId=?, price=?, createdAt=?" +
-                " WHERE id=?";
+        String sql = this.getUpdateSQLQuery();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            updatePreparedStatementWithItemData(ps, item);
-            ps.setLong(7, id);
+            updatePreparedStatementWithItemData(ps, item, true);
             ps.execute();
         } catch (SQLException e) {
             String message = String.format("Couldn't update item in table=[%s], see: %s", this.tableName, e);

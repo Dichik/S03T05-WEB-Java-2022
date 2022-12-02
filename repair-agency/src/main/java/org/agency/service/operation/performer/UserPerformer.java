@@ -36,21 +36,30 @@ public class UserPerformer implements ActionPerformer {
             scanner.next();
         }
         String input = scanner.nextLine();
-        return UserAction.valueOf(input.toUpperCase()); // FIXME throw exception if input is not valid and handle it on the lever up
+        try {
+            return UserAction.valueOf(input.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            String message = input + " action is not valid.";
+            throw new IllegalArgumentException(message);
+        }
     }
 
     @Override
     public boolean performAction(Action action) {
         UserAction userAction = (UserAction) action;
+
+        // adapter.perform(userAction)
+        // catch error and return true
+
         if (userAction == UserAction.SUBMIT_TICKET) {
             System.out.println("Enter title: ");
-            while(!scanner.hasNextLine()) {
+            while (!scanner.hasNextLine()) {
                 System.out.println("You should enter valid string name. Please try again.");
             }
             String title = scanner.nextLine();
 
             System.out.println("Enter description: ");
-            while(!scanner.hasNextLine()) {
+            while (!scanner.hasNextLine()) {
                 System.out.println("You should enter valid string name. Please try again.");
             }
             String description = scanner.nextLine();
@@ -62,18 +71,18 @@ public class UserPerformer implements ActionPerformer {
             ).build();
             this.userController.createTicket(ticket);
             logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return false;
+            return true;
         } else if (userAction == UserAction.SHOW_MY_TICKETS) {
             List<Ticket> tickets = this.userController.getTicketsByUserEmail(CurrentSession.getSession().getEmail());
             System.out.println(tickets);
             logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return false;
+            return true;
         } else if (userAction == UserAction.LOGOUT) {
             this.userController.logout();
             logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return false;
+            return true;
         }
         logger.info("Exit action performed.");
-        return true;
+        return false;
     }
 }

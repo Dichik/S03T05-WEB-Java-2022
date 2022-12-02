@@ -55,7 +55,7 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
     }
 
     @Override
-    public void updatePreparedStatementWithItemData(PreparedStatement ps, Ticket item) throws SQLException {
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, Ticket item, boolean setId) throws SQLException {
         ps.setString(1, item.getTitle());
         ps.setString(2, item.getDescription());
         ps.setString(3, item.getUserEmail());
@@ -67,6 +67,17 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
 
         ps.setBigDecimal(6, item.getPrice());
         ps.setTimestamp(7, item.getCreatedAt());
+
+        if (setId) {
+            ps.setLong(8, item.getId());
+        }
+    }
+
+    @Override
+    public String getUpdateSQLQuery() {
+        return "UPDATE " + this.tableName +
+                " SET title=?, description=?, userEmail=?, status=?, masterEmail=?, price=?, createdAt=?" +
+                " WHERE id=?";
     }
 
     public List<Ticket> getByUserEmail(String email) {

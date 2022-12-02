@@ -50,7 +50,7 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
     }
 
     @Override
-    public void updatePreparedStatementWithItemData(PreparedStatement ps, User user) throws SQLException {
+    public void updatePreparedStatementWithItemData(PreparedStatement ps, User user, boolean setId) throws SQLException {
         if (user.getFirstName() != null) {
             ps.setString(1, user.getFirstName());
         } else ps.setNull(1, Types.NULL);
@@ -68,6 +68,11 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
         if (user.getPassword() != null) {
             ps.setString(5, user.getPassword());
         } else ps.setNull(5, Types.NULL);
+    }
+
+    @Override
+    public String getUpdateSQLQuery() {
+        return null;
     }
 
     @Override
