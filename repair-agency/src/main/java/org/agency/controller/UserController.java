@@ -2,6 +2,7 @@ package org.agency.controller;
 
 import org.agency.delegator.ServiceDelegator;
 import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.service.auth.AuthService;
@@ -39,13 +40,10 @@ public class UserController {
 
     /**
      * TODO we should have option to check notifications
-     *
-     * TODO check from which user we perform operation
-     *
-     * TODO check if ticket in DONE phase
      */
     public void leaveFeedback(Long ticketId, String feedbackText) {
-        if (!this.ticketService.ticketExistsById(ticketId)) {
+        Optional<Ticket> ticket = this.ticketService.getById(ticketId);
+        if (!ticket.isPresent() || ticket.get().getStatus() != TicketStatus.DONE) {
             return;
         }
         this.feedbackService.submit(ticketId, feedbackText);

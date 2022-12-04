@@ -9,9 +9,9 @@ import org.agency.service.BaseService;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class TicketService implements BaseService {
-    // TODO add methods (getAll) to base service interface
 
     private final TicketRepository ticketRepository;
 
@@ -41,8 +41,6 @@ public class TicketService implements BaseService {
     public void assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
-
-        // FIXME would be really great to know here if master_id is correct
         ticket.setMasterEmail(masterEmail);
         this.ticketRepository.update(ticket.getId(), ticket);
     }
@@ -81,4 +79,7 @@ public class TicketService implements BaseService {
         return this.ticketRepository.getByStatus(status);
     }
 
+    public Optional<Ticket> getById(Long ticketId) {
+        return this.ticketRepository.findById(ticketId);
+    }
 }

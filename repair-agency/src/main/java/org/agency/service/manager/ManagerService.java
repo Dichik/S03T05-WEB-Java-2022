@@ -15,10 +15,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
-/**
- * TODO should we add method to get active/new tickets?
- */
-
 public class ManagerService implements BaseService {
     private final Logger logger = LogManager.getLogger(ManagerService.class);
 
