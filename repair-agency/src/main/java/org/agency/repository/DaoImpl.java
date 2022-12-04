@@ -10,13 +10,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
-    private static final Logger logger = LogManager.getLogger(BaseRepositoryImpl.class);
+public abstract class DaoImpl<T> implements Dao<T> {
+    private static final Logger logger = LogManager.getLogger(DaoImpl.class);
 
     protected final Connection connection;
     protected final String tableName;
 
-    public BaseRepositoryImpl(Connection connection, String tableName) {
+    public DaoImpl(Connection connection, String tableName) {
         this.connection = connection;
         this.tableName = tableName;
     }
@@ -29,7 +29,7 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
             Statement statement = this.connection.createStatement();
             String sql = this.getTableSQLSchema();
             statement.executeUpdate(sql);
-            logger.info(String.format("Table [%s] was successfully created/updated.", this.tableName));
+            logger.info(String.format("Table [%s] was successfully created.", this.tableName));
         } catch (SQLException e) {
             String message = String.format("Couldn't create table [%s], see: %s", this.tableName, e);
             throw new TableCreationException(message);
@@ -111,7 +111,7 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
         String sql = this.getUpdateSQLQuery();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             updatePreparedStatementWithItemData(ps, item, true);
-            ps.execute();
+            ps.executeUpdate();
         } catch (SQLException e) {
             String message = String.format("Couldn't update item in table=[%s], see: %s", this.tableName, e);
             throw new SQLOperationException(message);
@@ -120,8 +120,7 @@ public abstract class BaseRepositoryImpl<T> implements BaseRepository<T> {
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM " + this.tableName +
-                " WHERE id=?";
+        String sql = "DELETE FROM " + this.tableName + " WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, id);
             ps.execute();

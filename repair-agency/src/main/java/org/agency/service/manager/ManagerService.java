@@ -1,15 +1,17 @@
 package org.agency.service.manager;
 
+import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
+import org.agency.service.BaseService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class ManagerService {
+public class ManagerService implements BaseService {
     private final Logger logger = LogManager.getLogger(ManagerService.class);
 
-    public ManagerService() {
+    public ManagerService(RepositoryDelegator repositoryDelegator) {
         // TODO ...
     }
 

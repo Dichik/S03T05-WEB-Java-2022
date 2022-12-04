@@ -1,26 +1,24 @@
 package org.agency.service.operation.performer;
 
 import org.agency.controller.MasterController;
+import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.operation.performer.action.MasterAction;
 import org.agency.service.session.CurrentSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.agency.view.ActionSelector;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class MasterPerformer implements ActionPerformer {
-    private static final Logger logger = LogManager.getLogger(MasterPerformer.class);
 
-    private static final Scanner scanner = new Scanner(System.in);
     private final MasterController masterController;
+    private final ActionSelector actionSelector;
 
-
-    public MasterPerformer(MasterController masterController) {
+    public MasterPerformer(MasterController masterController, ActionSelector actionSelector) {
         this.masterController = masterController;
+        this.actionSelector = actionSelector;
     }
 
     @Override
@@ -32,43 +30,35 @@ public class MasterPerformer implements ActionPerformer {
 
     @Override
     public Action chooseValidAction() {
-        while (!scanner.hasNextLine()) {
-            System.out.println("You should enter valid string action name. Please try again.");
-            scanner.next();
-        }
-        String input = scanner.nextLine();
+        String input = this.actionSelector.getInput();
         return MasterAction.valueOf(input.toUpperCase());
     }
 
     @Override
     public boolean performAction(Action action) {
         MasterAction masterAction = (MasterAction) action;
-        if (masterAction == MasterAction.CHANGE_STATUS) {
-            System.out.println(
-                    this.masterController.getTicketsByEmail(CurrentSession.getSession().getEmail())
-            ); // FIXME
-
-            System.out.println("Enter ticket id: ");
-            while (!scanner.hasNextLong()) {
-                System.out.println("You should enter valid long id. Please try again.");
-                scanner.next();
-            }
-            Long id = scanner.nextLong();
-
-            System.out.println("Enter status: ");
-            System.out.printf("Valid options=%s%n", List.of(TicketStatus.IN_PROGRESS, TicketStatus.DONE));
-            while (!scanner.hasNextLine()) {
-                System.out.println("You should enter valid string action name. Please try again.");
-                scanner.next();
-            }
-            String status = scanner.nextLine();
-
-            this.masterController.updateStatus(id, status);
-        } else if (masterAction == MasterAction.LOGOUT) {
-            this.masterController.logout();
-            logger.info("Action " + masterAction.getName() + " was successfully performed.");
-            return false;
+        switch (masterAction) {
+            case CHANGE_STATUS:
+                changeStatus();
+                break;
+            case LOGOUT:
+                this.masterController.logout();
+                break;
+            case EXIT:
+                return false;
         }
         return true;
     }
+
+    private void changeStatus() {
+        List<Ticket> tickets = this.masterController.getTicketsByEmail(CurrentSession.getSession().getEmail());
+        this.actionSelector.showTickets(tickets);
+
+        Long ticketId = this.actionSelector.getTicketId();
+        System.out.printf("Valid options=%s%n", List.of(TicketStatus.IN_PROGRESS, TicketStatus.DONE));
+        String status = this.actionSelector.getStatus();
+
+        this.masterController.updateStatus(ticketId, status);
+    }
+
 }

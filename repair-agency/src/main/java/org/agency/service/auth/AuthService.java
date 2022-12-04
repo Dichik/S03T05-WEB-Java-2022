@@ -3,6 +3,7 @@ package org.agency.service.auth;
 import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.*;
 import org.agency.exception.EntityNotFoundException;
+import org.agency.exception.WrongPasswordOnLoginException;
 import org.agency.repository.PersonRepository;
 import org.agency.repository.manager.ManagerRepository;
 import org.agency.repository.master.MasterRepository;
@@ -42,17 +43,17 @@ public class AuthService implements BaseService {
         } else {
             throw new RuntimeException("Error...");
         }
+        logger.info("Registration was successful.");
     }
 
-    public void login(String email, String password, Role role) throws EntityNotFoundException {
+    public void login(String email, String password, Role role) throws EntityNotFoundException, WrongPasswordOnLoginException {
         PersonRepository<?> repository = getRepositoryByRole(role);
         Person person = (Person) repository.findByEmail(email);
         if (person == null) {
-            throw new RuntimeException("Couldn't find person by email=[" + email + "]"); // FIXME
+            throw new EntityNotFoundException("Couldn't find person by email=[" + email + "]");
         }
         if (!password.equals(person.getPassword())) {
-            logger.info("Password=" + person.getPassword() + " Email: " + person.getEmail());
-            throw new RuntimeException("Wrong password for email=[" + email + "]"); // FIXME
+            throw new WrongPasswordOnLoginException("Wrong password for email=[" + email + "]");
         }
         CurrentSession.setRole(email, role);
     }
@@ -71,6 +72,7 @@ public class AuthService implements BaseService {
 
     public void logout() {
         CurrentSession.clear();
+        logger.info("Logout was successfully performed.");
     }
 
 }

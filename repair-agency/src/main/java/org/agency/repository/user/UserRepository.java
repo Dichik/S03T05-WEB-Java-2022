@@ -2,14 +2,14 @@ package org.agency.repository.user;
 
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
-import org.agency.repository.BaseRepositoryImpl;
+import org.agency.repository.DaoImpl;
 import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 
-public class UserRepository extends BaseRepositoryImpl<User> implements PersonRepository<User> {
+public class UserRepository extends DaoImpl<User> implements PersonRepository<User> {
     private static final Logger logger = LogManager.getLogger(UserRepository.class);
 
     public UserRepository(Connection connection) {
@@ -68,11 +68,18 @@ public class UserRepository extends BaseRepositoryImpl<User> implements PersonRe
         if (user.getPassword() != null) {
             ps.setString(5, user.getPassword());
         } else ps.setNull(5, Types.NULL);
+
+        if (setId) {
+            ps.setLong(6, user.getId());
+        }
+
     }
 
     @Override
     public String getUpdateSQLQuery() {
-        return null;
+        return "UPDATE " + this.tableName +
+                " SET firstName=?, secondName=?, email=?, balance=?, password=?" +
+                " WHERE id=?";
     }
 
     @Override

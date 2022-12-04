@@ -6,6 +6,7 @@ import org.agency.delegator.ServiceDelegator;
 import org.agency.exception.InvalidActionException;
 import org.agency.service.operation.delegator.PerformerDelegator;
 import org.agency.service.operation.performer.action.Action;
+import org.agency.view.ActionSelector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +35,7 @@ public class App {
 
             RepositoryDelegator repositoryDelegator = new RepositoryDelegator(connection);
             ServiceDelegator serviceDelegator = new ServiceDelegator(repositoryDelegator);
-            PerformerDelegator performerDelegator = new PerformerDelegator(serviceDelegator);
+            PerformerDelegator performerDelegator = new PerformerDelegator(serviceDelegator, new ActionSelector());
 
             ActionController actionController = new ActionController(performerDelegator);
             boolean next = true;

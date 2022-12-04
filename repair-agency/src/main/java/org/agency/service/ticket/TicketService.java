@@ -12,9 +12,12 @@ import org.agency.service.session.CurrentSession;
 import org.agency.service.session.Session;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 public class TicketService implements BaseService {
+    // TODO add logger
+    // TODO add methods (getAll) to base service interface
 
     private final TicketRepository ticketRepository;
     private final MasterRepository masterRepository;
@@ -90,6 +93,36 @@ public class TicketService implements BaseService {
 
     public boolean ticketExistsById(Long ticketId) {
         return !(this.ticketRepository.findById(ticketId) == null);
+    }
+
+    public List<Ticket> getAll() {
+        return this.ticketRepository.findAll();
+    }
+
+    public List<Ticket> getSortedByDate() {
+        List<Ticket> tickets = this.ticketRepository.findAll();
+        tickets.sort(Comparator.comparing(Ticket::getCreatedAt));
+        return tickets;
+    }
+
+    public List<Ticket> getSortedByPrice() {
+        List<Ticket> tickets = this.ticketRepository.findAll();
+        tickets.sort(Comparator.comparing(Ticket::getPrice));
+        return tickets;
+    }
+
+    public List<Ticket> getSortedByStatus() {
+        List<Ticket> tickets = this.ticketRepository.findAll();
+        tickets.sort(Comparator.comparing(Ticket::getStatus));
+        return tickets;
+    }
+
+    public List<Ticket> getFilteredByMaster(String masterEmail) {
+        return this.ticketRepository.getByMasterEmail(masterEmail);
+    }
+
+    public List<Ticket> getFilteredByStatus(String status) {
+        return this.ticketRepository.getByStatus(status);
     }
 
 }

@@ -6,20 +6,19 @@ import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.operation.performer.action.UserAction;
 import org.agency.service.session.CurrentSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.agency.view.ActionSelector;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Scanner;
 
 public class UserPerformer implements ActionPerformer {
-    private static final Logger logger = LogManager.getLogger(UserPerformer.class);
 
-    private static final Scanner scanner = new Scanner(System.in); // FIXME move logic with getting inputs
     private final UserController userController;
+    private final ActionSelector actionSelector;
 
-    public UserPerformer(UserController userController) {
+    public UserPerformer(UserController userController, ActionSelector actionSelector) {
         this.userController = userController;
+        this.actionSelector = actionSelector;
     }
 
     @Override
@@ -31,11 +30,7 @@ public class UserPerformer implements ActionPerformer {
 
     @Override
     public Action chooseValidAction() {
-        while (!scanner.hasNextLine()) {
-            System.out.println("You should enter valid string action name. Please try again.");
-            scanner.next();
-        }
-        String input = scanner.nextLine();
+        String input = this.actionSelector.getInput();
         try {
             return UserAction.valueOf(input.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -47,42 +42,42 @@ public class UserPerformer implements ActionPerformer {
     @Override
     public boolean performAction(Action action) {
         UserAction userAction = (UserAction) action;
-
-        // adapter.perform(userAction)
-        // catch error and return true
-
-        if (userAction == UserAction.SUBMIT_TICKET) {
-            System.out.println("Enter title: ");
-            while (!scanner.hasNextLine()) {
-                System.out.println("You should enter valid string name. Please try again.");
-            }
-            String title = scanner.nextLine();
-
-            System.out.println("Enter description: ");
-            while (!scanner.hasNextLine()) {
-                System.out.println("You should enter valid string name. Please try again.");
-            }
-            String description = scanner.nextLine();
-
-            Ticket ticket = new Ticket.TicketBuilder(
-                    title,
-                    description,
-                    CurrentSession.getSession().getEmail()
-            ).build();
-            this.userController.createTicket(ticket);
-            logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return true;
-        } else if (userAction == UserAction.SHOW_MY_TICKETS) {
-            List<Ticket> tickets = this.userController.getTicketsByUserEmail(CurrentSession.getSession().getEmail());
-            System.out.println(tickets);
-            logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return true;
-        } else if (userAction == UserAction.LOGOUT) {
-            this.userController.logout();
-            logger.info("Action " + userAction.getName() + " was successfully performed.");
-            return true;
+        switch (userAction) {
+            case SUBMIT_TICKET:
+                submitTicket();
+                break;
+            case SHOW_MY_TICKETS:
+                showMyTickets();
+                break;
+            case SHOW_BALANCE:
+                showMyBalance();
+                break;
+            case LOGOUT:
+                this.userController.logout();
+                break;
+            default:
+                return userAction != UserAction.EXIT;
         }
-        logger.info("Exit action performed.");
-        return false;
+        return true;
     }
+
+    private void showMyBalance() {
+        BigDecimal balance = this.userController.getCurrentBalance();
+        this.actionSelector.showBalance(balance);
+    }
+
+    private void showMyTickets() {
+        List<Ticket> tickets = this.userController.getTicketsByUserEmail(CurrentSession.getSession().getEmail());
+        this.actionSelector.showTickets(tickets);
+    }
+
+    private void submitTicket() {
+        String title = this.actionSelector.getInput(ActionSelector.ENTER_TITLE);
+        String description = this.actionSelector.getInput(ActionSelector.ENTER_DESCRIPTION);
+
+        Ticket ticket = new Ticket.TicketBuilder(title, description,
+                CurrentSession.getSession().getEmail()).build();
+        this.userController.createTicket(ticket);
+    }
+
 }

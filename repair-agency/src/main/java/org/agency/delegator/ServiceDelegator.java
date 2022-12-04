@@ -2,8 +2,10 @@ package org.agency.delegator;
 
 import org.agency.service.BaseService;
 import org.agency.service.auth.AuthService;
+import org.agency.service.manager.ManagerService;
 import org.agency.service.master.MasterService;
 import org.agency.service.ticket.TicketService;
+import org.agency.service.user.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +16,11 @@ public class ServiceDelegator implements Delegator<BaseService> {
 
     public ServiceDelegator(RepositoryDelegator repositoryDelegator) {
         this.services = new HashMap<>(){{
-           put(AuthService.class, new AuthService(repositoryDelegator));
+            put(AuthService.class, new AuthService(repositoryDelegator));
             put(TicketService.class, new TicketService(repositoryDelegator));
             put(MasterService.class, new MasterService(repositoryDelegator));
+            put(UserService.class, new UserService(repositoryDelegator));
+            put(ManagerService.class, new ManagerService(repositoryDelegator));
         }};
     }
 

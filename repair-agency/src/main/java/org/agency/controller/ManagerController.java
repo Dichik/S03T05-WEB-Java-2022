@@ -4,6 +4,7 @@ import org.agency.delegator.ServiceDelegator;
 import org.agency.entity.Ticket;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UnvalidStatusUpdateException;
+import org.agency.service.auth.AuthService;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -17,15 +18,12 @@ public class ManagerController {
 
     private final UserService userService;
     private final TicketService ticketService;
+    private final AuthService authService;
 
     public ManagerController(ServiceDelegator serviceDelegator) {
         this.userService = (UserService) serviceDelegator.getByClass(UserService.class);
         this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
-    }
-
-    public List<Ticket> getFilteredTickets() { // FIXME should be generic. SOLID
-        // TODO implement method
-        return null;
+        this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
     }
 
     public void assignMasterToTicket(Long ticketId, String masterEmail) {
@@ -49,7 +47,7 @@ public class ManagerController {
     public void setStatus(Long ticketId, String updatedStatus) {
         try {
             this.ticketService.updateStatus(ticketId, updatedStatus);
-            logger.info(String.format("Successfully set %s status for ticket with %d id", updatedStatus, ticketId));
+            logger.info(String.format("Ticket status with id=%d was updated to status=%s", ticketId, updatedStatus));
         } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
             logger.error("Couldn't set status " + updatedStatus + ", see: " + e);
         }
@@ -58,10 +56,34 @@ public class ManagerController {
     public void topUpAccount(String email, BigDecimal amount) {
         try {
             this.userService.topUpBalance(email, amount);
-            logger.info(String.format("Manager %s successfully topped up %s account. Current balance: %a", "Manager1", email, 0.0));
+            logger.info(String.format("Balance of user with email=[%s] was topped up with amount=[%f]", email, amount));
         } catch (EntityNotFoundException e) {
             logger.error("Couldn't top up account, see: " + e);
         }
+    }
+
+    public void logout() {
+        this.authService.logout();
+    }
+
+    public List<Ticket> getTickets() {
+        return this.ticketService.getAll();
+    }
+
+    public List<Ticket> getSortedByDate() {
+        return this.ticketService.getSortedByDate();
+    }
+
+    public List<Ticket> getSortedByStatus() {
+        return this.ticketService.getSortedByStatus();
+    }
+
+    public List<Ticket> getSortedByPrice() {
+        return this.ticketService.getSortedByPrice();
+    }
+
+    public List<Ticket> getFilteredByMaster(String masterEmail) {
+        return this.ticketService.getFilteredByMaster(masterEmail);
     }
 
     // TODO when do user pay for the request/ticket? after ticket will be successfully done?

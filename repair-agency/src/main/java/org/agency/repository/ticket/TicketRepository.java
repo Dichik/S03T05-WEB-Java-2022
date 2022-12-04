@@ -3,7 +3,7 @@ package org.agency.repository.ticket;
 import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
 import org.agency.exception.SQLOperationException;
-import org.agency.repository.BaseRepositoryImpl;
+import org.agency.repository.DaoImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketRepository extends BaseRepositoryImpl<Ticket> {
+public class TicketRepository extends DaoImpl<Ticket> {
     private static final Logger logger = LogManager.getLogger(TicketRepository.class);
 
     public TicketRepository(Connection connection) {
@@ -114,6 +114,11 @@ public class TicketRepository extends BaseRepositoryImpl<Ticket> {
             throw new SQLOperationException(message);
         }
         return items;
+    }
+
+    public List<Ticket> getByStatus(String status) {
+        // TODO implement this method
+        return null;
     }
 
 }

@@ -2,7 +2,7 @@ package org.agency.repository;
 
 import java.util.List;
 
-public interface BaseRepository<T> {
+public interface Dao<T> {
 
     void createTable();
 

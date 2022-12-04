@@ -10,6 +10,7 @@ import org.agency.service.operation.performer.DefaultPerformer;
 import org.agency.service.operation.performer.ManagerPerformer;
 import org.agency.service.operation.performer.MasterPerformer;
 import org.agency.service.operation.performer.UserPerformer;
+import org.agency.view.ActionSelector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +19,12 @@ public class PerformerDelegator {
 
     private final Map<Role, ActionPerformer> performers;
 
-    public PerformerDelegator(ServiceDelegator serviceDelegator) {
+    public PerformerDelegator(ServiceDelegator serviceDelegator, ActionSelector actionSelector) {
         this.performers = new HashMap<>() {{
-            put(Role.NOT_AUTHORIZED, new DefaultPerformer(serviceDelegator));
-            put(Role.MANAGER, new ManagerPerformer(new ManagerController(serviceDelegator)));
-            put(Role.MASTER, new MasterPerformer(new MasterController(serviceDelegator)));
-            put(Role.USER, new UserPerformer(new UserController(serviceDelegator)));
+            put(Role.NOT_AUTHORIZED, new DefaultPerformer(serviceDelegator, actionSelector));
+            put(Role.MANAGER, new ManagerPerformer(new ManagerController(serviceDelegator), actionSelector));
+            put(Role.MASTER, new MasterPerformer(new MasterController(serviceDelegator), actionSelector));
+            put(Role.USER, new UserPerformer(new UserController(serviceDelegator), actionSelector));
         }};
     }
 

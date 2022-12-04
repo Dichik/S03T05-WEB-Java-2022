@@ -1,22 +1,23 @@
 package org.agency.service.operation.performer;
 
 import org.agency.controller.ManagerController;
+import org.agency.entity.Ticket;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.action.Action;
 import org.agency.service.operation.performer.action.ManagerAction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.agency.view.ActionSelector;
 
-import java.util.Scanner;
+import java.math.BigDecimal;
+import java.util.List;
 
 public class ManagerPerformer implements ActionPerformer {
-    private static final Logger logger = LogManager.getLogger(ManagerPerformer.class);
 
-    private static final Scanner scanner = new Scanner(System.in);
     private final ManagerController managerController;
+    private final ActionSelector actionSelector;
 
-    public ManagerPerformer(ManagerController managerController) {
+    public ManagerPerformer(ManagerController managerController, ActionSelector actionSelector) {
         this.managerController = managerController;
+        this.actionSelector = actionSelector;
     }
 
     @Override
@@ -28,35 +29,92 @@ public class ManagerPerformer implements ActionPerformer {
 
     @Override
     public Action chooseValidAction() {
-        while (!scanner.hasNextLine()) {
-            System.out.println("You should enter valid string action name. Please try again.");
-            scanner.next();
-        }
-        String input = scanner.nextLine();
+        String input = this.actionSelector.getInput();
         return ManagerAction.valueOf(input.toUpperCase());
     }
 
     @Override
     public boolean performAction(Action action) {
         ManagerAction managerAction = (ManagerAction) action;
-        if (managerAction == ManagerAction.ASSIGN_MASTER) {
-            System.out.println("Enter ticket id: ");
-            while (!scanner.hasNextLong()) {
-                System.out.println("You should enter valid string action name. Please try again.");
-                scanner.next();
-            }
-            Long ticketId = Long.parseLong(scanner.nextLine()); // FIXME
-
-            System.out.println("Enter master email: ");
-            while (!scanner.hasNextLine()) {
-                System.out.println("You should enter valid string action name. Please try again.");
-                scanner.next();
-            }
-            String masterEmail = scanner.nextLine();
-
-            this.managerController.assignMasterToTicket(ticketId, masterEmail);
-            return true;
+        switch (managerAction) {
+            case ASSIGN_MASTER:
+                assignMaster();
+                break;
+            case SET_PRICE:
+                setPrice();
+                break;
+            case SHOW_TICKETS:
+                showTickets(this.managerController.getTickets());
+                break;
+            case UPDATE_STATUS:
+                updateStatus();
+                break;
+            case TOP_UP_BALANCE:
+                topUpBalance();
+                break;
+            case SORT_BY_DATE:
+                showTickets(this.managerController.getSortedByDate());
+                break;
+            case SORT_BY_PRICE:
+                showTickets(this.managerController.getSortedByPrice());
+                break;
+            case SORT_BY_STATUS:
+                showTickets(this.managerController.getSortedByStatus());
+                break;
+            case FILTER_BY_MASTER:
+                filterByMaster();
+                break;
+            case FILTER_BY_STATUS:
+                filterByStatus();
+                break;
+            case LOGOUT:
+                this.managerController.logout();
+                break;
+            case EXIT:
+                return false;
         }
-        return false;
+        return true;
+    }
+
+    private void filterByStatus() {
+        // TODO to be implemented...
+    }
+
+    private void filterByMaster() {
+        String masterEmail = this.actionSelector.getEmail(ActionSelector.ENTER_MASTER_EMAIL);
+
+        showTickets(this.managerController.getFilteredByMaster(masterEmail));
+    }
+
+    private void topUpBalance() {
+        String email = this.actionSelector.getEmail(ActionSelector.ENTER_USER_EMAIL);
+        double amount = this.actionSelector.getAmount();
+
+        this.managerController.topUpAccount(email, new BigDecimal(amount));
+    }
+
+    private void updateStatus() {
+        Long ticketId = this.actionSelector.getTicketId();
+        String status = this.actionSelector.getStatus();
+
+        this.managerController.setStatus(ticketId, status);
+    }
+
+    private void showTickets(List<Ticket> tickets) {
+        this.actionSelector.showTickets(tickets);
+    }
+
+    private void setPrice() {
+        Long tickedId = this.actionSelector.getTicketId();
+        double price = this.actionSelector.getAmount();
+
+        this.managerController.setTicketPrice(tickedId, new BigDecimal(price));
+    }
+
+    private void assignMaster() {
+        Long ticketId = this.actionSelector.getTicketId();
+        String masterEmail = this.actionSelector.getEmail(ActionSelector.ENTER_MASTER_EMAIL);
+
+        this.managerController.assignMasterToTicket(ticketId, masterEmail);
     }
 }

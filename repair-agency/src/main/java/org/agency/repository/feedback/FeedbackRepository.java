@@ -1,14 +1,14 @@
 package org.agency.repository.feedback;
 
 import org.agency.entity.Feedback;
-import org.agency.repository.BaseRepositoryImpl;
+import org.agency.repository.DaoImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FeedbackRepository extends BaseRepositoryImpl<Feedback> {
+public class FeedbackRepository extends DaoImpl<Feedback> {
 
     public FeedbackRepository(Connection connection) {
         super(connection, "feedbacks"); // FIXME take name from the correct place

@@ -1,19 +1,21 @@
 package org.agency.service.user;
 
+import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.user.UserRepository;
+import org.agency.service.BaseService;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class UserService {
+public class UserService implements BaseService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(RepositoryDelegator repositoryDelegator) {
+        this.userRepository = (UserRepository) repositoryDelegator.getByClass(UserRepository.class);
     }
 
     // TODO add annotatio
@@ -46,4 +48,5 @@ public class UserService {
     public User findByEmail(String userEmail) throws EntityNotFoundException {
         return this.userRepository.findByEmail(userEmail);
     }
+
 }
