@@ -20,6 +20,7 @@ public class ActionSelector {
     public static final String ENTER_USER_EMAIL = "Enter user email: ";
     public static final String ENTER_TITLE = "Enter title: ";
     public static final String ENTER_DESCRIPTION = "Enter description: ";
+    public static final String ENTER_FEEDBACK = "Enter feedback: ";
 
     private static final Scanner scanner = new Scanner(System.in);
 

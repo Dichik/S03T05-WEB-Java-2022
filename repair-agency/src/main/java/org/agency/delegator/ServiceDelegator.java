@@ -2,6 +2,7 @@ package org.agency.delegator;
 
 import org.agency.service.BaseService;
 import org.agency.service.auth.AuthService;
+import org.agency.service.feedback.FeedbackService;
 import org.agency.service.manager.ManagerService;
 import org.agency.service.master.MasterService;
 import org.agency.service.ticket.TicketService;
@@ -14,13 +15,14 @@ public class ServiceDelegator implements Delegator<BaseService> {
 
     private final Map<Class<?>, BaseService> services;
 
-    public ServiceDelegator(RepositoryDelegator repositoryDelegator) {
-        this.services = new HashMap<>(){{
+    public ServiceDelegator(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
+        this.services = new HashMap<>() {{
             put(AuthService.class, new AuthService(repositoryDelegator));
             put(TicketService.class, new TicketService(repositoryDelegator));
             put(MasterService.class, new MasterService(repositoryDelegator));
             put(UserService.class, new UserService(repositoryDelegator));
             put(ManagerService.class, new ManagerService(repositoryDelegator));
+            put(FeedbackService.class, new FeedbackService(repositoryDelegator));
         }};
     }
 

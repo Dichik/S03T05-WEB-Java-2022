@@ -52,6 +52,9 @@ public class UserPerformer implements ActionPerformer {
             case SHOW_BALANCE:
                 showMyBalance();
                 break;
+            case LEAVE_FEEDBACK:
+                leaveFeedback();
+                break;
             case LOGOUT:
                 this.userController.logout();
                 break;
@@ -59,6 +62,13 @@ public class UserPerformer implements ActionPerformer {
                 return userAction != UserAction.EXIT;
         }
         return true;
+    }
+
+    private void leaveFeedback() {
+        Long ticketId = this.actionSelector.getTicketId();
+        String feedback = this.actionSelector.getInput(ActionSelector.ENTER_FEEDBACK);
+
+        this.userController.leaveFeedback(ticketId, feedback);
     }
 
     private void showMyBalance() {

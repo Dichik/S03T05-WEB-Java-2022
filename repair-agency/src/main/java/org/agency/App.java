@@ -56,6 +56,8 @@ public class App {
         } catch (SQLException e) {
             logger.error("Error occurred, see: " + e);
             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         logger.info("[App] is finished successfully.");
     }
