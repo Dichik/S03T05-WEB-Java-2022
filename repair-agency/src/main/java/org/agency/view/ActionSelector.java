@@ -7,8 +7,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * TODO there are lots of things that can be improved in this class
+ *
+ * TODO add email validation
+ */
+
 public class ActionSelector {
-    // TODO there are lots of things that can be improved in this class
+
     public static final String ENTER_EMAIL = "Enter email: ";
     public static final String ENTER_MASTER_EMAIL = "Enter master email: ";
     public static final String ENTER_USER_EMAIL = "Enter user email: ";
@@ -48,7 +54,6 @@ public class ActionSelector {
         return Long.parseLong(scanner.nextLine());
     }
 
-    // TODO add email validation
     public String getEmail(String message) {
         System.out.println(message);
         while (!scanner.hasNextLine()) {

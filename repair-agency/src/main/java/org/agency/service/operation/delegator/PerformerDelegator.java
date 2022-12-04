@@ -5,6 +5,7 @@ import org.agency.controller.MasterController;
 import org.agency.controller.UserController;
 import org.agency.delegator.ServiceDelegator;
 import org.agency.entity.Role;
+import org.agency.exception.RoleNotFoundException;
 import org.agency.service.operation.ActionPerformer;
 import org.agency.service.operation.performer.DefaultPerformer;
 import org.agency.service.operation.performer.ManagerPerformer;
@@ -19,7 +20,7 @@ public class PerformerDelegator {
 
     private final Map<Role, ActionPerformer> performers;
 
-    public PerformerDelegator(ServiceDelegator serviceDelegator, ActionSelector actionSelector) {
+    public PerformerDelegator(ServiceDelegator serviceDelegator, ActionSelector actionSelector) throws ClassNotFoundException {
         this.performers = new HashMap<>() {{
             put(Role.NOT_AUTHORIZED, new DefaultPerformer(serviceDelegator, actionSelector));
             put(Role.MANAGER, new ManagerPerformer(new ManagerController(serviceDelegator), actionSelector));
@@ -30,7 +31,7 @@ public class PerformerDelegator {
 
     public ActionPerformer getByRole(Role role) throws Exception {
         if (!this.performers.containsKey(role)) {
-            throw new Exception();
+            throw new RoleNotFoundException(String.format("Role=[%s] was not found.", role));
         }
         return this.performers.get(role);
     }

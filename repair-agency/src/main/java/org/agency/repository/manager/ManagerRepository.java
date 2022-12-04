@@ -37,12 +37,8 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
 
     @Override
     public Manager buildItem(ResultSet rs) throws SQLException {
-        // TODO should we add balance for master???
-
-        return new Manager.ManagerBuilder(
-                rs.getString("email"),
-                rs.getString("password")
-        ).build();
+        return new Manager.ManagerBuilder(rs.getString("email"),
+                rs.getString("password")).build();
     }
 
     @Override

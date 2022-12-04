@@ -16,25 +16,26 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * TODO should we add method to get active/new tickets?
+ *
+ * TODO should we add method for getting notifications? (additional table in database?)
+ */
+
 public class ManagerService implements BaseService {
     private final Logger logger = LogManager.getLogger(ManagerService.class);
 
     private final TicketRepository ticketRepository;
 
-    public ManagerService(RepositoryDelegator repositoryDelegator) {
+    public ManagerService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
         this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
     }
 
     public void updateStatus(Long ticketId, String updatedStatusName) throws EntityNotFoundException, UnvalidStatusUpdateException {
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        if (ticket == null) {
-            throw new EntityNotFoundException("Ticket with " + ticketId + " was not found.");
-        }
+        Ticket ticket = this.ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
 
-        Session session = CurrentSession.getSession();
-        if (!Objects.equals(ticket.getMasterEmail(), session.getEmail())) {
-            throw new MasterLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
-        }
+        checkPermissions(ticket);
 
         TicketStatus currentStatus = ticket.getStatus();
         TicketStatus updatedStatus = TicketStatus.getTicketStatusByName(updatedStatusName);
@@ -44,12 +45,19 @@ public class ManagerService implements BaseService {
                     currentStatus.getName(), updatedStatus.getName());
             throw new UnvalidStatusUpdateException(message);
         }
+
         ticket.setStatus(updatedStatus);
         this.ticketRepository.update(ticket.getId(), ticket);
         logger.info(String.format("Ticket with id=[%d] was updated from [%s] to [%s]",
                 ticket.getId(), currentStatus.getName(), Objects.requireNonNull(updatedStatus).getName()));
     }
 
+    private void checkPermissions(Ticket ticket) {
+        Session session = CurrentSession.getSession();
+        if (!Objects.equals(ticket.getMasterEmail(), session.getEmail())) {
+            throw new MasterLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
+        }
+    }
 
     private boolean validateStatusChange(TicketStatus currentStatus, TicketStatus updatedStatus) {
         if (currentStatus == TicketStatus.DONE && updatedStatus == TicketStatus.WAITING_FOR_PAYMENT) {
@@ -59,9 +67,5 @@ public class ManagerService implements BaseService {
         }
         return currentStatus == TicketStatus.CANCELED;
     }
-
-    // TODO should we add method to get active/new tickets?
-
-    // TODO should we add method for getting notifications? (additional table in database?)
 
 }

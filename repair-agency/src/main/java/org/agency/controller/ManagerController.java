@@ -22,7 +22,7 @@ public class ManagerController {
     private final AuthService authService;
     private final ManagerService managerService;
 
-    public ManagerController(ServiceDelegator serviceDelegator) {
+    public ManagerController(ServiceDelegator serviceDelegator) throws ClassNotFoundException {
         this.managerService = (ManagerService) serviceDelegator.getByClass(ManagerService.class);
         this.userService = (UserService) serviceDelegator.getByClass(UserService.class);
         this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
@@ -38,12 +38,11 @@ public class ManagerController {
         }
     }
 
-    public Ticket setTicketPrice(Long ticketId, BigDecimal price) {
+    public void setTicketPrice(Long ticketId, BigDecimal price) {
         try {
-            return this.ticketService.updatePrice(ticketId, price);
+            this.ticketService.updatePrice(ticketId, price);
         } catch (EntityNotFoundException e) {
             logger.error("Couldn't set ticket price, see: " + e);
-            return null;
         }
     }
 
@@ -92,7 +91,5 @@ public class ManagerController {
     public List<Ticket> getFilterByStatus(String status) {
         return this.ticketService.getFilteredByStatus(status);
     }
-
-    // TODO when do user pay for the request/ticket? after ticket will be successfully done?
 
 }

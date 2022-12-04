@@ -31,8 +31,9 @@ public class ActionController {
             String message = "Error while choosing action occurred. See: " + e;
             throw new InvalidActionException(message);
         } catch (Exception e) {
-            logger.error("Couldn't choose action, see: " + e);
-            throw new RuntimeException(); // FIXME
+            String message = "Couldn't choose action, see: " + e;
+            logger.error(message);
+            throw new RuntimeException(message);
         }
     }
 

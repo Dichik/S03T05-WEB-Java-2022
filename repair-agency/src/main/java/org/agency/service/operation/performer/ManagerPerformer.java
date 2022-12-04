@@ -119,4 +119,5 @@ public class ManagerPerformer implements ActionPerformer {
 
         this.managerController.assignMasterToTicket(ticketId, masterEmail);
     }
+
 }

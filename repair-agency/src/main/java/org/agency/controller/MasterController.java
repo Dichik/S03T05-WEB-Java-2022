@@ -19,7 +19,7 @@ public class MasterController {
     private final MasterService masterService;
     private final AuthService authService;
 
-    public MasterController(ServiceDelegator serviceDelegator) {
+    public MasterController(ServiceDelegator serviceDelegator) throws ClassNotFoundException {
         this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
         this.masterService = (MasterService) serviceDelegator.getByClass(MasterService.class);
         this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
@@ -28,10 +28,8 @@ public class MasterController {
     public void updateStatus(Long ticketId, String updatedStatus) {
         try {
             this.masterService.updateStatus(ticketId, updatedStatus);
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
             logger.error("Couldn't update the status, see: " + e);
-        } catch (UnvalidStatusUpdateException e) {
-            throw new RuntimeException(e);
         }
     }
 

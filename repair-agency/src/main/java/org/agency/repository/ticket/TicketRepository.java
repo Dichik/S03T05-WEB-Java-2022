@@ -33,8 +33,6 @@ public class TicketRepository extends DaoImpl<Ticket> {
                 "createdAt TIMESTAMP)";
     }
 
-// FIXME remove unused methods for assignment (update, etc)
-
     @Override
     public String getInsertSQLQuery() {
         return "INSERT INTO " + this.tableName +

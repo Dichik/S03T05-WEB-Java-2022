@@ -13,6 +13,9 @@ import org.agency.service.session.CurrentSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * TODO encrypt password
+ */
 public class AuthService implements BaseService {
     private static final Logger logger = LogManager.getLogger(AuthService.class);
 
@@ -20,15 +23,16 @@ public class AuthService implements BaseService {
     private final MasterRepository masterRepository;
     private final ManagerRepository managerRepository;
 
-    public AuthService(RepositoryDelegator repositoryDelegator) {
+    public AuthService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
         this.userRepository = (UserRepository) repositoryDelegator.getByClass(UserRepository.class);
         this.masterRepository = (MasterRepository) repositoryDelegator.getByClass(MasterRepository.class);
         this.managerRepository = (ManagerRepository) repositoryDelegator.getByClass(ManagerRepository.class);
     }
 
+    /**
+     * TODO already registered check
+     */
     public void register(String email, String password, Role role) {
-        // TODO encrypt password
-        // TODO already registered check
         if (role == Role.MASTER) {
             Master master = new Master.MasterBuilder(email, password).build();
             this.masterRepository.create(master);
@@ -41,7 +45,7 @@ public class AuthService implements BaseService {
                     .build();
             this.userRepository.create(user);
         } else {
-            throw new RuntimeException("Error...");
+            throw new RuntimeException("Error..."); // FIXME
         }
         logger.info("Registration was successful.");
     }

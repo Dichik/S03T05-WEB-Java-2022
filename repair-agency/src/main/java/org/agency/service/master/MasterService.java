@@ -20,20 +20,15 @@ public class MasterService implements BaseService {
 
     private final TicketRepository ticketRepository;
 
-    public MasterService(RepositoryDelegator repositoryDelegator) {
+    public MasterService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
         this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
     }
 
     public void updateStatus(Long ticketId, String updatedStatusName) throws EntityNotFoundException, UnvalidStatusUpdateException {
-        Ticket ticket = this.ticketRepository.findById(ticketId);
-        if (ticket == null) {
-            throw new EntityNotFoundException("Ticket with " + ticketId + " was not found.");
-        }
+        Ticket ticket = this.ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
 
-        Session session = CurrentSession.getSession();
-        if (!Objects.equals(ticket.getMasterEmail(), session.getEmail())) {
-            throw new MasterLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
-        }
+        checkPermissions(ticket);
 
         TicketStatus currentStatus = ticket.getStatus();
         TicketStatus updatedStatus = TicketStatus.getTicketStatusByName(updatedStatusName);
@@ -43,10 +38,18 @@ public class MasterService implements BaseService {
                     currentStatus.getName(), updatedStatus.getName());
             throw new UnvalidStatusUpdateException(message);
         }
+
         ticket.setStatus(updatedStatus);
         this.ticketRepository.update(ticket.getId(), ticket);
         logger.info(String.format("Ticket with id=[%d] was updated from [%s] to [%s]",
                 ticket.getId(), currentStatus.getName(), Objects.requireNonNull(updatedStatus).getName()));
+    }
+
+    private void checkPermissions(Ticket ticket) {
+        Session session = CurrentSession.getSession();
+        if (!Objects.equals(ticket.getMasterEmail(), session.getEmail())) {
+            throw new MasterLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
+        }
     }
 
     private boolean validateStatusChange(TicketStatus currentStatus, TicketStatus updatedStatus) {

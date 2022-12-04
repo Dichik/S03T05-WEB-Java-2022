@@ -25,24 +25,25 @@ public class UserController {
     private final FeedbackService feedbackService;
     private final AuthService authService;
 
-    public UserController(ServiceDelegator serviceDelegator) {
+    public UserController(ServiceDelegator serviceDelegator) throws ClassNotFoundException {
         this.userService = (UserService) serviceDelegator.getByClass(UserService.class);
         this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
         this.feedbackService = (FeedbackService) serviceDelegator.getByClass(FeedbackService.class);
         this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
     }
 
-    // TODO research how to perform one method before execution another (like filter?)
-
     public void createTicket(Ticket ticket) {
         this.ticketService.createTicket(ticket);
     }
 
-    // TODO we should have option to check notifications
-    // and one of them should contains "Feedback about solving ticket #3: fix laptop"
+
+    /**
+     * TODO we should have option to check notifications
+     *  and one of them should contains "Feedback about solving ticket #3: fix laptop"
+     *
+     * TODO check from which user we perform operation
+     */
     public void leaveFeedback(Long ticketId, String feedbackText) {
-        // TODO check from which user we perform operation
-        // TODO create controller to check authentification
         if (!this.ticketService.ticketExistsById(ticketId)) {
             return;
         }

@@ -22,6 +22,9 @@ public class App {
     // TODO cached information for the password
     // TODO create class with getting fields (for password ask about the same password twice)
     // TODO there is default login and password for admin
+    // TODO when do user pay for the request/ticket? after ticket will be successfully done?
+    // TODO should we add balance for master???
+    // FIXME first_name and second_name remove???
 
     public static void main(String[] args) {
         logger.info("[App] is started successfully.");

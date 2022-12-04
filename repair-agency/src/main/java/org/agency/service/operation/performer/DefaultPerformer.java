@@ -18,7 +18,7 @@ public class DefaultPerformer implements ActionPerformer {
     private final AuthService authService;
     private final ActionSelector actionSelector;
 
-    public DefaultPerformer(ServiceDelegator serviceDelegator, ActionSelector actionSelector) {
+    public DefaultPerformer(ServiceDelegator serviceDelegator, ActionSelector actionSelector) throws ClassNotFoundException {
         this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
         this.actionSelector = actionSelector;
     }

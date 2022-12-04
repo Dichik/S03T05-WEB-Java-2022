@@ -1,6 +1,7 @@
 package org.agency.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Dao<T> {
 
@@ -10,7 +11,7 @@ public interface Dao<T> {
 
     List<T> findAll();
 
-    T findById(Long id);
+    Optional<T> findById(Long id);
 
     void create(T t);
 

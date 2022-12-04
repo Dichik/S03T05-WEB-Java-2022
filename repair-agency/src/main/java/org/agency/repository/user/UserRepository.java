@@ -15,7 +15,6 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
     public UserRepository(Connection connection) {
         super(connection, "users");
 
-//        this.dropTable();
         this.createTable();
     }
 

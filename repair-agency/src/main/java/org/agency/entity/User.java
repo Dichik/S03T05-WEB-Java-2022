@@ -24,9 +24,8 @@ public class User extends Person {
         return balance;
     }
 
-    public BigDecimal topUp(BigDecimal amount) {
+    public void topUp(BigDecimal amount) {
         this.balance = this.balance.add(amount);
-        return this.balance;
     }
 
     public static class UserBuilder {

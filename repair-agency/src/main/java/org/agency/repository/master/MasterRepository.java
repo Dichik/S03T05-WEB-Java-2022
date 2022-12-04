@@ -37,13 +37,8 @@ public class MasterRepository extends DaoImpl<Master> implements PersonRepositor
 
     @Override
     public Master buildItem(ResultSet rs) throws SQLException {
-        // FIXME first name and second name
-        // TODO should we add balance for master???
-
-        return new Master.MasterBuilder(
-                rs.getString("email"),
-                rs.getString("password")
-        ).build();
+        return new Master.MasterBuilder(rs.getString("email"),
+                rs.getString("password")).build();
     }
 
     @Override

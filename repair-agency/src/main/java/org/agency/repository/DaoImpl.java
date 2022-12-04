@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class DaoImpl<T> implements Dao<T> {
     private static final Logger logger = LogManager.getLogger(DaoImpl.class);
@@ -71,7 +72,7 @@ public abstract class DaoImpl<T> implements Dao<T> {
     }
 
     @Override
-    public T findById(Long id) {
+    public Optional<T> findById(Long id) {
         try {
             Statement statement = this.connection.createStatement();
             String sql = "SELECT * from " + this.tableName;
@@ -80,7 +81,7 @@ public abstract class DaoImpl<T> implements Dao<T> {
             while (rs.next()) {
                 item = this.buildItem(rs);
             }
-            return item;
+            return item != null ? Optional.of(item) : Optional.empty();
         } catch (SQLException e) {
             String message = String.format("Couldn't get ticket with id=%d, see: %s", id, e);
             throw new SQLOperationException(message);

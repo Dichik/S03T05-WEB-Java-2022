@@ -26,13 +26,11 @@ public class RepositoryDelegator implements Delegator<Dao<?>> {
     }
 
     @Override
-    public boolean existsByClass(Class<?> clazz) {
-        return this.repositories.containsKey(clazz);
-    }
-
-    @Override
-    public Dao<?> getByClass(Class<?> clazz) {
-        return this.repositories.getOrDefault(clazz, null);
+    public Dao<?> getByClass(Class<?> clazz) throws ClassNotFoundException {
+        if (!this.repositories.containsKey(clazz)) {
+            throw new ClassNotFoundException("There is no class " + clazz);
+        }
+        return this.repositories.get(clazz);
     }
 
 }

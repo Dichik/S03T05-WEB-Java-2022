@@ -25,12 +25,10 @@ public class ServiceDelegator implements Delegator<BaseService> {
     }
 
     @Override
-    public boolean existsByClass(Class<?> clazz) {
-        return this.services.containsKey(clazz);
-    }
-
-    @Override
-    public BaseService getByClass(Class<?> clazz) {
+    public BaseService getByClass(Class<?> clazz) throws ClassNotFoundException {
+        if (!this.services.containsKey(clazz)) {
+            throw new ClassNotFoundException("There is no class " + clazz);
+        }
         return this.services.getOrDefault(clazz, null);
     }
 
