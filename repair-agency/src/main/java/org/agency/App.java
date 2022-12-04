@@ -16,13 +16,8 @@ import java.sql.SQLException;
 
 public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
-    // TODO add tests coverage
-    // TODO add DTOs
-    // TODO to cache everything that is possible
-    // TODO cached information for the password
-    // TODO create class with getting fields (for password ask about the same password twice)
-    // TODO there is default login and password for admin
-    // TODO should we add balance for master???
+    // TODO to cache everything that is possible (password, data, etc.)
+    // TODO there is default login and password for admin (?)
     // TODO add possibility to check feedback about ticket (as a manager?)
 
     public static void main(String[] args) {
@@ -40,17 +35,7 @@ public class App {
             PerformerDelegator performerDelegator = new PerformerDelegator(serviceDelegator, new ActionSelector());
 
             ActionController actionController = new ActionController(performerDelegator);
-            boolean next = true;
-            while (next) {
-                actionController.showActionsList();
-                Action action;
-                try {
-                    action = actionController.chooseAction();
-                    next = actionController.performAction(action);
-                } catch (InvalidActionException e) {
-                    logger.warn("Error occurred, see: " + e);
-                }
-            }
+            doActions(actionController);
             logger.info("Action performing is finished.");
         } catch (SQLException e) {
             logger.error("Error occurred, see: " + e);
@@ -59,6 +44,20 @@ public class App {
             throw new RuntimeException(e);
         }
         logger.info("[App] is finished successfully.");
+    }
+
+    private static void doActions(ActionController actionController) {
+        boolean next = true;
+        while (next) {
+            actionController.showActionsList();
+            Action action;
+            try {
+                action = actionController.chooseAction();
+                next = actionController.performAction(action);
+            } catch (InvalidActionException e) {
+                logger.warn("Error occurred, see: " + e);
+            }
+        }
     }
 
 }

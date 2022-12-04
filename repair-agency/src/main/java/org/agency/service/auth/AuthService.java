@@ -79,14 +79,15 @@ public class AuthService implements BaseService {
     }
 
     private PersonRepository<?> getRepositoryByRole(Role role) {
-        if (role == Role.MASTER) {
-            return this.masterRepository;
-        } else if (role == Role.MANAGER) {
-            return this.managerRepository;
-        } else if (role == Role.USER) {
-            return this.userRepository;
-        } else {
-            throw new RuntimeException("Error..."); // FIXME
+        switch (role) {
+            case MASTER:
+                return this.masterRepository;
+            case MANAGER:
+                return this.managerRepository;
+            case USER:
+                return this.userRepository;
+            default:
+                throw new NullPointerException("Repository for " + role + " doesn't exist.");
         }
     }
 
