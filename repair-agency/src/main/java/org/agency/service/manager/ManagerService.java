@@ -13,13 +13,10 @@ import org.agency.service.session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
  * TODO should we add method to get active/new tickets?
- *
- * TODO should we add method for getting notifications? (additional table in database?)
  */
 
 public class ManagerService implements BaseService {

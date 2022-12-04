@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class ManagerRepository extends DaoImpl<Manager> implements PersonRepository<Manager> {
     private static final Logger logger = LogManager.getLogger(ManagerRepository.class);
@@ -73,7 +74,7 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
     }
 
     @Override
-    public Manager findByEmail(String email) throws EntityNotFoundException {
+    public Optional<Manager> findByEmail(String email) throws EntityNotFoundException {
         try {
             Statement statement = this.connection.createStatement();
             String sql = "SELECT * FROM " + this.tableName + " WHERE email='" + email + "'";

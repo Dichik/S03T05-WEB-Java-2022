@@ -28,6 +28,10 @@ public class User extends Person {
         this.balance = this.balance.add(amount);
     }
 
+    public void drawback(BigDecimal amount) {
+        this.balance = this.balance.subtract(amount);
+    }
+
     public static class UserBuilder {
 
         private Long id;

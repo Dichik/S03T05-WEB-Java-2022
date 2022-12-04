@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class UserController {
     private static final Logger logger = LogManager.getLogger(UserController.class);
@@ -38,9 +39,10 @@ public class UserController {
 
     /**
      * TODO we should have option to check notifications
-     *  and one of them should contains "Feedback about solving ticket #3: fix laptop"
      *
      * TODO check from which user we perform operation
+     *
+     * TODO check if ticket in DONE phase
      */
     public void leaveFeedback(Long ticketId, String feedbackText) {
         if (!this.ticketService.ticketExistsById(ticketId)) {
@@ -60,11 +62,23 @@ public class UserController {
     public BigDecimal getCurrentBalance() {
         Session session = CurrentSession.getSession();
         try {
-            User user = this.userService.findByEmail(session.getEmail());
-            return user.getBalance();
+            Optional<User> user = this.userService.findByEmail(session.getEmail());
+            if (!user.isPresent()) {
+                logger.warn(String.format("User with email=[%s] was not found.", session.getEmail()));
+                return BigDecimal.ZERO;
+            }
+            return user.get().getBalance();
         } catch (EntityNotFoundException e) {
             logger.error(String.format("Couldn't get current balance for user=[%s], see: %s", session.getEmail(), e));
             return BigDecimal.ZERO;
+        }
+    }
+
+    public void payForTicket(Long ticketId, String userEmail) {
+        try {
+            this.userService.payForTicket(ticketId, userEmail);
+        } catch (EntityNotFoundException e) {
+            logger.warn(String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", userEmail, ticketId));
         }
     }
 

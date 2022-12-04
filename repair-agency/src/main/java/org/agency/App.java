@@ -25,6 +25,7 @@ public class App {
     // TODO when do user pay for the request/ticket? after ticket will be successfully done?
     // TODO should we add balance for master???
     // FIXME first_name and second_name remove???
+    // TODO add possibility to check feedback about ticket (as a manager?)
 
     public static void main(String[] args) {
         logger.info("[App] is started successfully.");

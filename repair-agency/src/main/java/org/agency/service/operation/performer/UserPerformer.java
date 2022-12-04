@@ -46,14 +46,17 @@ public class UserPerformer implements ActionPerformer {
             case SUBMIT_TICKET:
                 submitTicket();
                 break;
+            case PAY_FOR_TICKET:
+                payForTicket();
+                break;
+            case LEAVE_FEEDBACK:
+                leaveFeedback();
+                break;
             case SHOW_MY_TICKETS:
                 showMyTickets();
                 break;
             case SHOW_BALANCE:
                 showMyBalance();
-                break;
-            case LEAVE_FEEDBACK:
-                leaveFeedback();
                 break;
             case LOGOUT:
                 this.userController.logout();
@@ -62,6 +65,13 @@ public class UserPerformer implements ActionPerformer {
                 return userAction != UserAction.EXIT;
         }
         return true;
+    }
+
+    private void payForTicket() {
+        Long ticketId = this.actionSelector.getTicketId();
+        String userEmail = CurrentSession.getSession().getEmail();
+
+        this.userController.payForTicket(ticketId, userEmail);
     }
 
     private void leaveFeedback() {
