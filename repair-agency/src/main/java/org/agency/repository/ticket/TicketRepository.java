@@ -1,5 +1,6 @@
 package org.agency.repository.ticket;
 
+import lombok.Value;
 import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
 import org.agency.exception.SQLOperationException;
@@ -15,7 +16,7 @@ public class TicketRepository extends DaoImpl<Ticket> {
     private static final Logger logger = LogManager.getLogger(TicketRepository.class);
 
     public TicketRepository(Connection connection) {
-        super(connection, "tickets"); // FIXME take name from the correct place
+        super(connection, "tickets");
 
         this.createTable();
     }

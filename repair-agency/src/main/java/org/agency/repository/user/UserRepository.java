@@ -89,4 +89,14 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
         }
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        try {
+            this.findByEmail(email);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
+    }
+
 }

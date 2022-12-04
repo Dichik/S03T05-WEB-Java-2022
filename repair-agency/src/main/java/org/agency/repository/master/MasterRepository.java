@@ -83,4 +83,14 @@ public class MasterRepository extends DaoImpl<Master> implements PersonRepositor
         }
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        try {
+            this.findByEmail(email);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
+    }
+
 }

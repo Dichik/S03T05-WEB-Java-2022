@@ -8,4 +8,6 @@ public interface PersonRepository<T> {
 
     Optional<T> findByEmail(String email) throws EntityNotFoundException;
 
+    boolean existsByEmail(String email);
+
 }

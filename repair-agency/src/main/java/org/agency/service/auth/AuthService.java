@@ -3,6 +3,7 @@ package org.agency.service.auth;
 import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.*;
 import org.agency.exception.EntityNotFoundException;
+import org.agency.exception.RoleNotFoundException;
 import org.agency.exception.WrongPasswordOnLoginException;
 import org.agency.repository.PersonRepository;
 import org.agency.repository.manager.ManagerRepository;
@@ -31,23 +32,35 @@ public class AuthService implements BaseService {
         this.managerRepository = (ManagerRepository) repositoryDelegator.getByClass(ManagerRepository.class);
     }
 
-    /**
-     * TODO already registered check
-     */
     public void register(String email, String password, Role role) {
-        if (role == Role.MASTER) {
-            Master master = new Master.MasterBuilder(email, password).build();
-            this.masterRepository.create(master);
-        } else if (role == Role.MANAGER) {
-            Manager manager = new Manager.ManagerBuilder(email, password).build();
-            this.managerRepository.create(manager);
-        } else if (role == Role.USER) {
-            User user = new User.UserBuilder(email)
-                    .setPassword(password)
-                    .build();
-            this.userRepository.create(user);
-        } else {
-            throw new RuntimeException("Error..."); // FIXME
+        switch (role) {
+            case MASTER:
+                if (this.masterRepository.existsByEmail(email)) {
+                    logger.error(String.format("Master with email=[%s] already exists.", email));
+                    return;
+                }
+                Master master = new Master.MasterBuilder(email, password).build();
+                this.masterRepository.create(master);
+                break;
+            case MANAGER:
+                if (this.managerRepository.existsByEmail(email)) {
+                    logger.error(String.format("Manager with email=[%s] already exists.", email));
+                    return;
+                }
+                Manager manager = new Manager.ManagerBuilder(email, password).build();
+                this.managerRepository.create(manager);
+                break;
+            case USER:
+                if (this.userRepository.existsByEmail(email)) {
+                    logger.error(String.format("User with email=[%s] already exists.", email));
+                    return;
+                }
+                User user = new User.UserBuilder(email).setPassword(password).build();
+                this.userRepository.create(user);
+                break;
+            default:
+                logger.warn("Registration was not successful, because specified role is not correct.");
+                return;
         }
         logger.info("Registration was successful.");
     }

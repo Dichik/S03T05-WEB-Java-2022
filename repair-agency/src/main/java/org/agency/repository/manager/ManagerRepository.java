@@ -14,7 +14,7 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
     private static final Logger logger = LogManager.getLogger(ManagerRepository.class);
 
     public ManagerRepository(Connection connection) {
-        super(connection, "managers"); // FIXME take name from the correct place
+        super(connection, "managers");
 
         this.createTable();
     }
@@ -78,6 +78,16 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
             String message = String.format("Couldn't get item with email=%s, see: %s", email, e);
             logger.error(message);
             throw new EntityNotFoundException(message);
+        }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        try {
+            this.findByEmail(email);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
         }
     }
 

@@ -8,7 +8,7 @@ import java.sql.*;
 public class FeedbackRepository extends DaoImpl<Feedback> {
 
     public FeedbackRepository(Connection connection) {
-        super(connection, "feedbacks"); // FIXME take name from the correct place
+        super(connection, "feedbacks");
 
         this.createTable();
     }
