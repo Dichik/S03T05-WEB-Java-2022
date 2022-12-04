@@ -2,14 +2,13 @@ package org.agency.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class Ticket {
 
     private Long id;
-    private String title;
-    private String description;
-    private String userEmail;
+    private final String title;
+    private final String description;
+    private final String userEmail;
     private TicketStatus status;
     private String masterEmail;
     private BigDecimal price;
@@ -24,7 +23,7 @@ public class Ticket {
         this.masterEmail = builder.masterId;
         this.status = builder.status;
 
-        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.createdAt = builder.createdAt != null ? builder.createdAt : new Timestamp(System.currentTimeMillis());
     }
 
     public Long getId() {
@@ -39,16 +38,8 @@ public class Ticket {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getUserEmail() {
@@ -100,14 +91,13 @@ public class Ticket {
     public static class TicketBuilder {
 
         private Long id;
-        private String title;
-        private String description;
-        private String userEmail;
+        private final String title;
+        private final String description;
+        private final String userEmail;
 
         private TicketStatus status;
         private String masterId;
         private BigDecimal price;
-
         private Timestamp createdAt;
 
         public TicketBuilder(String title, String description, String userEmail) {
@@ -116,7 +106,6 @@ public class Ticket {
             this.userEmail = userEmail;
 
             this.status = TicketStatus.NEW;
-            this.createdAt = new Timestamp(LocalDateTime.now().toLocalTime().getNano());
         }
 
         public TicketBuilder setId(Long id) {

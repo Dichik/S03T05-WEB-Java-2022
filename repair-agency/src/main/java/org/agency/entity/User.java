@@ -9,11 +9,13 @@ public class User extends Person {
 
     private User(UserBuilder builder) {
         this.id = builder.id;
-        this.firstName = builder.firstName;
-        this.secondName =  builder.secondName;
         this.email = builder.email;
         this.balance = (builder.balance != null) ? builder.balance : BigDecimal.ZERO;
         this.password = builder.password;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -35,9 +37,7 @@ public class User extends Person {
     public static class UserBuilder {
 
         private Long id;
-        private String firstName;
-        private String secondName;
-        private String email;
+        private final String email;
         private BigDecimal balance;
         private String password;
 
@@ -47,16 +47,6 @@ public class User extends Person {
 
         public UserBuilder setId(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public UserBuilder setFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public UserBuilder setSecondName(String secondName) {
-            this.secondName = secondName;
             return this;
         }
 

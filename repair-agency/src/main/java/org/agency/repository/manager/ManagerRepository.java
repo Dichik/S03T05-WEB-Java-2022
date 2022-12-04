@@ -23,8 +23,6 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
     public String getTableSQLSchema() {
         return "CREATE TABLE IF NOT EXISTS managers(" +
                 "id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
-                "firstName VARCHAR(255), " +
-                "secondName VARCHAR(255), " +
                 "email VARCHAR(255), " +
                 "password VARCHAR(255))";
     }
@@ -32,8 +30,8 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
     @Override
     public String getInsertSQLQuery() {
         return "INSERT INTO " + this.tableName +
-                " (firstName, secondName, email, password) " +
-                "VALUES (?, ?, ?, ?)";
+                " (email, password) " +
+                "VALUES (?, ?)";
     }
 
     @Override
@@ -44,24 +42,16 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
 
     @Override
     public void updatePreparedStatementWithItemData(PreparedStatement ps, Manager manager, boolean setId) throws SQLException {
-        if (manager.getFirstName() != null) {
-            ps.setString(1, manager.getFirstName());
+        if (manager.getEmail() != null) {
+            ps.setString(1, manager.getEmail());
         } else ps.setNull(1, Types.NULL);
 
-        if (manager.getSecondName() != null) {
-            ps.setString(2, manager.getSecondName());
+        if (manager.getPassword() != null) {
+            ps.setString(2, manager.getPassword());
         } else ps.setNull(2, Types.NULL);
 
-        if (manager.getEmail() != null) {
-            ps.setString(3, manager.getEmail());
-        } else ps.setNull(3, Types.NULL);
-
-        if (manager.getPassword() != null) {
-            ps.setString(4, manager.getPassword());
-        } else ps.setNull(4, Types.NULL);
-
         if (setId) {
-            ps.setLong(5, manager.getId());
+            ps.setLong(3, manager.getId());
         }
 
     }
@@ -69,7 +59,7 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
     @Override
     public String getUpdateSQLQuery() {
         return "UPDATE " + this.tableName +
-                " SET firstName=?, secondName=?, email=?, password=?" +
+                " SET email=?, password=?" +
                 " WHERE id=?";
     }
 
@@ -83,7 +73,7 @@ public class ManagerRepository extends DaoImpl<Manager> implements PersonReposit
             while (rs.next()) {
                 item = this.buildItem(rs);
             }
-            return item;
+            return Optional.ofNullable(item);
         } catch (SQLException e) {
             String message = String.format("Couldn't get item with email=%s, see: %s", email, e);
             logger.error(message);

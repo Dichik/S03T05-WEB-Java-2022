@@ -24,8 +24,6 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
         return "CREATE TABLE IF NOT EXISTS " +
                 this.tableName +
                 " (id SERIAL PRIMARY KEY, " +
-                "firstName VARCHAR(255), " +
-                "secondName VARCHAR(255), " +
                 "email VARCHAR(255), " +
                 "balance decimal, " +
                 "password VARCHAR(255))";
@@ -34,8 +32,8 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
     @Override
     public String getInsertSQLQuery() {
         return "INSERT INTO " + this.tableName +
-                " (firstName, secondName, email, balance, password) " +
-                "VALUES (?, ?, ?, ?, ?)";
+                " (email, balance, password) " +
+                "VALUES (?, ?, ?)";
     }
 
     // FIXME field names should be in configuration
@@ -43,8 +41,6 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
     public User buildItem(ResultSet rs) throws SQLException {
         return new User.UserBuilder(rs.getString("email"))
                 .setId(rs.getLong("id"))
-                .setFirstName(rs.getString("firstName"))
-                .setSecondName(rs.getString("secondName"))
                 .setPassword(rs.getString("password"))
                 .setBalance(rs.getBigDecimal("balance"))
                 .build();
@@ -52,26 +48,18 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
 
     @Override
     public void updatePreparedStatementWithItemData(PreparedStatement ps, User user, boolean setId) throws SQLException {
-        if (user.getFirstName() != null) {
-            ps.setString(1, user.getFirstName());
+        if (user.getEmail() != null) {
+            ps.setString(1, user.getEmail());
         } else ps.setNull(1, Types.NULL);
 
-        if (user.getSecondName() != null) {
-            ps.setString(2, user.getSecondName());
-        } else ps.setNull(2, Types.NULL);
-
-        if (user.getEmail() != null) {
-            ps.setString(3, user.getEmail());
-        } else ps.setNull(3, Types.NULL);
-
-        ps.setBigDecimal(4, user.getBalance());
+        ps.setBigDecimal(2, user.getBalance());
 
         if (user.getPassword() != null) {
-            ps.setString(5, user.getPassword());
-        } else ps.setNull(5, Types.NULL);
+            ps.setString(3, user.getPassword());
+        } else ps.setNull(3, Types.NULL);
 
         if (setId) {
-            ps.setLong(6, user.getId());
+            ps.setLong(4, user.getId());
         }
 
     }
@@ -79,7 +67,7 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
     @Override
     public String getUpdateSQLQuery() {
         return "UPDATE " + this.tableName +
-                " SET firstName=?, secondName=?, email=?, balance=?, password=?" +
+                " SET email=?, balance=?, password=?" +
                 " WHERE id=?";
     }
 
@@ -93,7 +81,7 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
             while (rs.next()) {
                 item = this.buildItem(rs);
             }
-            return item;
+            return Optional.ofNullable(item);
         } catch (SQLException e) {
             String message = String.format("Couldn't get user with item=%s, see: %s", email, e);
             logger.error(message);

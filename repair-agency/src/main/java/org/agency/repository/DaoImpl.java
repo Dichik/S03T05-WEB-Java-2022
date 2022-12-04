@@ -81,7 +81,7 @@ public abstract class DaoImpl<T> implements Dao<T> {
             while (rs.next()) {
                 item = this.buildItem(rs);
             }
-            return item != null ? Optional.of(item) : Optional.empty();
+            return Optional.ofNullable(item);
         } catch (SQLException e) {
             String message = String.format("Couldn't get ticket with id=%d, see: %s", id, e);
             throw new SQLOperationException(message);

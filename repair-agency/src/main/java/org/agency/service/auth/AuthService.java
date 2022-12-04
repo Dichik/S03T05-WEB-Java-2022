@@ -13,6 +13,8 @@ import org.agency.service.session.CurrentSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 /**
  * TODO encrypt password
  */
@@ -52,10 +54,11 @@ public class AuthService implements BaseService {
 
     public void login(String email, String password, Role role) throws EntityNotFoundException, WrongPasswordOnLoginException {
         PersonRepository<?> repository = getRepositoryByRole(role);
-        Person person = (Person) repository.findByEmail(email);
-        if (person == null) {
+        Optional<?> obj = repository.findByEmail(email);
+        if (!obj.isPresent()) {
             throw new EntityNotFoundException("Couldn't find person by email=[" + email + "]");
         }
+        Person person = (Person) obj.get();
         if (!password.equals(person.getPassword())) {
             throw new WrongPasswordOnLoginException("Wrong password for email=[" + email + "]");
         }
