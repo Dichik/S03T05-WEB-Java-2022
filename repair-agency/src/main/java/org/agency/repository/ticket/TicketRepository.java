@@ -17,7 +17,6 @@ public class TicketRepository extends DaoImpl<Ticket> {
     public TicketRepository(Connection connection) {
         super(connection, "tickets"); // FIXME take name from the correct place
 
-//        this.dropTable();
         this.createTable();
     }
 
@@ -81,28 +80,24 @@ public class TicketRepository extends DaoImpl<Ticket> {
     }
 
     public List<Ticket> getByUserEmail(String email) {
-        List<Ticket> items = new ArrayList<>();
-        try {
-            Statement statement = this.connection.createStatement();
-            String sql = "SELECT * from " + this.tableName + " WHERE userEmail='" + email + "'";
-            ResultSet rs = statement.executeQuery(sql);
-            while (rs.next()) {
-                Ticket item = this.buildItem(rs);
-                items.add(item);
-            }
-            logger.info(String.format("Items from table=%s were successfully gotten.", this.tableName));
-        } catch (SQLException e) {
-            String message = String.format("Couldn't get items from %s, see: %s", this.tableName, e);
-            throw new SQLOperationException(message);
-        }
-        return items;
+        String sql = "SELECT * from " + this.tableName + " WHERE userEmail='" + email + "'";
+        return this.getBy(sql);
     }
 
     public List<Ticket> getByMasterEmail(String email) {
+        String sql = "SELECT * from " + this.tableName + " WHERE masterEmail='" + email + "'";
+        return this.getBy(sql);
+    }
+
+    public List<Ticket> getByStatus(String status) {
+        String sql = "SELECT * from " + this.tableName + " WHERE status='" + status + "'";
+        return this.getBy(sql);
+    }
+
+    private List<Ticket> getBy(String sql) {
         List<Ticket> items = new ArrayList<>();
         try {
             Statement statement = this.connection.createStatement();
-            String sql = "SELECT * from " + this.tableName + " WHERE masterEmail='" + email + "'";
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 Ticket item = this.buildItem(rs);
@@ -114,11 +109,6 @@ public class TicketRepository extends DaoImpl<Ticket> {
             throw new SQLOperationException(message);
         }
         return items;
-    }
-
-    public List<Ticket> getByStatus(String status) {
-        // TODO implement this method
-        return null;
     }
 
 }

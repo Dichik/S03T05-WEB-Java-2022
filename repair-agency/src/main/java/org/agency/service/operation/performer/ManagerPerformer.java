@@ -77,7 +77,9 @@ public class ManagerPerformer implements ActionPerformer {
     }
 
     private void filterByStatus() {
-        // TODO to be implemented...
+        String status = this.actionSelector.getStatus();
+
+        showTickets(this.managerController.getFilterByStatus(status));
     }
 
     private void filterByMaster() {

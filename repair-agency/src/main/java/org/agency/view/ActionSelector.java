@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ActionSelector {
+    // TODO there are lots of things that can be improved in this class
     public static final String ENTER_EMAIL = "Enter email: ";
     public static final String ENTER_MASTER_EMAIL = "Enter master email: ";
     public static final String ENTER_USER_EMAIL = "Enter user email: ";
     public static final String ENTER_TITLE = "Enter title: ";
     public static final String ENTER_DESCRIPTION = "Enter description: ";
+
     private static final Scanner scanner = new Scanner(System.in);
 
     public ActionSelector() {
@@ -63,7 +65,7 @@ public class ActionSelector {
 
     public String getStatus() {
         System.out.println("Enter status: ");
-        return scanner.nextLine();
+        return scanner.nextLine(); // FIXME
     }
 
     public String getPassword() {

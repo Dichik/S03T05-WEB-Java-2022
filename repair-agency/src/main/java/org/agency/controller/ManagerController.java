@@ -89,6 +89,10 @@ public class ManagerController {
         return this.ticketService.getFilteredByMaster(masterEmail);
     }
 
+    public List<Ticket> getFilterByStatus(String status) {
+        return this.ticketService.getFilteredByStatus(status);
+    }
+
     // TODO when do user pay for the request/ticket? after ticket will be successfully done?
 
 }
