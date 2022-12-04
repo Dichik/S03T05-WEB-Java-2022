@@ -111,7 +111,12 @@ public abstract class DaoImpl<T> implements Dao<T> {
         String sql = this.getUpdateSQLQuery();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             updatePreparedStatementWithItemData(ps, item, true);
-            ps.executeUpdate();
+            int result = ps.executeUpdate();
+            if (result == 0) {
+                logger.warn(String.format("Haven't found item with id=[%s] to update.", id));
+            } else {
+                logger.info(String.format("Item with id=[%d] was successfully updated.", id));
+            }
         } catch (SQLException e) {
             String message = String.format("Couldn't update item in table=[%s], see: %s", this.tableName, e);
             throw new SQLOperationException(message);

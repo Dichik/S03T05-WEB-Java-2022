@@ -2,27 +2,62 @@ package org.agency.service.manager;
 
 import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
+import org.agency.exception.EntityNotFoundException;
+import org.agency.exception.MasterLackOfPermissionException;
+import org.agency.exception.UnvalidStatusUpdateException;
+import org.agency.repository.ticket.TicketRepository;
 import org.agency.service.BaseService;
+import org.agency.service.session.CurrentSession;
+import org.agency.service.session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ManagerService implements BaseService {
     private final Logger logger = LogManager.getLogger(ManagerService.class);
 
+    private final TicketRepository ticketRepository;
+
     public ManagerService(RepositoryDelegator repositoryDelegator) {
-        // TODO ...
+        this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
     }
 
-    // TODO another annotation for allowing performing manager's operations
-    public void setStatus(/* enum with statuses */) {
-        // TODO implement this method
+    public void updateStatus(Long ticketId, String updatedStatusName) throws EntityNotFoundException, UnvalidStatusUpdateException {
+        Ticket ticket = this.ticketRepository.findById(ticketId);
+        if (ticket == null) {
+            throw new EntityNotFoundException("Ticket with " + ticketId + " was not found.");
+        }
+
+        Session session = CurrentSession.getSession();
+        if (!Objects.equals(ticket.getMasterEmail(), session.getEmail())) {
+            throw new MasterLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
+        }
+
+        TicketStatus currentStatus = ticket.getStatus();
+        TicketStatus updatedStatus = TicketStatus.getTicketStatusByName(updatedStatusName);
+        if (!this.validateStatusChange(currentStatus, updatedStatus)) {
+            assert updatedStatus != null;
+            String message = String.format("Oops, status update from [%s] to [%s] is not valid for current user",
+                    currentStatus.getName(), updatedStatus.getName());
+            throw new UnvalidStatusUpdateException(message);
+        }
+        ticket.setStatus(updatedStatus);
+        this.ticketRepository.update(ticket.getId(), ticket);
+        logger.info(String.format("Ticket with id=[%d] was updated from [%s] to [%s]",
+                ticket.getId(), currentStatus.getName(), Objects.requireNonNull(updatedStatus).getName()));
     }
 
-    public List<Ticket> getTickets() {
-        // TODO implement this method
-        return null;
+
+    private boolean validateStatusChange(TicketStatus currentStatus, TicketStatus updatedStatus) {
+        if (currentStatus == TicketStatus.DONE && updatedStatus == TicketStatus.WAITING_FOR_PAYMENT) {
+            return true;
+        } else if (currentStatus == TicketStatus.DONE && updatedStatus == TicketStatus.PAID) {
+            return true;
+        }
+        return currentStatus == TicketStatus.CANCELED;
     }
 
     // TODO should we add method to get active/new tickets?

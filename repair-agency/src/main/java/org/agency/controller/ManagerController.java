@@ -5,6 +5,7 @@ import org.agency.entity.Ticket;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UnvalidStatusUpdateException;
 import org.agency.service.auth.AuthService;
+import org.agency.service.manager.ManagerService;
 import org.agency.service.ticket.TicketService;
 import org.agency.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -19,8 +20,10 @@ public class ManagerController {
     private final UserService userService;
     private final TicketService ticketService;
     private final AuthService authService;
+    private final ManagerService managerService;
 
     public ManagerController(ServiceDelegator serviceDelegator) {
+        this.managerService = (ManagerService) serviceDelegator.getByClass(ManagerService.class);
         this.userService = (UserService) serviceDelegator.getByClass(UserService.class);
         this.ticketService = (TicketService) serviceDelegator.getByClass(TicketService.class);
         this.authService = (AuthService) serviceDelegator.getByClass(AuthService.class);
@@ -46,7 +49,7 @@ public class ManagerController {
 
     public void setStatus(Long ticketId, String updatedStatus) {
         try {
-            this.ticketService.updateStatus(ticketId, updatedStatus);
+            this.managerService.updateStatus(ticketId, updatedStatus);
             logger.info(String.format("Ticket status with id=%d was updated to status=%s", ticketId, updatedStatus));
         } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
             logger.error("Couldn't set status " + updatedStatus + ", see: " + e);

@@ -46,6 +46,7 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
                 .setFirstName(rs.getString("firstName"))
                 .setSecondName(rs.getString("secondName"))
                 .setPassword(rs.getString("password"))
+                .setBalance(rs.getBigDecimal("balance"))
                 .build();
     }
 
