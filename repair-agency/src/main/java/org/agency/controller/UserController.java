@@ -37,10 +37,6 @@ public class UserController {
         this.ticketService.createTicket(ticket);
     }
 
-
-    /**
-     * TODO we should have option to check notifications
-     */
     public void leaveFeedback(Long ticketId, String feedbackText) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
         if (!ticket.isPresent() || ticket.get().getStatus() != TicketStatus.DONE) {

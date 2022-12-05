@@ -10,11 +10,14 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.Optional;
 
+/**
+ * FIXME take names from properties
+ */
 public class MasterRepository extends DaoImpl<Master> implements PersonRepository<Master> {
     private static final Logger logger = LogManager.getLogger(MasterRepository.class);
 
     public MasterRepository(Connection connection) {
-        super(connection, "masters"); // FIXME name must be taken from properties of somewhere else
+        super(connection, "masters");
 
         this.createTable();
     }

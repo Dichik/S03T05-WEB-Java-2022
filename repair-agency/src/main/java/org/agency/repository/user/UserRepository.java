@@ -36,7 +36,6 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
                 "VALUES (?, ?, ?)";
     }
 
-    // FIXME field names should be in configuration
     @Override
     public User buildItem(ResultSet rs) throws SQLException {
         return new User.UserBuilder(rs.getString("email"))

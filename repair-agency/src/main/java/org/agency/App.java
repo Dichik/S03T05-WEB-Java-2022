@@ -14,11 +14,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * TODO notifications
+ * TODO to cache everything that is possible (password, data, etc.)
+ * TODO default login and password for admin
+ * TODO add possibility to check feedback about ticket (as a manager?)
+ */
 public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
-    // TODO to cache everything that is possible (password, data, etc.)
-    // TODO there is default login and password for admin (?)
-    // TODO add possibility to check feedback about ticket (as a manager?)
 
     public static void main(String[] args) {
         logger.info("[App] is started successfully.");
