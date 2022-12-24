@@ -1,20 +1,23 @@
 package org.agency.repository.ticket;
 
-import lombok.Value;
 import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
 import org.agency.exception.SQLOperationException;
 import org.agency.repository.DaoImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class TicketRepository extends DaoImpl<Ticket> {
     private static final Logger logger = LogManager.getLogger(TicketRepository.class);
 
+    @Autowired
     public TicketRepository(Connection connection) {
         super(connection, "tickets");
 

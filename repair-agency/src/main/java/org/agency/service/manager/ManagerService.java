@@ -1,6 +1,5 @@
 package org.agency.service.manager;
 
-import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
 import org.agency.entity.TicketStatus;
 import org.agency.exception.EntityNotFoundException;
@@ -12,16 +11,20 @@ import org.agency.service.session.CurrentSession;
 import org.agency.service.session.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+@Service
 public class ManagerService implements BaseService {
     private final Logger logger = LogManager.getLogger(ManagerService.class);
 
     private final TicketRepository ticketRepository;
 
-    public ManagerService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
-        this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
+    @Autowired
+    public ManagerService(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
     }
 
     public void updateStatus(Long ticketId, String updatedStatusName) throws EntityNotFoundException, UnvalidStatusUpdateException {

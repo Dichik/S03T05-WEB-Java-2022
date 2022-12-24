@@ -1,22 +1,25 @@
 package org.agency.service.ticket;
 
-import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.ticket.TicketRepository;
 import org.agency.service.BaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TicketService implements BaseService {
 
     private final TicketRepository ticketRepository;
 
-    public TicketService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
-        this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
+    @Autowired
+    public TicketService(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
     }
 
     public void createTicket(Ticket ticket) {

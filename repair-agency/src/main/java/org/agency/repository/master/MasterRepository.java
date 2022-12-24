@@ -6,6 +6,8 @@ import org.agency.repository.DaoImpl;
 import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Optional;
@@ -13,9 +15,11 @@ import java.util.Optional;
 /**
  * FIXME take names from properties
  */
+@Repository
 public class MasterRepository extends DaoImpl<Master> implements PersonRepository<Master> {
     private static final Logger logger = LogManager.getLogger(MasterRepository.class);
 
+    @Autowired
     public MasterRepository(Connection connection) {
         super(connection, "masters");
 

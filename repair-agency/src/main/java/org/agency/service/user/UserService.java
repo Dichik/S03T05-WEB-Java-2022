@@ -1,24 +1,27 @@
 package org.agency.service.user;
 
-import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.Ticket;
 import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.ticket.TicketRepository;
 import org.agency.repository.user.UserRepository;
 import org.agency.service.BaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
+@Service
 public class UserService implements BaseService {
 
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
 
-    public UserService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
-        this.userRepository = (UserRepository) repositoryDelegator.getByClass(UserRepository.class);
-        this.ticketRepository = (TicketRepository) repositoryDelegator.getByClass(TicketRepository.class);
+    @Autowired
+    public UserService(UserRepository userRepository, TicketRepository ticketRepository) {
+        this.userRepository = userRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public void topUpBalance(String email, BigDecimal amount) throws EntityNotFoundException {

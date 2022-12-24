@@ -1,9 +1,7 @@
 package org.agency.service.auth;
 
-import org.agency.delegator.RepositoryDelegator;
 import org.agency.entity.*;
 import org.agency.exception.EntityNotFoundException;
-import org.agency.exception.RoleNotFoundException;
 import org.agency.exception.WrongPasswordOnLoginException;
 import org.agency.repository.PersonRepository;
 import org.agency.repository.manager.ManagerRepository;
@@ -13,12 +11,15 @@ import org.agency.service.BaseService;
 import org.agency.service.session.CurrentSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 /**
  * TODO encrypt password
  */
+@Service
 public class AuthService implements BaseService {
     private static final Logger logger = LogManager.getLogger(AuthService.class);
 
@@ -26,10 +27,11 @@ public class AuthService implements BaseService {
     private final MasterRepository masterRepository;
     private final ManagerRepository managerRepository;
 
-    public AuthService(RepositoryDelegator repositoryDelegator) throws ClassNotFoundException {
-        this.userRepository = (UserRepository) repositoryDelegator.getByClass(UserRepository.class);
-        this.masterRepository = (MasterRepository) repositoryDelegator.getByClass(MasterRepository.class);
-        this.managerRepository = (ManagerRepository) repositoryDelegator.getByClass(ManagerRepository.class);
+    @Autowired
+    public AuthService(UserRepository userRepository, MasterRepository masterRepository, ManagerRepository managerRepository) throws ClassNotFoundException {
+        this.userRepository = userRepository;
+        this.masterRepository = masterRepository;
+        this.managerRepository = managerRepository;
     }
 
     public void register(String email, String password, Role role) {

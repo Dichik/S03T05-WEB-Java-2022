@@ -2,11 +2,15 @@ package org.agency.repository.feedback;
 
 import org.agency.entity.Feedback;
 import org.agency.repository.DaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 
+@Repository
 public class FeedbackRepository extends DaoImpl<Feedback> {
 
+    @Autowired
     public FeedbackRepository(Connection connection) {
         super(connection, "feedbacks");
 

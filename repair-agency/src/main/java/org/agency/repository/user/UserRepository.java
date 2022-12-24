@@ -6,13 +6,17 @@ import org.agency.repository.DaoImpl;
 import org.agency.repository.PersonRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Optional;
 
+@Repository
 public class UserRepository extends DaoImpl<User> implements PersonRepository<User> {
     private static final Logger logger = LogManager.getLogger(UserRepository.class);
 
+    @Autowired
     public UserRepository(Connection connection) {
         super(connection, "users");
 
