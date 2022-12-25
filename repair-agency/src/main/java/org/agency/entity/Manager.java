@@ -1,48 +1,24 @@
 package org.agency.entity;
 
+import lombok.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Manager extends Person {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final String email;
-    private final String password;
-
-    private Manager(ManagerBuilder builder) {
-        this.email = builder.email;
-        this.password = builder.password;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public static class ManagerBuilder {
-
-        private final String email;
-        private final String password;
-
-        public ManagerBuilder(String email, String password) {
-            this.email = email;
-            this.password = password;
-        }
-
-        public Manager build() {
-            return new Manager(this);
-        }
-
-    }
+    private String email;
+    private String password;
 
 }
