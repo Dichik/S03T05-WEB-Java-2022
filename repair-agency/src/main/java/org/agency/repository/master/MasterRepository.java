@@ -45,8 +45,10 @@ public class MasterRepository extends DaoImpl<Master> implements PersonRepositor
 
     @Override
     public Master buildItem(ResultSet rs) throws SQLException {
-        return new Master.MasterBuilder(rs.getString("email"),
-                rs.getString("password")).build();
+        return Master.builder()
+                .email(rs.getString("email"))
+                .password(rs.getString("password"))
+                .build();
     }
 
     @Override

@@ -1,6 +1,9 @@
 package org.agency.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +15,8 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Ticket {
 
     @Id
@@ -23,21 +28,7 @@ public class Ticket {
     private TicketStatus status;
     private String masterEmail;
     private BigDecimal price;
-    private Timestamp createdAt;
-
-    public Ticket() {
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-    }
-
-    public Ticket(Long id, String title, String description, String userEmail, TicketStatus status, String masterEmail, BigDecimal price) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.userEmail = userEmail;
-        this.status = status;
-        this.masterEmail = masterEmail;
-        this.price = price;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-    }
+    @Builder.Default
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
 }

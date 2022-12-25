@@ -35,10 +35,11 @@ public class FeedbackRepository extends DaoImpl<Feedback> {
 
     @Override
     public Feedback buildItem(ResultSet rs) throws SQLException {
-        return new Feedback.FeedbackBuilder(rs.getString("text"))
-                .setId(rs.getLong("id"))
-                .setTicketId(rs.getLong("ticketId"))
-                .setUserEmail(rs.getString("userEmail"))
+        return Feedback.builder()
+                .text(rs.getString("text"))
+                .id(rs.getLong("id"))
+                .ticketId(rs.getLong("ticketId"))
+                .userEmail(rs.getString("userEmail"))
                 .build();
     }
 

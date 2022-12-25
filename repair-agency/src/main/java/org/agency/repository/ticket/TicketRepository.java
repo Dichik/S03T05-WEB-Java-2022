@@ -46,12 +46,15 @@ public class TicketRepository extends DaoImpl<Ticket> {
 
     @Override
     public Ticket buildItem(ResultSet rs) throws SQLException {
-        return new Ticket.TicketBuilder(rs.getString("title"), rs.getString("description"), rs.getString("userEmail"))
-                .setId(rs.getLong("id"))
-                .setStatus(TicketStatus.getTicketStatusByName(rs.getString("status")))
-                .setMasterId(rs.getString("masterEmail"))
-                .setPrice(rs.getBigDecimal("price"))
-                .setCreatedAt(rs.getTimestamp("createdAt"))
+        return Ticket.builder()
+                .title(rs.getString("title"))
+                .description(rs.getString("description"))
+                .userEmail(rs.getString("userEmail"))
+                .id(rs.getLong("id"))
+                .status(TicketStatus.getTicketStatusByName(rs.getString("status")))
+                .masterEmail(rs.getString("masterEmail"))
+                .price(rs.getBigDecimal("price"))
+                .createdAt(rs.getTimestamp("createdAt"))
                 .build();
     }
 

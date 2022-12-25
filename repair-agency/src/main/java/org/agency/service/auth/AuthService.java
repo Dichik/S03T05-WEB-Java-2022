@@ -41,7 +41,10 @@ public class AuthService implements BaseService {
                     logger.error(String.format("Master with email=[%s] already exists.", email));
                     return;
                 }
-                Master master = new Master.MasterBuilder(email, password).build();
+                Master master = Master.builder()
+                        .email(email)
+                        .password(password)
+                        .build();
                 this.masterRepository.create(master);
                 break;
             case MANAGER:
@@ -49,7 +52,10 @@ public class AuthService implements BaseService {
                     logger.error(String.format("Manager with email=[%s] already exists.", email));
                     return;
                 }
-                Manager manager = new Manager.ManagerBuilder(email, password).build();
+                Manager manager = Manager.builder()
+                        .email(email)
+                        .password(password)
+                        .build();
                 this.managerRepository.create(manager);
                 break;
             case USER:
@@ -57,7 +63,10 @@ public class AuthService implements BaseService {
                     logger.error(String.format("User with email=[%s] already exists.", email));
                     return;
                 }
-                User user = new User.UserBuilder(email).setPassword(password).build();
+                User user = User.builder()
+                        .email(email)
+                        .password(password)
+                        .build();
                 this.userRepository.create(user);
                 break;
             default:

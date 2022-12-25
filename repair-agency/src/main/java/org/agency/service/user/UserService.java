@@ -27,7 +27,7 @@ public class UserService implements BaseService {
     public void topUpBalance(String email, BigDecimal amount) throws EntityNotFoundException {
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User with " + email + " email was not found"));
-        user.topUp(amount);
+        user.setBalance(amount.add(user.getBalance()));
         this.userRepository.update(user.getId(), user);
     }
 
@@ -42,7 +42,7 @@ public class UserService implements BaseService {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " id was not found"));
 
-        user.drawback(ticket.getPrice());
+        user.setBalance(user.getBalance().subtract(ticket.getPrice()));
         this.userRepository.update(user.getId(), user);
     }
 

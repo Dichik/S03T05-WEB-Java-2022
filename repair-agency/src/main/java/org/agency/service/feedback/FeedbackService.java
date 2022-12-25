@@ -21,9 +21,10 @@ public class FeedbackService implements BaseService {
     }
 
     public void submit(Long ticketId, String feedbackText) {
-        Feedback feedback = new Feedback.FeedbackBuilder(feedbackText)
-                .setTicketId(ticketId)
-                .setUserEmail(CurrentSession.getSession().getEmail())
+        Feedback feedback = Feedback.builder()
+                .text(feedbackText)
+                .ticketId(ticketId)
+                .userEmail(CurrentSession.getSession().getEmail())
                 .build();
         this.feedbackRepository.create(feedback);
         logger.info(String.format("Feedback to ticket with id=[%d] was successfully added.", ticketId));

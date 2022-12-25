@@ -42,10 +42,11 @@ public class UserRepository extends DaoImpl<User> implements PersonRepository<Us
 
     @Override
     public User buildItem(ResultSet rs) throws SQLException {
-        return new User.UserBuilder(rs.getString("email"))
-                .setId(rs.getLong("id"))
-                .setPassword(rs.getString("password"))
-                .setBalance(rs.getBigDecimal("balance"))
+        return User.builder()
+                .email(rs.getString("email"))
+                .id(rs.getLong("id"))
+                .password(rs.getString("password"))
+                .balance(rs.getBigDecimal("balance"))
                 .build();
     }
 
