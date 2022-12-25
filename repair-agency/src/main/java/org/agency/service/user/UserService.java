@@ -28,7 +28,7 @@ public class UserService implements BaseService {
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User with " + email + " email was not found"));
         user.setBalance(amount.add(user.getBalance()));
-        this.userRepository.update(user.getId(), user);
+        this.userRepository.save(user);
     }
 
     public Optional<User> findByEmail(String userEmail) throws EntityNotFoundException {
@@ -43,7 +43,7 @@ public class UserService implements BaseService {
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " id was not found"));
 
         user.setBalance(user.getBalance().subtract(ticket.getPrice()));
-        this.userRepository.update(user.getId(), user);
+        this.userRepository.save(user);
     }
 
 }

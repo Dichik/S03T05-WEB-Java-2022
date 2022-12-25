@@ -1,9 +1,11 @@
 package org.agency.service.auth;
 
-import org.agency.entity.*;
+import org.agency.entity.Manager;
+import org.agency.entity.Master;
+import org.agency.entity.Role;
+import org.agency.entity.User;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.WrongPasswordOnLoginException;
-import org.agency.repository.PersonRepository;
 import org.agency.repository.manager.ManagerRepository;
 import org.agency.repository.master.MasterRepository;
 import org.agency.repository.user.UserRepository;
@@ -13,8 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 /**
  * TODO encrypt password
@@ -45,7 +45,7 @@ public class AuthService implements BaseService {
                         .email(email)
                         .password(password)
                         .build();
-                this.masterRepository.create(master);
+                this.masterRepository.save(master);
                 break;
             case MANAGER:
                 if (this.managerRepository.existsByEmail(email)) {
@@ -56,7 +56,7 @@ public class AuthService implements BaseService {
                         .email(email)
                         .password(password)
                         .build();
-                this.managerRepository.create(manager);
+                this.managerRepository.save(manager);
                 break;
             case USER:
                 if (this.userRepository.existsByEmail(email)) {
@@ -67,7 +67,7 @@ public class AuthService implements BaseService {
                         .email(email)
                         .password(password)
                         .build();
-                this.userRepository.create(user);
+                this.userRepository.save(user);
                 break;
             default:
                 logger.warn("Registration was not successful, because specified role is not correct.");
@@ -77,29 +77,7 @@ public class AuthService implements BaseService {
     }
 
     public void login(String email, String password, Role role) throws EntityNotFoundException, WrongPasswordOnLoginException {
-        PersonRepository<?> repository = getRepositoryByRole(role);
-        Optional<?> obj = repository.findByEmail(email);
-        if (!obj.isPresent()) {
-            throw new EntityNotFoundException("Couldn't find person by email=[" + email + "]");
-        }
-        Person person = (Person) obj.get();
-        if (!password.equals(person.getPassword())) {
-            throw new WrongPasswordOnLoginException("Wrong password for email=[" + email + "]");
-        }
-        CurrentSession.setRole(email, role);
-    }
 
-    private PersonRepository<?> getRepositoryByRole(Role role) {
-        switch (role) {
-            case MASTER:
-                return this.masterRepository;
-            case MANAGER:
-                return this.managerRepository;
-            case USER:
-                return this.userRepository;
-            default:
-                throw new NullPointerException("Repository for " + role + " doesn't exist.");
-        }
     }
 
     public void logout() {

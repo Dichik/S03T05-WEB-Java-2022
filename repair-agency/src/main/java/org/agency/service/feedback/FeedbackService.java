@@ -26,7 +26,7 @@ public class FeedbackService implements BaseService {
                 .ticketId(ticketId)
                 .userEmail(CurrentSession.getSession().getEmail())
                 .build();
-        this.feedbackRepository.create(feedback);
+        this.feedbackRepository.save(feedback);
         logger.info(String.format("Feedback to ticket with id=[%d] was successfully added.", ticketId));
     }
 

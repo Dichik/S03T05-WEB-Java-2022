@@ -1,6 +1,7 @@
 package org.agency.controller;
 
 import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UnvalidStatusUpdateException;
 import org.agency.service.manager.ManagerService;
@@ -10,9 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
@@ -34,7 +34,7 @@ public class ManagerController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public List<Ticket> getTickets() {
         return this.ticketService.getAll();
     }
@@ -56,10 +56,10 @@ public class ManagerController {
     }
 
     public List<Ticket> getFilterByStatus(String status) {
-        return this.ticketService.getFilteredByStatus(status);
+        return this.ticketService.getFilteredByStatus(TicketStatus.valueOf(status));
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "masterEmail"})
     public void assignMasterToTicket(@RequestParam Long ticketId, @RequestParam String masterEmail) {
         try {
             this.ticketService.assignMaster(ticketId, masterEmail);
@@ -69,7 +69,8 @@ public class ManagerController {
         }
     }
 
-    @PostMapping
+    // TODO can we do all that 'set's as PUT/PATCH operation?
+    @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "price"})
     public void setTicketPrice(@RequestParam Long ticketId, @RequestParam BigDecimal price) {
         try {
             this.ticketService.updatePrice(ticketId, price);
@@ -78,7 +79,7 @@ public class ManagerController {
         }
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "updatedStatus"})
     public void setStatus(@RequestParam Long ticketId, @RequestParam String updatedStatus) {
         try {
             this.managerService.updateStatus(ticketId, updatedStatus);
@@ -88,7 +89,8 @@ public class ManagerController {
         }
     }
 
-    @PostMapping
+    // TODO do we really need this method here?
+    @RequestMapping(method = RequestMethod.POST, params = {"email", "amount"})
     public void topUpAccount(@RequestParam String email, @RequestParam BigDecimal amount) {
         try {
             this.userService.topUpBalance(email, amount);

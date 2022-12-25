@@ -1,6 +1,7 @@
 package org.agency.service.ticket;
 
 import org.agency.entity.Ticket;
+import org.agency.entity.TicketStatus;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.repository.ticket.TicketRepository;
 import org.agency.service.BaseService;
@@ -23,29 +24,29 @@ public class TicketService implements BaseService {
     }
 
     public void createTicket(Ticket ticket) {
-        this.ticketRepository.create(ticket);
+        this.ticketRepository.save(ticket);
     }
 
     public List<Ticket> getTicketsByUserEmail(String email) {
-        return this.ticketRepository.getByUserEmail(email);
+        return this.ticketRepository.findByUserEmail(email);
     }
 
     public List<Ticket> getTicketsByMasterEmail(String email) {
-        return this.ticketRepository.getByMasterEmail(email);
+        return this.ticketRepository.findByMasterEmail(email);
     }
 
     public void updatePrice(Long ticketId, BigDecimal price) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
         ticket.setPrice(price);
-        this.ticketRepository.update(ticket.getId(), ticket);
+        this.ticketRepository.save(ticket);
     }
 
     public void assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
         ticket.setMasterEmail(masterEmail);
-        this.ticketRepository.update(ticket.getId(), ticket);
+        this.ticketRepository.save(ticket);
     }
 
     public boolean ticketExistsById(Long ticketId) {
@@ -75,11 +76,11 @@ public class TicketService implements BaseService {
     }
 
     public List<Ticket> getFilteredByMaster(String masterEmail) {
-        return this.ticketRepository.getByMasterEmail(masterEmail);
+        return this.ticketRepository.findByMasterEmail(masterEmail);
     }
 
-    public List<Ticket> getFilteredByStatus(String status) {
-        return this.ticketRepository.getByStatus(status);
+    public List<Ticket> getFilteredByStatus(TicketStatus status) {
+        return this.ticketRepository.findByStatus(status);
     }
 
     public Optional<Ticket> getById(Long ticketId) {

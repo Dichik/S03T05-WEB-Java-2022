@@ -43,7 +43,7 @@ public class ManagerService implements BaseService {
         }
 
         ticket.setStatus(updatedStatus);
-        this.ticketRepository.update(ticket.getId(), ticket);
+        this.ticketRepository.save(ticket);
         logger.info(String.format("Ticket with id=[%d] was updated from [%s] to [%s]",
                 ticket.getId(), currentStatus.getName(), Objects.requireNonNull(updatedStatus).getName()));
     }

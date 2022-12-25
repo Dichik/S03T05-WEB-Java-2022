@@ -3,16 +3,14 @@ package org.agency.controller;
 import org.agency.entity.Ticket;
 import org.agency.exception.EntityNotFoundException;
 import org.agency.exception.UnvalidStatusUpdateException;
-import org.agency.service.auth.AuthService;
 import org.agency.service.master.MasterService;
 import org.agency.service.ticket.TicketService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -31,12 +29,12 @@ public class MasterController {
         this.masterService = masterService;
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public List<Ticket> getTicketsByEmail(@RequestParam String email) {
         return this.ticketService.getTicketsByMasterEmail(email);
     }
 
-    @PutMapping
+    @RequestMapping(method = RequestMethod.PUT, params = {"ticketId", "updatedStatus"})
     public void updateStatus(@RequestParam Long ticketId, @RequestParam String updatedStatus) {
         try {
             this.masterService.updateStatus(ticketId, updatedStatus);

@@ -13,7 +13,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -36,26 +39,27 @@ public class UserController {
         this.feedbackService = feedbackService;
     }
 
-    @PostMapping
-    public void createTicket(@RequestBody @Valid Ticket ticket) {
+    @RequestMapping(method = RequestMethod.POST)
+    public void create(@RequestBody @Valid Ticket ticket) {
         this.ticketService.createTicket(ticket);
     }
 
-    @PostMapping
-    public void leaveFeedback(@RequestParam Long ticketId, @RequestParam String feedbackText) {
+    @RequestMapping(method = RequestMethod.POST, value = "feedback", params = {"ticketId", "text"})
+    public void leaveFeedback(@RequestParam Long ticketId, @RequestParam String text) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
         if (!ticket.isPresent() || ticket.get().getStatus() != TicketStatus.DONE) {
             return;
         }
-        this.feedbackService.submit(ticketId, feedbackText);
+        this.feedbackService.submit(ticketId, text);
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET, params = {"email"})
     public List<Ticket> getTicketsByUserEmail(@RequestParam String email) {
         return this.ticketService.getTicketsByUserEmail(email);
     }
 
-    @GetMapping("/balance")
+    // FIXME get by email or filter (Spring Security)?
+    @RequestMapping(method = RequestMethod.GET, value = "/balance")
     public BigDecimal getCurrentBalance() {
         Session session = CurrentSession.getSession();
         try {
@@ -71,7 +75,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "userEmail"})
     public void payForTicket(@RequestParam Long ticketId, @RequestParam String userEmail) {
         try {
             this.userService.payForTicket(ticketId, userEmail);
