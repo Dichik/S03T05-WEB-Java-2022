@@ -1,18 +1,16 @@
 package com.agency.finalproject.entity.login.response;
 
-import java.util.List;
-
 public class UserInfoResponse {
-    private final List<String> roles;
+    private final String role;
     private Long id;
     private String username;
     private String email;
 
-    public UserInfoResponse(Long id, String username, String email, List<String> roles) {
+    public UserInfoResponse(Long id, String username, String email, String role) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.roles = roles;
+        this.role = role;
     }
 
     public Long getId() {
@@ -39,7 +37,7 @@ public class UserInfoResponse {
         this.username = username;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 }
