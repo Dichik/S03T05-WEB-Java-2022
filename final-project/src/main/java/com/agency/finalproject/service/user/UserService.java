@@ -4,7 +4,6 @@ import com.agency.finalproject.entity.Ticket;
 import com.agency.finalproject.entity.User;
 import com.agency.finalproject.repository.ticket.TicketRepository;
 import com.agency.finalproject.repository.user.UserRepository;
-import com.agency.finalproject.service.BaseService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
-public class UserService implements BaseService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;

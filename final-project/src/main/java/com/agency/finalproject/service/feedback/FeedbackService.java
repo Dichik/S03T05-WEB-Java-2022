@@ -2,7 +2,6 @@ package com.agency.finalproject.service.feedback;
 
 import com.agency.finalproject.entity.Feedback;
 import com.agency.finalproject.repository.feedback.FeedbackRepository;
-import com.agency.finalproject.service.BaseService;
 import com.agency.finalproject.service.session.CurrentSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FeedbackService implements BaseService {
+public class FeedbackService {
     private static final Logger logger = LogManager.getLogger(FeedbackService.class);
 
     private final FeedbackRepository feedbackRepository;

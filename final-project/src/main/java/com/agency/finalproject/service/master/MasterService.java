@@ -5,7 +5,6 @@ import com.agency.finalproject.entity.TicketStatus;
 import com.agency.finalproject.exception.MasterLackOfPermissionException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.repository.ticket.TicketRepository;
-import com.agency.finalproject.service.BaseService;
 import com.agency.finalproject.service.session.CurrentSession;
 import com.agency.finalproject.service.session.Session;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class MasterService implements BaseService {
+public class MasterService {
     private static final Logger logger = LogManager.getLogger(MasterService.class);
 
     private final TicketRepository ticketRepository;

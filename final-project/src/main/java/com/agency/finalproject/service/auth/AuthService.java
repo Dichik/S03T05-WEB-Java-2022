@@ -8,7 +8,6 @@ import com.agency.finalproject.exception.WrongPasswordOnLoginException;
 import com.agency.finalproject.repository.manager.ManagerRepository;
 import com.agency.finalproject.repository.master.MasterRepository;
 import com.agency.finalproject.repository.user.UserRepository;
-import com.agency.finalproject.service.BaseService;
 import com.agency.finalproject.service.session.CurrentSession;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Service;
  * TODO encrypt password
  */
 @Service
-public class AuthService implements BaseService {
+public class AuthService {
     private static final Logger logger = LogManager.getLogger(AuthService.class);
 
     private final UserRepository userRepository;

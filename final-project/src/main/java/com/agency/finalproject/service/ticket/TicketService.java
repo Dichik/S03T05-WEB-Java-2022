@@ -3,7 +3,6 @@ package com.agency.finalproject.service.ticket;
 import com.agency.finalproject.entity.Ticket;
 import com.agency.finalproject.entity.TicketStatus;
 import com.agency.finalproject.repository.ticket.TicketRepository;
-import com.agency.finalproject.service.BaseService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TicketService implements BaseService {
+public class TicketService {
 
     private final TicketRepository ticketRepository;
 
