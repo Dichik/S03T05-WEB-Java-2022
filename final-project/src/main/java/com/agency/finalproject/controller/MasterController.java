@@ -4,7 +4,6 @@ import com.agency.finalproject.entity.Ticket;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.service.master.MasterService;
 import com.agency.finalproject.service.ticket.TicketService;
-import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Controller

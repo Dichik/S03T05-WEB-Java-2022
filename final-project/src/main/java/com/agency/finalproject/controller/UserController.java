@@ -4,11 +4,8 @@ import com.agency.finalproject.entity.Ticket;
 import com.agency.finalproject.entity.TicketStatus;
 import com.agency.finalproject.entity.User;
 import com.agency.finalproject.service.feedback.FeedbackService;
-import com.agency.finalproject.service.session.CurrentSession;
-import com.agency.finalproject.service.session.Session;
 import com.agency.finalproject.service.ticket.TicketService;
 import com.agency.finalproject.service.user.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +44,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, value = "feedback", params = {"ticketId", "text"})
     public void leaveFeedback(@RequestParam Long ticketId, @RequestParam String text) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
-        if (!ticket.isPresent() || ticket.get().getStatus() != TicketStatus.DONE) {
+        if (ticket.isEmpty() || ticket.get().getStatus() != TicketStatus.DONE) {
             return;
         }
         this.feedbackService.submit(ticketId, text);
@@ -60,16 +58,15 @@ public class UserController {
     // FIXME get by email or filter (Spring Security)?
     @RequestMapping(method = RequestMethod.GET, value = "/balance")
     public BigDecimal getCurrentBalance() {
-        Session session = CurrentSession.getSession();
         try {
-            Optional<User> user = this.userService.findByEmail(session.getEmail());
-            if (!user.isPresent()) {
-                logger.warn(String.format("User with email=[%s] was not found.", session.getEmail()));
+            Optional<User> user = this.userService.findByEmail("email");
+            if (user.isEmpty()) {
+                logger.warn(String.format("User with email=[%s] was not found.", ""));
                 return BigDecimal.ZERO;
             }
             return user.get().getBalance();
         } catch (EntityNotFoundException e) {
-            logger.error(String.format("Couldn't get current balance for user=[%s], see: %s", session.getEmail(), e));
+            logger.error(String.format("Couldn't get current balance for user=[%s], see: %s", "session.getEmail()", e));
             return BigDecimal.ZERO;
         }
     }

@@ -5,14 +5,12 @@ import com.agency.finalproject.entity.TicketStatus;
 import com.agency.finalproject.exception.MasterLackOfPermissionException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.repository.ticket.TicketRepository;
-import com.agency.finalproject.service.session.CurrentSession;
-import com.agency.finalproject.service.session.Session;
-import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 
 @Service
@@ -48,8 +46,7 @@ public class ManagerService {
     }
 
     private void checkPermissions(Ticket ticket) {
-        Session session = CurrentSession.getSession();
-        if (!Objects.equals(ticket.getMasterEmail(), session.getEmail())) {
+        if (!Objects.equals(ticket.getMasterEmail(), null)) {
             throw new MasterLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
         }
     }

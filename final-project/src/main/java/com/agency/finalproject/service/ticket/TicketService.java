@@ -3,10 +3,10 @@ package com.agency.finalproject.service.ticket;
 import com.agency.finalproject.entity.Ticket;
 import com.agency.finalproject.entity.TicketStatus;
 import com.agency.finalproject.repository.ticket.TicketRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;

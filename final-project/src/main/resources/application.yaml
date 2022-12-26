@@ -14,3 +14,13 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   thymeleaf:
     cache: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-ui
+
+domelian:
+  app:
+    jwtCookieName: bezkoder
+    jwtSecret: bezKoderSecretKey
+    jwtExpirationMs: 86400000

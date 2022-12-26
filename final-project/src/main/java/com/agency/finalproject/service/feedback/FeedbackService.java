@@ -2,7 +2,6 @@ package com.agency.finalproject.service.feedback;
 
 import com.agency.finalproject.entity.Feedback;
 import com.agency.finalproject.repository.feedback.FeedbackRepository;
-import com.agency.finalproject.service.session.CurrentSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class FeedbackService {
         Feedback feedback = Feedback.builder()
                 .text(feedbackText)
                 .ticketId(ticketId)
-                .userEmail(CurrentSession.getSession().getEmail())
+                .userEmail(null)
                 .build();
         this.feedbackRepository.save(feedback);
         logger.info(String.format("Feedback to ticket with id=[%d] was successfully added.", ticketId));
