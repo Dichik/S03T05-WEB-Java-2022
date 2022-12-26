@@ -12,7 +12,7 @@
 {
     "username": "dichikk",
     "email": "domelian@mail.com",
-    "role": ["USER"],
+    "role": "USER",
     "password": "password"
 }
 ```
