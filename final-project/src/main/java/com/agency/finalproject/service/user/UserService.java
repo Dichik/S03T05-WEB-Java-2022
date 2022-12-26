@@ -1,7 +1,7 @@
 package com.agency.finalproject.service.user;
 
-import com.agency.finalproject.entity.Ticket;
-import com.agency.finalproject.entity.User;
+import com.agency.finalproject.entity.ticket.Ticket;
+import com.agency.finalproject.entity.user.User;
 import com.agency.finalproject.repository.ticket.TicketRepository;
 import com.agency.finalproject.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

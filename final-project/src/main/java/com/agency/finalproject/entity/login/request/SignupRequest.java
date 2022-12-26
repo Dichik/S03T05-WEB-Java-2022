@@ -1,4 +1,4 @@
-package com.agency.finalproject.login.request;
+package com.agency.finalproject.entity.login.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

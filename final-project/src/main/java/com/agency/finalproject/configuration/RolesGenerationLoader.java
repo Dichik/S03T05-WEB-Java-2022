@@ -1,7 +1,7 @@
 package com.agency.finalproject.configuration;
 
-import com.agency.finalproject.entity.ERole;
-import com.agency.finalproject.entity.Role;
+import com.agency.finalproject.entity.role.ERole;
+import com.agency.finalproject.entity.role.Role;
 import com.agency.finalproject.repository.role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RolesGenerationLoader implements ApplicationRunner {
 
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public RolesGenerationLoader(RoleRepository roleRepository) {

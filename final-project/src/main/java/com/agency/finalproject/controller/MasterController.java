@@ -1,6 +1,6 @@
 package com.agency.finalproject.controller;
 
-import com.agency.finalproject.entity.Ticket;
+import com.agency.finalproject.entity.ticket.Ticket;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.service.master.MasterService;
 import com.agency.finalproject.service.ticket.TicketService;

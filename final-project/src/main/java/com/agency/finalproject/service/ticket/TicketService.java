@@ -1,7 +1,7 @@
 package com.agency.finalproject.service.ticket;
 
-import com.agency.finalproject.entity.Ticket;
-import com.agency.finalproject.entity.TicketStatus;
+import com.agency.finalproject.entity.ticket.Ticket;
+import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.repository.ticket.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

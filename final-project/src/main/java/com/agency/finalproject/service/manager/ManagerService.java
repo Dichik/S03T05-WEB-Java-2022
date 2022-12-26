@@ -1,7 +1,7 @@
 package com.agency.finalproject.service.manager;
 
-import com.agency.finalproject.entity.Ticket;
-import com.agency.finalproject.entity.TicketStatus;
+import com.agency.finalproject.entity.ticket.Ticket;
+import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.exception.MasterLackOfPermissionException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.repository.ticket.TicketRepository;

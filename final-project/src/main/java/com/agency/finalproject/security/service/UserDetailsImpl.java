@@ -1,6 +1,6 @@
 package com.agency.finalproject.security.service;
 
-import com.agency.finalproject.entity.User;
+import com.agency.finalproject.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

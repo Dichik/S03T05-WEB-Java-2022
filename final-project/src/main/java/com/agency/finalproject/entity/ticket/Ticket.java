@@ -1,4 +1,4 @@
-package com.agency.finalproject.entity;
+package com.agency.finalproject.entity.ticket;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

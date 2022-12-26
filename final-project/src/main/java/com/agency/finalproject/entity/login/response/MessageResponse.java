@@ -1,4 +1,4 @@
-package com.agency.finalproject.login.response;
+package com.agency.finalproject.entity.login.response;
 
 public class MessageResponse {
     private String message;

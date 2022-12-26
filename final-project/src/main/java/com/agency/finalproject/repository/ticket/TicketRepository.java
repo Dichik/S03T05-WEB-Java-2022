@@ -1,7 +1,7 @@
 package com.agency.finalproject.repository.ticket;
 
-import com.agency.finalproject.entity.Ticket;
-import com.agency.finalproject.entity.TicketStatus;
+import com.agency.finalproject.entity.ticket.Ticket;
+import com.agency.finalproject.entity.ticket.TicketStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

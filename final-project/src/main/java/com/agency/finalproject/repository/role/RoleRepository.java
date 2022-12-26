@@ -1,7 +1,7 @@
 package com.agency.finalproject.repository.role;
 
-import com.agency.finalproject.entity.ERole;
-import com.agency.finalproject.entity.Role;
+import com.agency.finalproject.entity.role.ERole;
+import com.agency.finalproject.entity.role.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

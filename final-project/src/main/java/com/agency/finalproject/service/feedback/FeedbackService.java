@@ -1,6 +1,6 @@
 package com.agency.finalproject.service.feedback;
 
-import com.agency.finalproject.entity.Feedback;
+import com.agency.finalproject.entity.feedback.Feedback;
 import com.agency.finalproject.repository.feedback.FeedbackRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

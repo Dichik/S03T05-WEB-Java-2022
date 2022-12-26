@@ -1,7 +1,7 @@
 package com.agency.finalproject.repository.user;
 
 
-import com.agency.finalproject.entity.User;
+import com.agency.finalproject.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

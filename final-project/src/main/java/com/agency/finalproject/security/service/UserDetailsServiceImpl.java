@@ -1,8 +1,7 @@
 package com.agency.finalproject.security.service;
 
-import com.agency.finalproject.entity.User;
+import com.agency.finalproject.entity.user.User;
 import com.agency.finalproject.repository.user.UserRepository;
-import com.agency.finalproject.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

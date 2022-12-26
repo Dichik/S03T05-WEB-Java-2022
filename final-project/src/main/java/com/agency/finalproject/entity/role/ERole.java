@@ -1,4 +1,4 @@
-package com.agency.finalproject.entity;
+package com.agency.finalproject.entity.role;
 
 public enum ERole {
     MANAGER,

@@ -1,8 +1,8 @@
 package com.agency.finalproject.controller;
 
-import com.agency.finalproject.entity.Ticket;
-import com.agency.finalproject.entity.TicketStatus;
-import com.agency.finalproject.entity.User;
+import com.agency.finalproject.entity.ticket.Ticket;
+import com.agency.finalproject.entity.ticket.TicketStatus;
+import com.agency.finalproject.entity.user.User;
 import com.agency.finalproject.service.feedback.FeedbackService;
 import com.agency.finalproject.service.ticket.TicketService;
 import com.agency.finalproject.service.user.UserService;

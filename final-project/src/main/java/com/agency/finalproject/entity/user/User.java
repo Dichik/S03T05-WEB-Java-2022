@@ -1,5 +1,6 @@
-package com.agency.finalproject.entity;
+package com.agency.finalproject.entity.user;
 
+import com.agency.finalproject.entity.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

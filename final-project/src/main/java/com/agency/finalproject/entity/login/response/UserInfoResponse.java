@@ -1,12 +1,12 @@
-package com.agency.finalproject.login.response;
+package com.agency.finalproject.entity.login.response;
 
 import java.util.List;
 
 public class UserInfoResponse {
+    private final List<String> roles;
     private Long id;
     private String username;
     private String email;
-    private final List<String> roles;
 
     public UserInfoResponse(Long id, String username, String email, List<String> roles) {
         this.id = id;

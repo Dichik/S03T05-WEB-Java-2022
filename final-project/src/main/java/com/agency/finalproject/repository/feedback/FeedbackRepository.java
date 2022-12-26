@@ -1,6 +1,6 @@
 package com.agency.finalproject.repository.feedback;
 
-import com.agency.finalproject.entity.Feedback;
+import com.agency.finalproject.entity.feedback.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

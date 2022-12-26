@@ -1,6 +1,5 @@
 package com.agency.finalproject.security;
 
-import com.agency.finalproject.entity.ERole;
 import com.agency.finalproject.security.jwt.AuthEntryPointJwt;
 import com.agency.finalproject.security.jwt.AuthTokenFilter;
 import com.agency.finalproject.security.service.UserDetailsServiceImpl;

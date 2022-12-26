@@ -1,12 +1,12 @@
 package com.agency.finalproject.controller;
 
-import com.agency.finalproject.entity.ERole;
-import com.agency.finalproject.entity.Role;
-import com.agency.finalproject.entity.User;
-import com.agency.finalproject.login.request.LoginRequest;
-import com.agency.finalproject.login.request.SignupRequest;
-import com.agency.finalproject.login.response.MessageResponse;
-import com.agency.finalproject.login.response.UserInfoResponse;
+import com.agency.finalproject.entity.role.ERole;
+import com.agency.finalproject.entity.role.Role;
+import com.agency.finalproject.entity.user.User;
+import com.agency.finalproject.entity.login.request.LoginRequest;
+import com.agency.finalproject.entity.login.request.SignupRequest;
+import com.agency.finalproject.entity.login.response.MessageResponse;
+import com.agency.finalproject.entity.login.response.UserInfoResponse;
 import com.agency.finalproject.repository.role.RoleRepository;
 import com.agency.finalproject.repository.user.UserRepository;
 import com.agency.finalproject.security.jwt.JwtUtils;
@@ -24,9 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
