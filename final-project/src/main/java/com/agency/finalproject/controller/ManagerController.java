@@ -16,7 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/managers")
 public class ManagerController {
@@ -34,7 +34,7 @@ public class ManagerController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasRole('MANAGER')")
+//    @PreAuthorize("hasRole('MANAGER')")
     public List<Ticket> getTickets() {
         return this.ticketService.getAll();
     }

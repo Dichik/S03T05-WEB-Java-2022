@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class MasterController {
         this.masterService = masterService;
     }
 
+    @RolesAllowed("MANAGER")
     @RequestMapping(method = RequestMethod.GET)
     public List<Ticket> getTicketsByEmail(@RequestParam String email) {
         return this.ticketService.getTicketsByMasterEmail(email);

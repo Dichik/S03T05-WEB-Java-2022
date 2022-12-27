@@ -3,24 +3,28 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/repair-agency
-    username: admin
-    password: admin
+    url: jdbc:h2:mem:repair-agency
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
   thymeleaf:
     cache: false
   h2:
     console:
       enabled: true
-      path: /h2-ui
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
 
 domelian:
   app:
-    jwtCookieName: bezkoder
-    jwtSecret: bezKoderSecretKey
+    jwtCookieName: domelian
+    jwtSecret: dOmelianSecretKey
     jwtExpirationMs: 86400000

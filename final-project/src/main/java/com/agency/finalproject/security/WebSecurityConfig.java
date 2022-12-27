@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
 
     @Autowired
@@ -62,7 +62,8 @@ public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/managers/**").permitAll()
+                .antMatchers("/api/managers/**").access("hasRole('MANAGER')")
+//                .antMatchers("/api/masters/**").hasRole("MANAGER")
                 .anyRequest().authenticated();
 
 //        http.cors().and().csrf().disable()

@@ -88,14 +88,14 @@ public class AuthController {
 
         switch (strRole.toUpperCase()) {
             case "MANAGER" -> {
-                Role adminRole = roleRepository.findByName(ERole.MANAGER)
+                Role managerRole = roleRepository.findByName(ERole.MANAGER)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                user.setRole(adminRole);
+                user.setRole(managerRole);
             }
             case "MASTER" -> {
-                Role modRole = roleRepository.findByName(ERole.MASTER)
+                Role masterRole = roleRepository.findByName(ERole.MASTER)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                user.setRole(modRole);
+                user.setRole(masterRole);
             }
             default -> {
                 Role userRole = roleRepository.findByName(ERole.USER)
