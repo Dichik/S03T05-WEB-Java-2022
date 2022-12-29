@@ -1,7 +1,7 @@
 package com.agency.finalproject.entity.role;
 
 public enum ERole {
-    MANAGER,
-    MASTER,
-    USER
+    ROLE_MANAGER,
+    ROLE_MASTER,
+    ROLE_USER
 }

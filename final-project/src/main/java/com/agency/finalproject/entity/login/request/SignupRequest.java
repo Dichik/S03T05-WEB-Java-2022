@@ -3,6 +3,7 @@ package com.agency.finalproject.entity.login.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 public class SignupRequest {
     @NotBlank
@@ -14,7 +15,7 @@ public class SignupRequest {
     @Email
     private String email;
 
-    private String role;
+    private Set<String> roles;
 
     @NotBlank
     @Size(min = 6, max = 40)
@@ -44,11 +45,11 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public String getRole() {
-        return this.role;
+    public Set<String> getRoles() {
+        return this.roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

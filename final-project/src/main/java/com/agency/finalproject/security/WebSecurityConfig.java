@@ -59,12 +59,15 @@ public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/managers/**").access("hasRole('MANAGER')")
 //                .antMatchers("/api/masters/**").hasRole("MANAGER")
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .maximumSessions(1);
 
 //        http.cors().and().csrf().disable()
 //                .authorizeRequests()

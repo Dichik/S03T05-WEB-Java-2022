@@ -24,7 +24,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -81,29 +83,38 @@ public class AuthController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        String strRole = signUpRequest.getRole();
-        if (strRole == null) {
-            throw new RuntimeException("Error: Role is not found.");
+        Set<String> strRoles = signUpRequest.getRoles();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role.toUpperCase()) {
+                    case "MANAGER" -> {
+                        Role managerRole = roleRepository.findByName(ERole.ROLE_MANAGER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(managerRole);
+                    }
+                    case "MASTER" -> {
+                        Role masterRole = roleRepository.findByName(ERole.ROLE_MASTER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(masterRole);
+                    }
+                    default -> {
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                    }
+                }
+            });
         }
 
-        switch (strRole.toUpperCase()) {
-            case "MANAGER" -> {
-                Role managerRole = roleRepository.findByName(ERole.MANAGER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                user.setRole(managerRole);
-            }
-            case "MASTER" -> {
-                Role masterRole = roleRepository.findByName(ERole.MASTER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                user.setRole(masterRole);
-            }
-            default -> {
-                Role userRole = roleRepository.findByName(ERole.USER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                user.setRole(userRole);
-            }
-        }
+        user.setRoles(roles);
         userRepository.save(user);
+
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
