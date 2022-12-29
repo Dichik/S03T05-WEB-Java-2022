@@ -9,10 +9,11 @@ import com.agency.finalproject.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,46 +34,53 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void create(@RequestBody Ticket ticket) {
-        this.ticketService.createTicket(ticket);
+    public ResponseEntity<Ticket> create(@RequestBody Ticket ticket) {
+        return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "feedback", params = {"ticketId", "text"})
-    public void leaveFeedback(@RequestParam Long ticketId, @RequestParam String text) {
+    public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
         if (ticket.isEmpty() || ticket.get().getStatus() != TicketStatus.DONE) {
-            return;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         this.feedbackService.submit(ticketId, text);
+        return new ResponseEntity<>("Feedback was successfully submitted!", HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, params = {"email"})
-    public List<Ticket> getTicketsByUserEmail(@RequestParam String email) {
-        return this.ticketService.getTicketsByUserEmail(email);
+    public ResponseEntity<List<Ticket>> getTicketsByUserEmail(@RequestParam String email) {
+        List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(email);
+        if (tickets.isEmpty()) {
+            logger.info("No tickes were found for email=" + email);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
     // FIXME get by email or filter (Spring Security)?
-    @RequestMapping(method = RequestMethod.GET, value = "/balance")
-    public BigDecimal getCurrentBalance() {
+    @RequestMapping(value = "/{id:\\d+}/balance", method = RequestMethod.GET)
+    public ResponseEntity<?> getBalance(/*@ApplicationPrincipal*/ @PathVariable Long id) {
         try {
-            Optional<User> user = this.userService.findByEmail("email");
-            if (user.isEmpty()) {
-                logger.warn(String.format("User with email=[%s] was not found.", ""));
-                return BigDecimal.ZERO;
-            }
-            return user.get().getBalance();
+            User user = this.userService.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("User with id=[%d] was not found.", id)));
+            return new ResponseEntity<>(user.getBalance(), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            logger.error(String.format("Couldn't get current balance for user=[%s], see: %s", "session.getEmail()", e));
-            return BigDecimal.ZERO;
+            String message = String.format("Couldn't get current balance for user_id=[%d]", id);
+            logger.error(message + ", see: " + e);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
     }
 
     @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "userEmail"})
-    public void payForTicket(@RequestParam Long ticketId, @RequestParam String userEmail) {
+    public ResponseEntity<?> payForTicket(@RequestParam Long ticketId, @RequestParam String userEmail) {
         try {
             this.userService.payForTicket(ticketId, userEmail);
+            return new ResponseEntity<>("Ticket was successfully paid!", HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            logger.warn(String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", userEmail, ticketId));
+            String message = String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", userEmail, ticketId);
+            logger.warn(message);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
     }
 

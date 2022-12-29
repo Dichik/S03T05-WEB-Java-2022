@@ -9,8 +9,10 @@ import com.agency.finalproject.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
@@ -34,7 +36,6 @@ public class ManagerController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-//    @PreAuthorize("hasRole('MANAGER')")
     public List<Ticket> getTickets() {
         return this.ticketService.getAll();
     }
