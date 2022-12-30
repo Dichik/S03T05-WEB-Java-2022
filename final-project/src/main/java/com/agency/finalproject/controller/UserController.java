@@ -1,13 +1,8 @@
 package com.agency.finalproject.controller;
 
-import com.agency.finalproject.entity.feedback.Feedback;
 import com.agency.finalproject.entity.login.response.MessageResponse;
-import com.agency.finalproject.entity.ticket.Ticket;
-import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.entity.user.User;
 import com.agency.finalproject.security.service.UserDetailsImpl;
-import com.agency.finalproject.service.feedback.FeedbackService;
-import com.agency.finalproject.service.ticket.TicketService;
 import com.agency.finalproject.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,14 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,49 +27,10 @@ public class UserController {
     private static final Logger logger = LogManager.getLogger(UserController.class);
 
     private final UserService userService;
-    private final TicketService ticketService;
-    private final FeedbackService feedbackService;
 
     @Autowired
-    public UserController(UserService userService, TicketService ticketService, FeedbackService feedbackService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.ticketService = ticketService;
-        this.feedbackService = feedbackService;
-    }
-
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Ticket> create(@RequestBody Ticket ticket) {
-        return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
-    }
-
-    @Secured({"ROLE_USER"})
-    @RequestMapping(method = RequestMethod.POST, value = "feedback", params = {"ticketId", "text"})
-    public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text,
-                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Optional<Ticket> ticket = this.ticketService.getById(ticketId);
-        if (ticket.isEmpty() || ticket.get().getStatus() != TicketStatus.DONE) {
-            return new ResponseEntity<>(new MessageResponse("Couldn't leave your feedback, try again."), HttpStatus.BAD_REQUEST);
-        }
-
-        Feedback feedback = this.feedbackService.submit(userDetails.getUsername(), ticketId, text);
-        Map<String, Object> body = new LinkedHashMap<>() {{
-            put("data", feedback);
-            put("message", "Feedback was successfully submitted!");
-        }};
-        return new ResponseEntity<>(body, HttpStatus.CREATED);
-    }
-
-    @Secured("ROLE_USER")
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> getTicketsByUserEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String email = userDetails.getEmail();
-        List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(email);
-        if (tickets.isEmpty()) {
-            logger.info("No tickets were found for email=" + email);
-            return new ResponseEntity<>(new MessageResponse("No tickets were found."), HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
     @Secured("ROLE_USER")
@@ -90,6 +47,7 @@ public class UserController {
         }
     }
 
+    @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "userEmail"})
     public ResponseEntity<?> payForTicket(@RequestParam Long ticketId, @RequestParam String userEmail) {
         try {
