@@ -23,11 +23,11 @@ public class UserService {
         this.ticketRepository = ticketRepository;
     }
 
-    public void topUpBalance(String email, BigDecimal amount) throws EntityNotFoundException {
-        User user = this.userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User with " + email + " email was not found"));
+    public User topUpBalance(String username, BigDecimal amount) throws EntityNotFoundException {
+        User user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User with " + username + " username was not found"));
         user.setBalance(amount.add(user.getBalance()));
-        this.userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     public Optional<User> findByEmail(String userEmail) throws EntityNotFoundException {

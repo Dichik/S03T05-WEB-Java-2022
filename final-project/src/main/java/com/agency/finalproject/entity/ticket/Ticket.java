@@ -3,10 +3,7 @@ package com.agency.finalproject.entity.ticket;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -45,6 +42,7 @@ public class Ticket {
     private String masterEmail;
 
     @Builder.Default
+    @Min(0) @Max(1000)
     private BigDecimal price = BigDecimal.ZERO;
 
     @Builder.Default

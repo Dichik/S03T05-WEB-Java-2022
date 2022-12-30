@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,24 @@ public class UserController {
             String message = String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", userEmail, ticketId);
             logger.warn(message);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Secured("ROLE_MANAGER")
+    @RequestMapping(value = "/topup", method = RequestMethod.POST, params = {"username", "amount"})
+    public ResponseEntity<?> topUpAccount(@RequestParam String username, @RequestParam BigDecimal amount) {
+        try {
+            User user = this.userService.topUpBalance(username, amount);
+            String message = String.format("Balance of user with username=[%s] was topped up with amount=[%f]", username, amount);
+
+            Map<String, Object> body = new LinkedHashMap<>(){{
+                put("data", user);
+                put("message", message);
+            }};
+            return new ResponseEntity<>(body, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            logger.error("Couldn't top up account, see: " + e);
+            return new ResponseEntity<>("Couldn't top up accont, please try again.", HttpStatus.NOT_FOUND);
         }
     }
 

@@ -10,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -34,18 +35,18 @@ public class TicketService {
         return this.ticketRepository.findByMasterEmail(email);
     }
 
-    public void updatePrice(Long ticketId, BigDecimal price) throws EntityNotFoundException {
+    public Ticket updatePrice(Long ticketId, BigDecimal price) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
         ticket.setPrice(price);
-        this.ticketRepository.save(ticket);
+        return this.ticketRepository.save(ticket);
     }
 
-    public void assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
+    public Ticket assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
         ticket.setMasterEmail(masterEmail);
-        this.ticketRepository.save(ticket);
+        return this.ticketRepository.save(ticket);
     }
 
     public boolean ticketExistsById(Long ticketId) {
@@ -84,5 +85,13 @@ public class TicketService {
 
     public Optional<Ticket> getById(Long ticketId) {
         return this.ticketRepository.findById(ticketId);
+    }
+
+    public Ticket updateTicket(Ticket ticket) {
+        return this.ticketRepository.save(ticket);
+    }
+
+    public Ticket update(Long id, TicketDto ticket) {
+        return this.ticketRepository.save()
     }
 }
