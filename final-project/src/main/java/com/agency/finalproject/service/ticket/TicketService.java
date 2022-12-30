@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +21,10 @@ import java.util.Optional;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository, ModelMapper modelMapper) {
         this.ticketRepository = ticketRepository;
-        this.modelMapper = modelMapper;
     }
 
     public Ticket createTicket(Ticket ticket) {
@@ -42,13 +39,6 @@ public class TicketService {
         return this.ticketRepository.findByMasterEmail(email);
     }
 
-    public Ticket updatePrice(Long ticketId, BigDecimal price) throws EntityNotFoundException {
-        Ticket ticket = this.ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
-        ticket.setPrice(price);
-        return this.ticketRepository.save(ticket);
-    }
-
     public Ticket assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
@@ -56,29 +46,25 @@ public class TicketService {
         return this.ticketRepository.save(ticket);
     }
 
-    public boolean ticketExistsById(Long ticketId) {
-        return this.ticketRepository.findById(ticketId).isPresent();
-    }
-
     public List<Ticket> getAll() {
         return this.ticketRepository.findAll();
     }
 
     public List<Ticket> getSortedByDate() {
-        List<Ticket> tickets = this.ticketRepository.findAll();
-        tickets.sort(Comparator.comparing(Ticket::getCreatedAt));
-        return tickets;
+        return this.getTicketsByComparator(Comparator.comparing(Ticket::getCreatedAt));
     }
 
     public List<Ticket> getSortedByPrice() {
-        List<Ticket> tickets = this.ticketRepository.findAll();
-        tickets.sort(Comparator.comparing(Ticket::getPrice));
-        return tickets;
+        return this.getTicketsByComparator(Comparator.comparing(Ticket::getPrice));
     }
 
     public List<Ticket> getSortedByStatus() {
+        return this.getTicketsByComparator(Comparator.comparing(Ticket::getStatus));
+    }
+
+    private List<Ticket> getTicketsByComparator(Comparator<Ticket> comparator) {
         List<Ticket> tickets = this.ticketRepository.findAll();
-        tickets.sort(Comparator.comparing(Ticket::getStatus));
+        tickets.sort(comparator);
         return tickets;
     }
 
@@ -87,7 +73,7 @@ public class TicketService {
     }
 
     public List<Ticket> getFilteredByStatus(String status) {
-        TicketStatus ticketStatus = TicketStatus.valueOf(status);
+        TicketStatus ticketStatus = TicketStatus.valueOf(status); // FIXME
         return this.ticketRepository.findByStatus(ticketStatus);
     }
 
@@ -95,13 +81,10 @@ public class TicketService {
         return this.ticketRepository.findById(ticketId);
     }
 
-    public Ticket updateTicket(Ticket ticket) {
-        return this.ticketRepository.save(ticket);
-    }
-
-    public Ticket update(Long id, TicketDto ticketDto) {
-        Ticket ticket = this.modelMapper.map(ticketDto, Ticket.class);
-        ticket.setId(id);
+    public Ticket updateTicketPrice(Long id, TicketDto ticketDto) {
+        Ticket ticket = this.ticketRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ticket was not found"));
+        ticket.setPrice(ticketDto.getPrice());
         return this.ticketRepository.save(ticket);
     }
 

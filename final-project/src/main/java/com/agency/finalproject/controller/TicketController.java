@@ -19,7 +19,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 // TODO refactor and fix issues
 
@@ -46,11 +45,8 @@ public class TicketController {
     }
 
     @Secured("ROLE_USER")
-    @RequestMapping(method = RequestMethod.GET, params = {"byEmail"})
-    public ResponseEntity<?> getTicketsByUserEmail(@RequestParam Optional<Boolean> byEmail, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if (byEmail.isEmpty() || !byEmail.get()) {
-            return getTickets();
-        }
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public ResponseEntity<?> getTicketsByUserEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String email = userDetails.getEmail();
         List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(email);
         if (tickets.isEmpty()) {
@@ -61,7 +57,7 @@ public class TicketController {
     }
 
     @Secured("ROLE_MASTER")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/master", method = RequestMethod.GET)
     public ResponseEntity<?> getTicketsByMasterEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String masterEmail = userDetails.getEmail();
         List<Ticket> tickets = this.ticketService.getTicketsByMasterEmail(masterEmail);
@@ -95,12 +91,11 @@ public class TicketController {
         }
     }
 
-    // TODO finish implementation...
     @Secured("ROLE_MANAGER")
-    @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> setTicketPrice(@PathVariable Long id, @RequestBody TicketDto ticketDto) {
+    @RequestMapping(value = "/{id:\\d+}/price", method = RequestMethod.PATCH)
+    public ResponseEntity<?> updateTicketPrice(@PathVariable Long id, @RequestBody TicketDto ticketDto) {
         try {
-            return new ResponseEntity<>(this.ticketService.update(id, ticketDto), HttpStatus.OK);
+            return new ResponseEntity<>(this.ticketService.updateTicketPrice(id, ticketDto), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             logger.error("Couldn't set ticket price, see: " + e);
             return new ResponseEntity<>(new MessageResponse("Couldn't find ticket"), HttpStatus.NOT_FOUND);
