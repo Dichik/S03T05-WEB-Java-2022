@@ -1,5 +1,6 @@
 package com.agency.finalproject.controller;
 
+import com.agency.finalproject.entity.feedback.Feedback;
 import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.entity.ticket.Ticket;
 import com.agency.finalproject.entity.ticket.TicketStatus;
@@ -14,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -47,22 +48,29 @@ public class UserController {
 
     @Secured({"ROLE_USER"})
     @RequestMapping(method = RequestMethod.POST, value = "feedback", params = {"ticketId", "text"})
-    public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text) {
+    public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
         if (ticket.isEmpty() || ticket.get().getStatus() != TicketStatus.DONE) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessageResponse("Couldn't leave your feedback, try again."), HttpStatus.BAD_REQUEST);
         }
-        this.feedbackService.submit(ticketId, text);
-        return new ResponseEntity<>("Feedback was successfully submitted!", HttpStatus.CREATED);
+
+        Feedback feedback = this.feedbackService.submit(userDetails.getUsername(), ticketId, text);
+        Map<String, Object> body = new LinkedHashMap<>() {{
+            put("data", feedback);
+            put("message", "Feedback was successfully submitted!");
+        }};
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     @Secured("ROLE_USER")
-    @RequestMapping(method = RequestMethod.GET, params = {"email"})
-    public ResponseEntity<List<Ticket>> getTicketsByUserEmail( /*principal and use email from there*/ @RequestParam String email) {
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getTicketsByUserEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String email = userDetails.getEmail();
         List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(email);
         if (tickets.isEmpty()) {
-            logger.info("No tickes were found for email=" + email);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            logger.info("No tickets were found for email=" + email);
+            return new ResponseEntity<>(new MessageResponse("No tickets were found."), HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }

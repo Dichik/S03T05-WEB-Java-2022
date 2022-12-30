@@ -20,6 +20,6 @@ public class Feedback {
     private Long id;
     private String text;
     private Long ticketId;
-    private String userEmail;
+    private String username;
 
 }

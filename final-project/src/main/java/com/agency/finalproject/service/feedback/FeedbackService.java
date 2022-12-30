@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FeedbackService {
-    private static final Logger logger = LogManager.getLogger(FeedbackService.class);
 
     private final FeedbackRepository feedbackRepository;
 
@@ -18,14 +17,13 @@ public class FeedbackService {
         this.feedbackRepository = feedbackRepository;
     }
 
-    public void submit(Long ticketId, String feedbackText) {
+    public Feedback submit(String username, Long ticketId, String feedbackText) {
         Feedback feedback = Feedback.builder()
                 .text(feedbackText)
                 .ticketId(ticketId)
-                .userEmail(null)
+                .username(username)
                 .build();
-        this.feedbackRepository.save(feedback);
-        logger.info(String.format("Feedback to ticket with id=[%d] was successfully added.", ticketId));
+        return this.feedbackRepository.save(feedback);
     }
 
 }

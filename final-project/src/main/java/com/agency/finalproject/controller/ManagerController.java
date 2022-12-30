@@ -19,6 +19,8 @@ import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
+// FIXME fix this controller with Secured annotation and others
+
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/managers")
