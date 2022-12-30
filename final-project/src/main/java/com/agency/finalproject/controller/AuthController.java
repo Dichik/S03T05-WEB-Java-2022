@@ -1,12 +1,12 @@
 package com.agency.finalproject.controller;
 
+import com.agency.finalproject.entity.login.request.LoginRequest;
+import com.agency.finalproject.entity.login.request.SignupRequest;
 import com.agency.finalproject.entity.login.response.JwtResponse;
+import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.entity.role.ERole;
 import com.agency.finalproject.entity.role.Role;
 import com.agency.finalproject.entity.user.User;
-import com.agency.finalproject.entity.login.request.LoginRequest;
-import com.agency.finalproject.entity.login.request.SignupRequest;
-import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.repository.role.RoleRepository;
 import com.agency.finalproject.repository.user.UserRepository;
 import com.agency.finalproject.security.jwt.JwtUtils;

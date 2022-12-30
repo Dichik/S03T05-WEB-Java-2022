@@ -67,7 +67,7 @@ public class UserController {
             User user = this.userService.topUpBalance(username, amount);
             String message = String.format("Balance of user with username=[%s] was topped up with amount=[%f]", username, amount);
 
-            Map<String, Object> body = new LinkedHashMap<>(){{
+            Map<String, Object> body = new LinkedHashMap<>() {{
                 put("data", user);
                 put("message", message);
             }};

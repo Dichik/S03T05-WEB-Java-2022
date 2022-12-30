@@ -1,6 +1,9 @@
 package com.agency.finalproject.entity.ticket;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -42,7 +45,8 @@ public class Ticket {
     private String masterEmail;
 
     @Builder.Default
-    @Min(0) @Max(1000)
+    @Min(0)
+    @Max(1000)
     private BigDecimal price = BigDecimal.ZERO;
 
     @Builder.Default
