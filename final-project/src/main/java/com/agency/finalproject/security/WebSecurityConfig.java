@@ -1,16 +1,15 @@
 package com.agency.finalproject.security;
 
-import com.agency.finalproject.entity.role.ERole;
 import com.agency.finalproject.security.jwt.AuthEntryPointJwt;
 import com.agency.finalproject.security.jwt.AuthTokenFilter;
 import com.agency.finalproject.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.annotation.WebServlet;
 
 @Configuration
 @EnableWebSecurity
@@ -61,7 +62,8 @@ public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/managers/**").access("hasRole('MANAGER')")
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/api/managers/**").hasAnyRole("MANAGER")
 //                .antMatchers("/api/masters/**").hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()

@@ -1,12 +1,12 @@
 package com.agency.finalproject.controller;
 
+import com.agency.finalproject.entity.login.response.JwtResponse;
 import com.agency.finalproject.entity.role.ERole;
 import com.agency.finalproject.entity.role.Role;
 import com.agency.finalproject.entity.user.User;
 import com.agency.finalproject.entity.login.request.LoginRequest;
 import com.agency.finalproject.entity.login.request.SignupRequest;
 import com.agency.finalproject.entity.login.response.MessageResponse;
-import com.agency.finalproject.entity.login.response.UserInfoResponse;
 import com.agency.finalproject.repository.role.RoleRepository;
 import com.agency.finalproject.repository.user.UserRepository;
 import com.agency.finalproject.security.jwt.JwtUtils;
@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -50,23 +51,22 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UserInfoResponse(userDetails.id(),
-                        userDetails.getUsername(),
-                        userDetails.getEmail(),
-                        roles.get(0)));
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.id(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles));
     }
 
     @PostMapping("/signup")
@@ -79,9 +79,11 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+        User user = User.builder()
+                .username(signUpRequest.getUsername())
+                .email(signUpRequest.getEmail())
+                .password(encoder.encode(signUpRequest.getPassword()))
+                .build();
 
         Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();

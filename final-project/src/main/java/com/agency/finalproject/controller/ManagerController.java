@@ -9,6 +9,7 @@ import com.agency.finalproject.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +36,7 @@ public class ManagerController {
         this.ticketService = ticketService;
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping(method = RequestMethod.GET)
     public List<Ticket> getTickets() {
         return this.ticketService.getAll();

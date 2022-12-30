@@ -1,8 +1,10 @@
 package com.agency.finalproject.controller;
 
+import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.entity.ticket.Ticket;
 import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.entity.user.User;
+import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.feedback.FeedbackService;
 import com.agency.finalproject.service.ticket.TicketService;
 import com.agency.finalproject.service.user.UserService;
@@ -11,6 +13,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,11 +39,13 @@ public class UserController {
         this.feedbackService = feedbackService;
     }
 
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Ticket> create(@RequestBody Ticket ticket) {
         return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
     }
 
+    @Secured({"ROLE_USER"})
     @RequestMapping(method = RequestMethod.POST, value = "feedback", params = {"ticketId", "text"})
     public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
@@ -48,8 +56,9 @@ public class UserController {
         return new ResponseEntity<>("Feedback was successfully submitted!", HttpStatus.CREATED);
     }
 
+    @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.GET, params = {"email"})
-    public ResponseEntity<List<Ticket>> getTicketsByUserEmail(@RequestParam String email) {
+    public ResponseEntity<List<Ticket>> getTicketsByUserEmail( /*principal and use email from there*/ @RequestParam String email) {
         List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(email);
         if (tickets.isEmpty()) {
             logger.info("No tickes were found for email=" + email);
@@ -58,15 +67,15 @@ public class UserController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    // FIXME get by email or filter (Spring Security)?
-    @RequestMapping(value = "/{id:\\d+}/balance", method = RequestMethod.GET)
-    public ResponseEntity<?> getBalance(/*@ApplicationPrincipal*/ @PathVariable Long id) {
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/balance", method = RequestMethod.GET)
+    public ResponseEntity<?> getBalance(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
-            User user = this.userService.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("User with id=[%d] was not found.", id)));
-            return new ResponseEntity<>(user.getBalance(), HttpStatus.OK);
+            User user = this.userService.findById(userDetails.id())
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("User with id=[%d] was not found.", userDetails.id())));
+            return new ResponseEntity<>(new MessageResponse("Your current balance is: " + user.getBalance()), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            String message = String.format("Couldn't get current balance for user_id=[%d]", id);
+            String message = String.format("Couldn't get current balance for user_id=[%d]", userDetails.id());
             logger.error(message + ", see: " + e);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
