@@ -1,9 +1,6 @@
 package com.agency.finalproject.entity.ticket;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -30,7 +27,7 @@ public class Ticket { // FIXME create relations for user fields (emails)
     @Size(max = 120)
     private String description;
 
-    @Null
+    @NotBlank
     @Email
     @Size(max = 50)
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

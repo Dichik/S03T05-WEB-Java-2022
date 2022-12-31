@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,8 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig {
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -60,26 +61,12 @@ public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-//                .antMatchers("/api/feedbacks/**").hasAnyRole("ROLE_MANAGER")
                 .antMatchers("/api/tickets/**").permitAll()
-//                .antMatchers("/api/users/**").hasAnyRole("ROLE_USER", "ROLE_MANAGER", "ROLE_MASTER")
-//                .antMatchers("/api/masters/**").hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .maximumSessions(1);
-
-//        http.cors().and().csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/api/auth/**").permitAll()
-//                .antMatchers("/api/managers/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-//        http.headers().frameOptions().sameOrigin();
 
         http.authenticationProvider(authenticationProvider());
 
