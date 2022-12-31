@@ -20,8 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO refactor and fix issues
-
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
