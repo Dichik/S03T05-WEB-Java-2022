@@ -8,10 +8,12 @@ import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.ticket.TicketService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +22,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/tickets")
+@RequestMapping("/api/tickets")
 public class TicketController {
     private static final Logger logger = LogManager.getLogger(TicketController.class);
 
     private final TicketService ticketService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, ModelMapper modelMapper) {
         this.ticketService = ticketService;
+        this.modelMapper = modelMapper;
     }
 
     @Secured("ROLE_MANAGER")
@@ -65,9 +70,11 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Ticket> create(@RequestBody Ticket ticket) {
+    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
+    public ResponseEntity<Ticket> create(@RequestBody TicketDto ticketDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Ticket ticket = this.modelMapper.map(ticketDto, Ticket.class);
+        ticket.setUserEmail(userDetails.getEmail());
         return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
     }
 

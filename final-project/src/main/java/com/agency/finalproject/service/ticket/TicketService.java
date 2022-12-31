@@ -22,7 +22,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository, ModelMapper modelMapper) {
+    public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 

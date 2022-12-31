@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/feedbacks")
+@RequestMapping("/api/feedbacks")
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
@@ -52,7 +52,7 @@ public class FeedbackController {
     }
 
     @Secured("ROLE_MANAGER")
-    @RequestMapping(value = "/feedback", method = RequestMethod.GET, params = {"ticketId"})
+    @RequestMapping(method = RequestMethod.GET, params = {"ticketId"})
     public ResponseEntity<?> showFeedbackAboutTicket(@RequestParam Long ticketId) {
         try {
             List<Feedback> feedbacks = this.feedbackService.findByTicketId(ticketId);
