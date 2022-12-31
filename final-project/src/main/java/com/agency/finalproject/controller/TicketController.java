@@ -104,13 +104,15 @@ public class TicketController {
 
     @Secured({"ROLE_USER", "ROLE_MANAGER", "ROLE_MASTER"})
     @RequestMapping(method = RequestMethod.PUT, params = {"ticketId", "updatedStatus"})
-    public void setStatus(@RequestParam Long ticketId, @RequestParam String updatedStatus,
-                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> setStatus(@RequestParam Long ticketId, @RequestParam String updatedStatus,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
-            this.ticketService.updateStatus(ticketId, updatedStatus, userDetails);
+            Ticket ticket = this.ticketService.updateStatus(ticketId, updatedStatus, userDetails);
             logger.info(String.format("Ticket status with id=%d was updated to status=%s", ticketId, updatedStatus));
+            return new ResponseEntity<>(ticket, HttpStatus.OK);
         } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
             logger.error("Couldn't set status " + updatedStatus + ", see: " + e);
+            return new ResponseEntity<>("Couldn't update status.", HttpStatus.BAD_REQUEST);
         }
     }
 
