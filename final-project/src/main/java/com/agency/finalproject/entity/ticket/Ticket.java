@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tickets")
-public class Ticket {
+public class Ticket { // FIXME create relations for user fields (emails)
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,17 +33,19 @@ public class Ticket {
     @Null
     @Email
     @Size(max = 50)
-    private String userEmail; // FIXME relation
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_email")
+    private String userEmail;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     @Builder.Default
-    private TicketStatus status = TicketStatus.NEW; // FIXME create table for statuses
+    private TicketStatus status = TicketStatus.NEW;
 
     @Null
     @Email
     @Size(max = 50)
-    private String masterEmail; // FIXME create relation
+    private String masterEmail;
 
     @Builder.Default
     @Min(0)
@@ -51,6 +53,7 @@ public class Ticket {
     private BigDecimal price = BigDecimal.ZERO;
 
     @Builder.Default
+    @Column(updatable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
 }

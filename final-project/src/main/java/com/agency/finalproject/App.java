@@ -4,9 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * TODO notifications
  * TODO to cache everything that is possible (password, data, etc.)
- * TODO add possibility to check feedback about ticket (as a manager?)
+ * Check: https://www.baeldung.com/spring-cache-tutorial
  */
 @SpringBootApplication
 public class App {

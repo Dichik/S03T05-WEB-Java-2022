@@ -1,5 +1,6 @@
 package com.agency.finalproject.entity.ticket;
 
+// FIXME create table for statuses
 public enum TicketStatus {
     NEW("new"),
     IN_PROGRESS("in_progress"),
