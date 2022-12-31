@@ -148,4 +148,7 @@ public class TicketService {
         return currentStatus == TicketStatus.IN_PROGRESS && updatedStatus == TicketStatus.DONE;
     }
 
+    public boolean existsById(Long ticketId) {
+        return this.ticketRepository.existsById(ticketId);
+    }
 }

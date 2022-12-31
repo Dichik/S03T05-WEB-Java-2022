@@ -5,6 +5,8 @@ import com.agency.finalproject.repository.feedback.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FeedbackService {
 
@@ -22,6 +24,10 @@ public class FeedbackService {
                 .username(username)
                 .build();
         return this.feedbackRepository.save(feedback);
+    }
+
+    public List<Feedback> findByTicketId(Long ticketId) {
+        return this.feedbackRepository.findAllByTicketId(ticketId);
     }
 
 }

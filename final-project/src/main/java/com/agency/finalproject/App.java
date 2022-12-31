@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * TODO notifications
  * TODO to cache everything that is possible (password, data, etc.)
- * TODO default login and password for admin
  * TODO add possibility to check feedback about ticket (as a manager?)
  */
 @SpringBootApplication

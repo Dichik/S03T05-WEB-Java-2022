@@ -33,16 +33,17 @@ public class Ticket {
     @Null
     @Email
     @Size(max = 50)
-    private String userEmail;
+    private String userEmail; // FIXME relation
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private TicketStatus status;
+    @Builder.Default
+    private TicketStatus status = TicketStatus.NEW; // FIXME create table for statuses
 
     @Null
     @Email
     @Size(max = 50)
-    private String masterEmail;
+    private String masterEmail; // FIXME create relation
 
     @Builder.Default
     @Min(0)

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class FeedbackController {
     }
 
     @Secured({"ROLE_USER"})
-    @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.POST, params = {"ticketId", "text"})
+    @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "text"})
     public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text,
                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Optional<Ticket> ticket = this.ticketService.getById(ticketId);
@@ -49,6 +50,19 @@ public class FeedbackController {
             put("message", "Feedback was successfully submitted!");
         }};
         return new ResponseEntity<>(body, HttpStatus.CREATED);
+    }
+
+    @Secured("ROLE_MANAGER")
+    @RequestMapping(value = "/feedback", method = RequestMethod.GET, params = {"ticketId"})
+    public ResponseEntity<?> showFeedbackAboutTicket(@RequestParam Long ticketId) {
+        if (!this.ticketService.existsById(ticketId)) {
+            return new ResponseEntity<>("Ticket with this id was not found.", HttpStatus.NOT_FOUND);
+        }
+        List<Feedback> feedbacks = this.feedbackService.findByTicketId(ticketId);
+        if (feedbacks.isEmpty()) {
+            return new ResponseEntity<>("No feedbacks were found for this ticket.", HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(feedbacks, HttpStatus.OK);
     }
 
 }
