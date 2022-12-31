@@ -37,7 +37,7 @@ public class TicketController {
         this.modelMapper = modelMapper;
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getTickets() {
         List<Ticket> tickets = this.ticketService.getAll();
@@ -47,7 +47,7 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ResponseEntity<?> getTicketsByUserEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String email = userDetails.getEmail();
@@ -59,7 +59,7 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @Secured("ROLE_MASTER")
+    @PreAuthorize("hasRole('MASTER')")
     @RequestMapping(value = "/master", method = RequestMethod.GET)
     public ResponseEntity<?> getTicketsByMasterEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String masterEmail = userDetails.getEmail();
@@ -70,15 +70,15 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Ticket> create(@RequestBody TicketDto ticketDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Ticket ticket = this.modelMapper.map(ticketDto, Ticket.class);
         ticket.setUserEmail(userDetails.getEmail());
         return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/assign_master", method = RequestMethod.POST, params = {"ticketId", "masterEmail"})
     public ResponseEntity<?> assignMasterToTicket(@RequestParam Long ticketId, @RequestParam String masterEmail) {
         try {
@@ -96,7 +96,7 @@ public class TicketController {
         }
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/{id:\\d+}/price", method = RequestMethod.PATCH)
     public ResponseEntity<?> updateTicketPrice(@PathVariable Long id, @RequestBody TicketDto ticketDto) {
         try {
@@ -121,7 +121,7 @@ public class TicketController {
         }
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(method = RequestMethod.GET, params = {"filter"})
     public ResponseEntity<?> getFilteredBy(@RequestParam String filter) {
         List<Ticket> tickets;
@@ -139,7 +139,7 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(method = RequestMethod.GET, params = {"sortBy"})
     public ResponseEntity<?> getSortedBy(@RequestParam String sortBy) {
         List<Ticket> tickets;

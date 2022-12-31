@@ -2,27 +2,22 @@ package com.agency.finalproject.controller;
 
 import com.agency.finalproject.entity.feedback.Feedback;
 import com.agency.finalproject.entity.login.response.MessageResponse;
-import com.agency.finalproject.entity.ticket.Ticket;
-import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.exception.ItemWasNotFoundException;
 import com.agency.finalproject.exception.TicketWrongDataException;
 import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.feedback.FeedbackService;
-import com.agency.finalproject.service.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/feedbacks")
 public class FeedbackController {
@@ -34,7 +29,7 @@ public class FeedbackController {
         this.feedbackService = feedbackService;
     }
 
-    @Secured({"ROLE_USER"})
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "text"})
     public ResponseEntity<?> leaveFeedback(@RequestParam Long ticketId, @RequestParam String text,
                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -51,7 +46,7 @@ public class FeedbackController {
         }
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(method = RequestMethod.GET, params = {"ticketId"})
     public ResponseEntity<?> showFeedbackAboutTicket(@RequestParam Long ticketId) {
         try {

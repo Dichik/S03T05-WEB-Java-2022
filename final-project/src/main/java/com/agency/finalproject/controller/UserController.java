@@ -9,18 +9,16 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -33,7 +31,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/balance", method = RequestMethod.GET)
     public ResponseEntity<?> getBalance(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
@@ -47,7 +45,7 @@ public class UserController {
         }
     }
 
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "userEmail"})
     public ResponseEntity<?> payForTicket(@RequestParam Long ticketId, @RequestParam String userEmail) {
         try {
@@ -60,7 +58,7 @@ public class UserController {
         }
     }
 
-    @Secured("ROLE_MANAGER")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/topup", method = RequestMethod.POST, params = {"username", "amount"})
     public ResponseEntity<?> topUpAccount(@RequestParam String username, @RequestParam BigDecimal amount) {
         try {
