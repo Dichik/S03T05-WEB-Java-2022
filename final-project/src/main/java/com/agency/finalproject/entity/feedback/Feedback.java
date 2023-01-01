@@ -1,12 +1,10 @@
 package com.agency.finalproject.entity.feedback;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -21,14 +19,13 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String text;
 
-    @NotBlank
+    @NotNull(message = "Ticket id can't be null")
     private Long ticketId;
 
-    @NotBlank
+    @NotNull(message = "Ticket id can't be null")
     private String username;
 
 }

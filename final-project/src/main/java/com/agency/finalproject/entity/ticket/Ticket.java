@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -24,17 +22,13 @@ public class Ticket { // FIXME create relations for user fields (emails)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 50)
+    @Size(min = 3, max = 50)
     private String title;
 
-    @NotBlank
-    @Size(max = 120)
+    @Size(min = 1, max = 120)
     private String description;
 
-    @NotBlank
     @Email
-    @Size(max = 50)
     private String userEmail;
 
     @Enumerated(EnumType.STRING)
@@ -47,7 +41,7 @@ public class Ticket { // FIXME create relations for user fields (emails)
     private String masterEmail;
 
     @Builder.Default
-    @Size(max = 1000)
+    @DecimalMin(value = "0.0")
     private BigDecimal price = BigDecimal.ZERO;
 
     @Builder.Default
