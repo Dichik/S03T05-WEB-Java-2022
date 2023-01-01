@@ -2,6 +2,8 @@ package com.agency.finalproject.controller;
 
 import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.entity.user.User;
+import com.agency.finalproject.exception.ItemWasNotFoundException;
+import com.agency.finalproject.exception.NotEnoughMoneyException;
 import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.user.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -46,15 +48,25 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(method = RequestMethod.POST, params = {"ticketId", "userEmail"})
-    public ResponseEntity<?> payForTicket(@RequestParam Long ticketId, @RequestParam String userEmail) {
+    @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.POST, params = {"ticketId"})
+    public ResponseEntity<?> payForTicket(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String email = userDetails.getEmail();
         try {
-            this.userService.payForTicket(ticketId, userEmail);
-            return new ResponseEntity<>("Ticket was successfully paid!", HttpStatus.OK);
+            User user = this.userService.payForTicket(id, email);
+
+            Map<String, Object> body = new LinkedHashMap<>(){{
+               put("data", user);
+               put("message", "Ticket was successfully paid!");
+            }};
+            return new ResponseEntity<>(body, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            String message = String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", userEmail, ticketId);
+            String message = String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", email, id);
             logger.warn(message);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } catch (NotEnoughMoneyException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ItemWasNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
