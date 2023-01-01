@@ -39,7 +39,6 @@ public class Ticket { // FIXME create relations for user fields (emails)
     @Builder.Default
     private TicketStatus status = TicketStatus.NEW;
 
-    @Null
     @Email
     @Size(max = 50)
     private String masterEmail;

@@ -2,6 +2,7 @@ package com.agency.finalproject.controller;
 
 import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.entity.ticket.Ticket;
+import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.entity.ticket.dto.TicketDto;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.security.service.UserDetailsImpl;
@@ -74,6 +75,7 @@ public class TicketController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Ticket> create(@RequestBody TicketDto ticketDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Ticket ticket = this.modelMapper.map(ticketDto, Ticket.class);
+        ticket.setStatus(TicketStatus.NEW);
         ticket.setUserEmail(userDetails.getEmail());
         return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
     }
@@ -92,7 +94,7 @@ public class TicketController {
             return new ResponseEntity<>(body, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             logger.error("Couldn't assign master to the ticket, see: " + e);
-            return new ResponseEntity<>("Couldn't assign master, please try again.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new MessageResponse("Couldn't assign master, please try again."), HttpStatus.NOT_FOUND);
         }
     }
 
