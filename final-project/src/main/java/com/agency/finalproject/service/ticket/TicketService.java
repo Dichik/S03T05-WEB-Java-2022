@@ -41,6 +41,7 @@ public class TicketService {
     public Ticket assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
+        // FIXME check if master is valid
         ticket.setMasterEmail(masterEmail);
         return this.ticketRepository.save(ticket);
     }
@@ -126,7 +127,7 @@ public class TicketService {
             } else if ("ROLE_MASTER".equals(role) && validateStatusChangeForMaster(current, updated)) {
                 return true;
             } else {
-                throw new RoleLackOfPermissionException("Role doesn't have enough permissions.");
+                throw new RoleLackOfPermissionException("Role doesn't have enough permissions."); // FIXME
             }
         }
         return false;

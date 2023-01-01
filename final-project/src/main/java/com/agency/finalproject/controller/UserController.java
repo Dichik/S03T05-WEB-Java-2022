@@ -47,12 +47,13 @@ public class UserController {
         }
     }
 
+    // FIXME how manager understands that user paid for ticket?
     @PreAuthorize("hasRole('USER')")
-    @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.POST, params = {"ticketId"})
-    public ResponseEntity<?> payForTicket(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @RequestMapping(method = RequestMethod.POST, params = {"ticketId"})
+    public ResponseEntity<?> payForTicket(@RequestParam Long ticketId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String email = userDetails.getEmail();
         try {
-            User user = this.userService.payForTicket(id, email);
+            User user = this.userService.payForTicket(ticketId, email);
 
             Map<String, Object> body = new LinkedHashMap<>(){{
                put("data", user);
@@ -60,7 +61,7 @@ public class UserController {
             }};
             return new ResponseEntity<>(body, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            String message = String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", email, id);
+            String message = String.format("User with email=[%s] couldn't pay for ticket with id=[%d]", email, ticketId);
             logger.warn(message);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         } catch (NotEnoughMoneyException e) {

@@ -124,15 +124,15 @@ public class TicketController {
     }
 
     @PreAuthorize("hasRole('MANAGER')")
-    @RequestMapping(method = RequestMethod.GET, params = {"filter"})
-    public ResponseEntity<?> getFilteredBy(@RequestParam String filter) {
+    @RequestMapping(method = RequestMethod.GET, params = {"filter", "value"})
+    public ResponseEntity<?> getFilteredBy(@RequestParam String filter, @RequestParam String value) {
         List<Ticket> tickets;
         switch (filter) {
             case "masterEmail" -> {
-                tickets = this.ticketService.getFilteredByMasterEmail(filter);
+                tickets = this.ticketService.getFilteredByMasterEmail(value);
             }
             case "status" -> {
-                tickets = this.ticketService.getFilteredByStatus(filter);
+                tickets = this.ticketService.getFilteredByStatus(value);
             }
             default -> {
                 return new ResponseEntity<>(new MessageResponse("Can't get tickets filtered by " + filter), HttpStatus.NOT_IMPLEMENTED);
