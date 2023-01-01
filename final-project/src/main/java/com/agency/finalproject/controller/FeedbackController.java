@@ -6,6 +6,7 @@ import com.agency.finalproject.exception.ItemWasNotFoundException;
 import com.agency.finalproject.exception.TicketWrongDataException;
 import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.feedback.FeedbackService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/feedbacks")
@@ -42,6 +44,7 @@ public class FeedbackController {
             }};
             return new ResponseEntity<>(body, HttpStatus.CREATED);
         } catch (TicketWrongDataException e) {
+            log.error("Can't leave feedback, see: " + e);
             return new ResponseEntity<>(new MessageResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
@@ -56,6 +59,7 @@ public class FeedbackController {
             }
             return new ResponseEntity<>(feedbacks, HttpStatus.OK);
         } catch (ItemWasNotFoundException e) {
+            log.warn("Ticket was not found, see: " + e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

@@ -1,9 +1,14 @@
 package com.agency.finalproject.entity.ticket;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -30,8 +35,6 @@ public class Ticket { // FIXME create relations for user fields (emails)
     @NotBlank
     @Email
     @Size(max = 50)
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_email")
     private String userEmail;
 
     @Enumerated(EnumType.STRING)
@@ -44,8 +47,7 @@ public class Ticket { // FIXME create relations for user fields (emails)
     private String masterEmail;
 
     @Builder.Default
-    @Min(0)
-    @Max(1000)
+    @Size(max = 1000)
     private BigDecimal price = BigDecimal.ZERO;
 
     @Builder.Default

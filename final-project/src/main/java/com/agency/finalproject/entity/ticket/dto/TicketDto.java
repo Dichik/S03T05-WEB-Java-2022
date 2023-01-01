@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketDto {
+
     private String title;
     private String description;
     private String userEmail;
@@ -19,4 +20,5 @@ public class TicketDto {
     private String masterEmail;
     private BigDecimal price = BigDecimal.ZERO;
     private Timestamp createdAt;
+
 }

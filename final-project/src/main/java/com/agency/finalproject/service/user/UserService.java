@@ -35,10 +35,6 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public Optional<User> findByEmail(String userEmail) throws EntityNotFoundException {
-        return this.userRepository.findByEmail(userEmail);
-    }
-
     public User payForTicket(Long ticketId, String userEmail) throws EntityNotFoundException, ItemWasNotFoundException, NotEnoughMoneyException {
         User user = this.userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("User with " + userEmail + " email was not found"));

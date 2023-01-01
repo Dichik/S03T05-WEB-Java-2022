@@ -55,9 +55,9 @@ public class UserController {
         try {
             User user = this.userService.payForTicket(ticketId, email);
 
-            Map<String, Object> body = new LinkedHashMap<>(){{
-               put("data", user);
-               put("message", "Ticket was successfully paid!");
+            Map<String, Object> body = new LinkedHashMap<>() {{
+                put("data", user);
+                put("message", "Ticket was successfully paid!");
             }};
             return new ResponseEntity<>(body, HttpStatus.OK);
         } catch (EntityNotFoundException e) {

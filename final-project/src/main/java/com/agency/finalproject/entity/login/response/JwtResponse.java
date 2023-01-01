@@ -3,12 +3,12 @@ package com.agency.finalproject.entity.login.response;
 import java.util.List;
 
 public class JwtResponse {
+    private final List<String> roles;
     private String token;
     private String type = "Bearer";
     private Long id;
     private String username;
     private String email;
-    private final List<String> roles;
 
     public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
         this.token = accessToken;

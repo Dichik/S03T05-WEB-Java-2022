@@ -62,6 +62,9 @@ public class WebSecurityConfig {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/tickets/**").permitAll()
+                .antMatchers("/api/users/**").permitAll() // FIXME ??? or not
+                .antMatchers("/api/feedbacks/**").permitAll()
+                .antMatchers("/api/masters/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

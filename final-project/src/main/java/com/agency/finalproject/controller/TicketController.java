@@ -7,8 +7,7 @@ import com.agency.finalproject.entity.ticket.dto.TicketDto;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.ticket.TicketService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +22,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
-    private static final Logger logger = LogManager.getLogger(TicketController.class);
 
     private final TicketService ticketService;
     private final ModelMapper modelMapper;
@@ -54,7 +53,7 @@ public class TicketController {
         String email = userDetails.getEmail();
         List<Ticket> tickets = this.ticketService.getTicketsByUserEmail(email);
         if (tickets.isEmpty()) {
-            logger.info("No tickets were found for email=" + email);
+            log.info("No tickets were found for email=" + email);
             return new ResponseEntity<>(new MessageResponse("No tickets were found."), HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(tickets, HttpStatus.OK);
@@ -93,7 +92,7 @@ public class TicketController {
             }};
             return new ResponseEntity<>(body, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            logger.error("Couldn't assign master to the ticket, see: " + e);
+            log.error("Couldn't assign master to the ticket, see: " + e);
             return new ResponseEntity<>(new MessageResponse("Couldn't assign master, please try again."), HttpStatus.NOT_FOUND);
         }
     }
@@ -104,7 +103,7 @@ public class TicketController {
         try {
             return new ResponseEntity<>(this.ticketService.updateTicketPrice(id, ticketDto), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            logger.error("Couldn't set ticket price, see: " + e);
+            log.error("Couldn't set ticket price, see: " + e);
             return new ResponseEntity<>(new MessageResponse("Couldn't find ticket"), HttpStatus.NOT_FOUND);
         }
     }
@@ -115,10 +114,10 @@ public class TicketController {
                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             Ticket ticket = this.ticketService.updateStatus(ticketId, updatedStatus, userDetails);
-            logger.info(String.format("Ticket status with id=%d was updated to status=%s", ticketId, updatedStatus));
+            log.info(String.format("Ticket status with id=%d was updated to status=%s", ticketId, updatedStatus));
             return new ResponseEntity<>(ticket, HttpStatus.OK);
         } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
-            logger.error("Couldn't set status " + updatedStatus + ", see: " + e);
+            log.error("Couldn't set status " + updatedStatus + ", see: " + e);
             return new ResponseEntity<>("Couldn't update status.", HttpStatus.BAD_REQUEST);
         }
     }
@@ -135,6 +134,7 @@ public class TicketController {
                 tickets = this.ticketService.getFilteredByStatus(value);
             }
             default -> {
+                log.warn("Invalid filter " + filter);
                 return new ResponseEntity<>(new MessageResponse("Can't get tickets filtered by " + filter), HttpStatus.NOT_IMPLEMENTED);
             }
         }
@@ -156,6 +156,7 @@ public class TicketController {
                 tickets = this.ticketService.getSortedByPrice();
             }
             default -> {
+                log.warn("Invalid request param [sortBy], so can't get items sorted by " + sortBy);
                 return new ResponseEntity<>(new MessageResponse("Can't get tickets sorted by " + sortBy), HttpStatus.NOT_IMPLEMENTED);
             }
         }

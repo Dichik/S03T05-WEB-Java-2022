@@ -7,13 +7,15 @@ import com.agency.finalproject.exception.RoleLackOfPermissionException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.repository.ticket.TicketRepository;
 import com.agency.finalproject.security.service.UserDetailsImpl;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,10 +80,6 @@ public class TicketService {
             throw new EntityNotFoundException("You are trying to filter by wrong status.");
         }
         return this.ticketRepository.findByStatus(ticketStatus);
-    }
-
-    public Optional<Ticket> getById(Long ticketId) {
-        return this.ticketRepository.findById(ticketId);
     }
 
     public Ticket updateTicketPrice(Long id, TicketDto ticketDto) {
@@ -149,7 +147,4 @@ public class TicketService {
         return currentStatus == TicketStatus.IN_PROGRESS && updatedStatus == TicketStatus.DONE;
     }
 
-    public boolean existsById(Long ticketId) {
-        return this.ticketRepository.existsById(ticketId);
-    }
 }
