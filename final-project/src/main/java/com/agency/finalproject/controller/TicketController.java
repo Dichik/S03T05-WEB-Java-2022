@@ -4,6 +4,8 @@ import com.agency.finalproject.entity.login.response.MessageResponse;
 import com.agency.finalproject.entity.ticket.Ticket;
 import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.entity.ticket.dto.TicketDto;
+import com.agency.finalproject.exception.InvalidStatusChangeException;
+import com.agency.finalproject.exception.ItemWasNotFoundException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.security.service.UserDetailsImpl;
 import com.agency.finalproject.service.ticket.TicketService;
@@ -91,7 +93,7 @@ public class TicketController {
                 put("message", message);
             }};
             return new ResponseEntity<>(body, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
+        } catch (ItemWasNotFoundException e) {
             log.error("Couldn't assign master to the ticket, see: " + e);
             return new ResponseEntity<>(new MessageResponse("Couldn't assign master, please try again."), HttpStatus.NOT_FOUND);
         }
@@ -102,7 +104,7 @@ public class TicketController {
     public ResponseEntity<?> updateTicketPrice(@PathVariable Long id, @RequestBody TicketDto ticketDto) {
         try {
             return new ResponseEntity<>(this.ticketService.updateTicketPrice(id, ticketDto), HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
+        } catch (ItemWasNotFoundException e) {
             log.error("Couldn't set ticket price, see: " + e);
             return new ResponseEntity<>(new MessageResponse("Couldn't find ticket"), HttpStatus.NOT_FOUND);
         }
@@ -116,9 +118,13 @@ public class TicketController {
             Ticket ticket = this.ticketService.updateStatus(ticketId, updatedStatus, userDetails);
             log.info(String.format("Ticket status with id=%d was updated to status=%s", ticketId, updatedStatus));
             return new ResponseEntity<>(ticket, HttpStatus.OK);
-        } catch (EntityNotFoundException | UnvalidStatusUpdateException e) {
+        } catch (UnvalidStatusUpdateException e) {
             log.error("Couldn't set status " + updatedStatus + ", see: " + e);
             return new ResponseEntity<>("Couldn't update status.", HttpStatus.BAD_REQUEST);
+        } catch (InvalidStatusChangeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (ItemWasNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

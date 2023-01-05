@@ -3,6 +3,8 @@ package com.agency.finalproject.service.ticket;
 import com.agency.finalproject.entity.ticket.Ticket;
 import com.agency.finalproject.entity.ticket.TicketStatus;
 import com.agency.finalproject.entity.ticket.dto.TicketDto;
+import com.agency.finalproject.exception.InvalidStatusChangeException;
+import com.agency.finalproject.exception.ItemWasNotFoundException;
 import com.agency.finalproject.exception.RoleLackOfPermissionException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.repository.ticket.TicketRepository;
@@ -40,9 +42,9 @@ public class TicketService {
         return this.ticketRepository.findByMasterEmail(email);
     }
 
-    public Ticket assignMaster(Long ticketId, String masterEmail) throws EntityNotFoundException {
+    public Ticket assignMaster(Long ticketId, String masterEmail) throws ItemWasNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
+                .orElseThrow(() -> new ItemWasNotFoundException("Ticket with " + ticketId + " was not found."));
         // FIXME check if master is valid
         ticket.setMasterEmail(masterEmail);
         return this.ticketRepository.save(ticket);
@@ -82,21 +84,21 @@ public class TicketService {
         return this.ticketRepository.findByStatus(ticketStatus);
     }
 
-    public Ticket updateTicketPrice(Long id, TicketDto ticketDto) {
+    public Ticket updateTicketPrice(Long id, TicketDto ticketDto) throws ItemWasNotFoundException {
         Ticket ticket = this.ticketRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket was not found"));
+                .orElseThrow(() -> new ItemWasNotFoundException("Ticket was not found"));
         ticket.setPrice(ticketDto.getPrice());
         return this.ticketRepository.save(ticket);
     }
 
-    public Ticket updateStatus(Long ticketId, String updatedStatusName, UserDetailsImpl userDetails) throws EntityNotFoundException, UnvalidStatusUpdateException {
+    public Ticket updateStatus(Long ticketId, String updatedStatusName, UserDetailsImpl userDetails) throws EntityNotFoundException, UnvalidStatusUpdateException, InvalidStatusChangeException, ItemWasNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new EntityNotFoundException("Ticket with " + ticketId + " was not found."));
 
         TicketStatus currentStatus = ticket.getStatus();
         TicketStatus updatedStatus = TicketStatus.getTicketStatusByName(updatedStatusName);
         if (updatedStatus == null) {
-            throw new EntityNotFoundException("Updated status is not valid, please specify the correct one.");
+            throw new ItemWasNotFoundException("Updated status is not valid, please specify the correct one.");
         }
 
         Set<String> roles = userDetails.getAuthorities().stream()
@@ -105,27 +107,24 @@ public class TicketService {
 
         if (roles.contains("ROLE_MASTER") && !roles.contains("ROLE_MANAGER")
                 && !Objects.equals(ticket.getMasterEmail(), userDetails.getEmail())) {
-            throw new RoleLackOfPermissionException("Oops, it seems like you are trying to update not your ticket...");
+            throw new RoleLackOfPermissionException("It seems like you are trying to update not your ticket...");
         }
 
         if (!this.validateStatusChange(currentStatus, updatedStatus, roles)) {
-            String message = String.format("Oops, status update from [%s] to [%s] is not valid for current user",
-                    currentStatus.getName(), updatedStatus.getName());
-            throw new UnvalidStatusUpdateException(message);
+            throw new InvalidStatusChangeException(String.format("Invalid status change from %s to %s for current user.",
+                    currentStatus.getName(), updatedStatus.getName()));
         }
 
         ticket.setStatus(updatedStatus);
         return this.ticketRepository.save(ticket);
     }
 
-    private boolean validateStatusChange(TicketStatus current, TicketStatus updated, Set<String> roles) {
+    private boolean validateStatusChange(TicketStatus current, TicketStatus updated, Set<String> roles) throws InvalidStatusChangeException {
         for (String role : roles) {
             if ("ROLE_MANAGER".equals(role) && validateStatusChangeForManager(current, updated)) {
                 return true;
             } else if ("ROLE_MASTER".equals(role) && validateStatusChangeForMaster(current, updated)) {
                 return true;
-            } else {
-                throw new RoleLackOfPermissionException("Role doesn't have enough permissions."); // FIXME
             }
         }
         return false;

@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
@@ -70,6 +71,22 @@ class UserServiceTest {
 
     @Test
     void topUpBalance() {
+        assertEquals(this.USER.getBalance(), BigDecimal.ZERO, "user's balance is not 0.");
+        User user = this.userService.topUpBalance(this.USER.getUsername(), BigDecimal.ONE);
+        assertEquals(user.getUsername(), this.USER.getUsername(), "Updated balance for wrong user.");
+        assertEquals(0, user.getBalance().compareTo(BigDecimal.ONE), "Balance was not topped up.");
+    }
+
+    @Test
+    void topUpBalanceWithMinusValue() {
+        assertEquals(this.USER.getBalance(), BigDecimal.ZERO, "user's balance is not 0.");
+        BigDecimal invalidValue = BigDecimal.valueOf(-1);
+        Exception exception = assertThrows(TransactionSystemException.class, () -> {
+            this.userService.topUpBalance(this.USER.getUsername(), invalidValue);
+        });
+
+        String actualMessage = exception.getMessage();
+        assertNotNull(actualMessage);
     }
 
     @Test
