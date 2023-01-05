@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.TransactionSystemException;
 
-import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +33,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class TicketServiceTest {
 
-    private Ticket TICKET;
-    private List<Ticket> TICKETS;
     private static final String DEFAULT_USER_EMAIL = "user@user.com";
     private static final String DEFAULT_MASTER_EMAIL = "master@user.com";
-
+    private Ticket TICKET;
+    private List<Ticket> TICKETS;
     @Autowired
     private TicketRepository ticketRepository;
 
