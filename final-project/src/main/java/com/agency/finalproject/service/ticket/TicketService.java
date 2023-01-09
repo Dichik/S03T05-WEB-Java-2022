@@ -26,17 +26,15 @@ import java.util.stream.Collectors;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
+    public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
-        this.userRepository = userRepository;
     }
 
-    public Ticket createTicket(Ticket ticket, UserDetailsImpl userDetails) {
+    public Ticket createTicket(Ticket ticket, String userEmail) {
         ticket.setStatus(TicketStatus.NEW);
-        ticket.setUserEmail(userDetails.getEmail());
+        ticket.setUserEmail(userEmail);
         ticket.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return this.ticketRepository.save(ticket);
     }
@@ -52,9 +50,10 @@ public class TicketService {
     public Ticket assignMaster(Long ticketId, String masterEmail) throws ItemWasNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ItemWasNotFoundException("Ticket with " + ticketId + " was not found."));
-        if (!this.userRepository.existsByEmail(masterEmail)) {
-            throw new ItemWasNotFoundException("Master with email=" + masterEmail + " was not found.");
-        }
+        // maybe master will be created in the future
+//        if (!this.userRepository.existsByEmail(masterEmail)) {
+//            throw new ItemWasNotFoundException("Master with email=" + masterEmail + " was not found.");
+//        }
         ticket.setMasterEmail(masterEmail);
         return this.ticketRepository.save(ticket);
     }

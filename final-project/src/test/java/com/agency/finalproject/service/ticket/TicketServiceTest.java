@@ -50,10 +50,10 @@ class TicketServiceTest {
         Ticket ticket = Ticket.builder()
                 .title("Ticket #1")
                 .status(TicketStatus.DONE)
-                .userEmail(DEFAULT_USER_EMAIL)
+                .masterEmail(DEFAULT_MASTER_EMAIL)
                 .description("keyboard was broken...")
                 .build();
-        this.TICKET = this.ticketService.createTicket(ticket, userDetails);
+        this.TICKET = this.ticketService.createTicket(ticket, DEFAULT_USER_EMAIL);
         assertNotNull(this.TICKET, "Couldn't create ticket to database.");
         this.TICKETS.add(this.TICKET);
 
@@ -61,10 +61,9 @@ class TicketServiceTest {
                 .title("Ticket #2")
                 .status(TicketStatus.NEW)
                 .price(BigDecimal.TEN)
-                .masterEmail(DEFAULT_MASTER_EMAIL)
                 .description("keyboard was broken...")
                 .build();
-        this.TICKET = this.ticketService.createTicket(ticket2, userDetails);
+        this.TICKET = this.ticketService.createTicket(ticket2, DEFAULT_MASTER_EMAIL);
         assertNotNull(this.TICKET, "Couldn't create ticket to database.");
         this.TICKETS.add(this.TICKET);
     }
@@ -140,14 +139,14 @@ class TicketServiceTest {
 
     @Test
     void updateStatus() throws InvalidStatusChangeException, ItemWasNotFoundException, UnvalidStatusUpdateException {
-        String invalidStatusName = TicketStatus.IN_PROGRESS.getName();
+        String validStatusName = TicketStatus.IN_PROGRESS.getName();
         assertEquals(this.TICKET.getStatus(), TicketStatus.NEW, "ticket must be NEW");
         UserDetailsImpl userDetails = UserDetailsImpl.build(User.builder()
-                .email(DEFAULT_MASTER_EMAIL)
+                .email(this.TICKET.getMasterEmail())
                 .roles(Set.of(new Role(ERole.ROLE_MASTER)))
                 .build());
-        this.TICKET = this.ticketService.updateStatus(this.TICKET.getId(), invalidStatusName, userDetails);
-        assertNotNull(this.TICKET, "ticket couln't be updated.");
+        this.TICKET = this.ticketService.updateStatus(this.TICKET.getId(), validStatusName, userDetails);
+        assertNotNull(this.TICKET, "ticket couldn't be updated.");
         assertEquals(this.TICKET.getStatus(), TicketStatus.IN_PROGRESS, "ticket must be in progress phase.");
     }
 
@@ -190,10 +189,9 @@ class TicketServiceTest {
     void updateStatusWithInvalidStatusChange() {
         String paidStatusName = TicketStatus.PAID.getName();
         UserDetailsImpl userDetails = UserDetailsImpl.build(User.builder()
-                .email(DEFAULT_MASTER_EMAIL)
+                .email(this.TICKET.getMasterEmail())
                 .roles(Set.of(new Role(ERole.ROLE_MASTER)))
                 .build());
-        assertNotEquals(userDetails.getUsername(), this.TICKET.getMasterEmail());
         Exception exception = assertThrows(InvalidStatusChangeException.class, () -> {
             this.ticketService.updateStatus(this.TICKET.getId(), paidStatusName, userDetails);
         });
