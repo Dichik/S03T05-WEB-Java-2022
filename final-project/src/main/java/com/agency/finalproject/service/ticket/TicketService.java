@@ -8,12 +8,14 @@ import com.agency.finalproject.exception.ItemWasNotFoundException;
 import com.agency.finalproject.exception.RoleLackOfPermissionException;
 import com.agency.finalproject.exception.UnvalidStatusUpdateException;
 import com.agency.finalproject.repository.ticket.TicketRepository;
+import com.agency.finalproject.repository.user.UserRepository;
 import com.agency.finalproject.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -24,13 +26,18 @@ import java.util.stream.Collectors;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
     }
 
-    public Ticket createTicket(Ticket ticket) {
+    public Ticket createTicket(Ticket ticket, UserDetailsImpl userDetails) {
+        ticket.setStatus(TicketStatus.NEW);
+        ticket.setUserEmail(userDetails.getEmail());
+        ticket.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return this.ticketRepository.save(ticket);
     }
 
@@ -45,7 +52,9 @@ public class TicketService {
     public Ticket assignMaster(Long ticketId, String masterEmail) throws ItemWasNotFoundException {
         Ticket ticket = this.ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ItemWasNotFoundException("Ticket with " + ticketId + " was not found."));
-        // FIXME check if master is valid
+        if (!this.userRepository.existsByEmail(masterEmail)) {
+            throw new ItemWasNotFoundException("Master with email=" + masterEmail + " was not found.");
+        }
         ticket.setMasterEmail(masterEmail);
         return this.ticketRepository.save(ticket);
     }

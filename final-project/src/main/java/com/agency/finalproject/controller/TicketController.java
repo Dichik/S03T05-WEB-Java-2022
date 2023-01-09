@@ -75,9 +75,7 @@ public class TicketController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Ticket> create(@RequestBody TicketDto ticketDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Ticket ticket = this.modelMapper.map(ticketDto, Ticket.class);
-        ticket.setStatus(TicketStatus.NEW);
-        ticket.setUserEmail(userDetails.getEmail());
-        return new ResponseEntity<>(this.ticketService.createTicket(ticket), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.ticketService.createTicket(ticket, userDetails), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('MANAGER')")

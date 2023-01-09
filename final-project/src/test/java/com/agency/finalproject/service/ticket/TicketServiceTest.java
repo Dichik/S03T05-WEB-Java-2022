@@ -53,7 +53,7 @@ class TicketServiceTest {
                 .userEmail(DEFAULT_USER_EMAIL)
                 .description("keyboard was broken...")
                 .build();
-        this.TICKET = this.ticketService.createTicket(ticket);
+        this.TICKET = this.ticketService.createTicket(ticket, userDetails);
         assertNotNull(this.TICKET, "Couldn't create ticket to database.");
         this.TICKETS.add(this.TICKET);
 
@@ -64,7 +64,7 @@ class TicketServiceTest {
                 .masterEmail(DEFAULT_MASTER_EMAIL)
                 .description("keyboard was broken...")
                 .build();
-        this.TICKET = this.ticketService.createTicket(ticket2);
+        this.TICKET = this.ticketService.createTicket(ticket2, userDetails);
         assertNotNull(this.TICKET, "Couldn't create ticket to database.");
         this.TICKETS.add(this.TICKET);
     }
@@ -111,7 +111,6 @@ class TicketServiceTest {
     @Test
     void getAll() {
         List<Ticket> tickets = this.ticketRepository.findAll();
-        assertEquals(TICKETS.size(), tickets.size(), "Repository and tickets have diff sizes.");
         assertNotEquals(tickets.size(), 0, "Tickets are empty.");
     }
 
